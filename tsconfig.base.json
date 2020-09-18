@@ -15,7 +15,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "resolveJsonModule": true,
+    "paths": {
+      "@pct-org/mongo-models": ["libs/packages/mongo-models/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@pct-org/mongo-models": [
+        "dist/libs/packages/mongo-models"
+      ]
+    }
+  },
+  "extends": "../../../apps/graphql-api/tsconfig.app.json"
+}

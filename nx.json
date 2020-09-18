@@ -21,5 +21,12 @@
       }
     }
   },
-  "projects": {}
+  "projects": {
+    "graphql-api": {
+      "tags": []
+    },
+    "packages-mongo-models": {
+      "tags": ["scope:public", "type:util", "target:all"]
+    }
+  }
 }

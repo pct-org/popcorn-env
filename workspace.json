@@ -1,7 +1,97 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "graphql-api": {
+      "root": "apps/graphql-api",
+      "sourceRoot": "apps/graphql-api/src",
+      "projectType": "application",
+      "prefix": "graphql-api",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/graphql-api",
+            "main": "apps/graphql-api/src/main.ts",
+            "tsConfig": "apps/graphql-api/tsconfig.app.json",
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": false,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "graphql-api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "apps/graphql-api/tsconfig.app.json",
+              "apps/graphql-api/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/graphql-api/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/graphql-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "packages-mongo-models": {
+      "root": "libs/packages/mongo-models",
+      "sourceRoot": "libs/packages/mongo-models/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/packages/mongo-models/tsconfig.lib.json",
+              "libs/packages/mongo-models/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/packages/mongo-models/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/packages/mongo-models/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/libs/packages/mongo-models",
+            "tsConfig": "libs/packages/mongo-models/tsconfig.lib.json",
+            "packageJson": "libs/packages/mongo-models/package.json",
+            "main": "libs/packages/mongo-models/src/index.ts",
+            "assets": ["libs/packages/mongo-models/*.md"]
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+    "defaultCollection": "@nrwl/nest"
+  },
+  "defaultProject": "graphql-api"
 }
