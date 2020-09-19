@@ -23,8 +23,15 @@ export class BookmarksService {
     return [
       ...movies,
       ...shows
-    ].sort((itemA, itemB) => itemB.bookmarkedOn - itemA.bookmarkedOn)
-    // .slice(bookmarksArgs.offset, bookmarksArgs.offset + bookmarksArgs.limit)
+    ]
+      .sort((itemA, itemB) => {
+        console.log(itemA)
+        console.log(itemB)
+        const itemACompare = itemA?.latestEpisodeAired ?? itemA.bookmarkedOn
+        const itemBCompare = itemB?.latestEpisodeAired ?? itemB.bookmarkedOn
+
+        return itemBCompare - itemACompare
+      })
   }
 
   async findAllMovies(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
@@ -82,7 +89,7 @@ export class BookmarksService {
         bookmarked: true,
         title: {
           // Update the query to make it better searchable
-          $regex: bookmarksArgs.query.split(' ').join('.+'),
+          $regex: bookmarksArgs.query.trim().split(' ').join('.+'),
           $options: 'i'
         }
       }
