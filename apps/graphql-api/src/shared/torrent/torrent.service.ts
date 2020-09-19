@@ -30,7 +30,7 @@ export class TorrentService {
   /**
    * Maximum of concurrent downloads in the background
    */
-  private maxConcurrent: number = 1
+  private maxConcurrent = 1
 
   /**
    * Array of downloads that will be downloaded in the background
@@ -40,7 +40,7 @@ export class TorrentService {
   /**
    * Are we currently downloading in the background
    */
-  private backgroundDownloading: boolean = false
+  private backgroundDownloading = false
 
   /**
    * Items currently downloading
@@ -62,6 +62,26 @@ export class TorrentService {
    */
   public supportedFormats: string[] = ['mp4', 'ogg', 'mov', 'webmv', 'mkv', 'wmv', 'avi']
 
+  private trackers: string[] = [
+    'udp://glotorrents.pw:6969',
+    'udp://tracker.opentrackr.org:1337',
+    'udp://torrent.gresille.org:80',
+    'udp://tracker.openbittorrent.com:1337',
+    'udp://tracker.coppersurfer.tk:6969',
+    'udp://tracker.leechers-paradise.org:6969',
+    'udp://p4p.arenabg.ch:1337',
+    'udp://p4p.arenabg.com:1337',
+    'udp://tracker.internetwarriors.net:1337',
+    'udp://9.rarbg.to:2710',
+    'udp://9.rarbg.me:2710',
+    'udp://exodus.desync.com:6969',
+    'udp://tracker.cyberia.is:6969',
+    'udp://tracker.torrent.eu.org:451',
+    'udp://tracker.open-internet.nl:6969',
+    'wss://tracker.openwebtorrent.com',
+    'wss://tracker.btorrent.xyz'
+  ]
+
   constructor(
     @InjectModel('Movies') private readonly movieModel: Model<Movie>,
     @InjectModel('Episodes') private readonly episodeModel: Model<Episode>,
@@ -81,7 +101,10 @@ export class TorrentService {
    * @param wasCrash
    */
   private setupWebTorrent(wasCrash = false) {
-    this.webTorrent = new WebTorrent({ maxConns: 20 })
+    this.webTorrent = new WebTorrent({
+      maxConns: 55, // Is the default
+    })
+
     this.webTorrent.on('error', (error) => {
       this.logger.error(`[webTorrent]: ${JSON.stringify(error)}`)
 
@@ -286,7 +309,9 @@ export class TorrentService {
         magnet.url,
         {
           // Add a unique download location for this item
-          path: this.getDownloadLocation(download)
+          path: this.getDownloadLocation(download),
+          maxWebConns: 5,
+          announce: this.trackers,
         },
         this.handleTorrent(resolve, item, download, magnet)
       )
