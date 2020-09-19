@@ -49,7 +49,7 @@ export class CalendarController {
               start: new Date(episode.firstAired),
               alarms: null,
               allDay: true,
-              summary: `${bookmark.title} S${episode.season}E${episode.number}. ${episode.title}`,
+              summary: `${bookmark.title} S${`0${episode.season}`.slice(-2)}E${`0${episode.number}`.slice(-2)}. ${episode.title}`,
               description: episode.synopsis
             })
           })
