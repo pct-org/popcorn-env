@@ -25,8 +25,6 @@ export class BookmarksService {
       ...shows
     ]
       .sort((itemA, itemB) => {
-        console.log(itemA)
-        console.log(itemB)
         const itemACompare = itemA?.latestEpisodeAired ?? itemA.bookmarkedOn
         const itemBCompare = itemB?.latestEpisodeAired ?? itemB.bookmarkedOn
 
