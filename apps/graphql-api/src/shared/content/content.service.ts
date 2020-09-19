@@ -26,7 +26,7 @@ export abstract class ContentService {
         ...query,
         title: {
           // Update the query to make it better searchable
-          $regex: contentArgs.query.split(' ').join('.+'),
+          $regex: contentArgs.query.trim().split(' ').join('.+'),
           $options: 'i'
         }
       }
