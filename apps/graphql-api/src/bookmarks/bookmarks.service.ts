@@ -25,7 +25,11 @@ export class BookmarksService {
       ...shows
     ]
       .sort((itemA, itemB) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
         const itemACompare = itemA?.latestEpisodeAired ?? itemA.bookmarkedOn
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
         const itemBCompare = itemB?.latestEpisodeAired ?? itemB.bookmarkedOn
 
         return itemBCompare - itemACompare
