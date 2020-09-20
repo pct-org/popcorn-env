@@ -365,10 +365,7 @@ export class TorrentService {
       this.removeFromTorrents(download, true)
 
       let searchedSubs = false
-      let lastUpdate = {
-        progress: null,
-        numPeers: null
-      }
+      let lastUpdate = null
 
       // Keep track if we updated the episode of movie with the new status
       let updatedItem = false
@@ -429,17 +426,12 @@ export class TorrentService {
           this.subtitlesService.searchForSubtitles(download, file)
         }
 
-        // Only update every 0.5 %
-        if (lastUpdate.progress === null
-          || (lastUpdate.progress + 0.5) < newProgress
-          || lastUpdate.numPeers !== torrent.numPeers
-        ) {
+        const now = Date.now()
+        // Only update 0,5 seconds
+        if (lastUpdate === null || (lastUpdate + 5000) < now) {
           this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(1)}% at ${formatKbToString(torrent.downloadSpeed)}`)
 
-          lastUpdate = {
-            progress: newProgress,
-            numPeers: torrent.numPeers
-          }
+          lastUpdate = now
 
           // Don't update if we are already updating
           if (!updatingModel) {

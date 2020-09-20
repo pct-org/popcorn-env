@@ -23,7 +23,11 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
     'SeekNDstroy',
     'Cristie',
     'mazemaze16',
-    'TeamRocker'
+    'TeamRocker',
+    'YIFY',
+    'PMEDIA',
+    'bone111',
+    'Silmarillion'
   ]
   /**
    * Search for a episode
@@ -39,12 +43,12 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
         category: 'TV'
       })
 
+      // Get all the torrents from trusted uploaders and validate if the
+      // season and episode format is in the torrent
       const foundTorrents = torrents.filter((torrent) =>
         this.trustedUploaders.includes(torrent.uploader) &&
         torrent.title.toUpperCase().includes(this.buildSeasonEpisodeString(episode).toUpperCase())
       )
-
-      console.log(torrents)
 
       const results = await Promise.all(
         foundTorrents.map((torrent) => this.formatTorrent(torrent, domain))
