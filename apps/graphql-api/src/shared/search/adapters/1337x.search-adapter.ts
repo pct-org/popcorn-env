@@ -12,13 +12,18 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
   private readonly logger = new Logger(OneThreeThreeSevenXSearchAdapater.name)
 
   /**
-   * Thse uploaders are Vip Uploaders
+   * These uploaders are Vip Uploaders / trusted
    */
   private readonly trustedUploaders = [
     'ETTV',
     'EtHD',
     'MkvCage',
-    'mazemaze16'
+    'mazemaze16',
+    'MrStark',
+    'SeekNDstroy',
+    'Cristie',
+    'mazemaze16',
+    'TeamRocker'
   ]
   /**
    * Search for a episode
@@ -38,6 +43,8 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
         this.trustedUploaders.includes(torrent.uploader) &&
         torrent.title.toUpperCase().includes(this.buildSeasonEpisodeString(episode).toUpperCase())
       )
+
+      console.log(torrents)
 
       const results = await Promise.all(
         foundTorrents.map((torrent) => this.formatTorrent(torrent, domain))
@@ -82,7 +89,7 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
     return {
       language: 'en',
       peers: parseInt(data.leechers, 10),
-      provider: OneThreeThreeSevenXSearchAdapater.providerName,
+      provider: `${OneThreeThreeSevenXSearchAdapater.providerName} - ${torrent.uploader}`,
       quality: quality,
       seeds: parseInt(data.seeders, 10),
       size: parseBytes(data.size),
