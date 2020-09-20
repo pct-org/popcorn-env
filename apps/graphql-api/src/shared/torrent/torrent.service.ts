@@ -102,7 +102,7 @@ export class TorrentService {
    */
   private setupWebTorrent(wasCrash = false) {
     this.webTorrent = new WebTorrent({
-      maxConns: 55, // Is the default
+      maxConns: 55 // Is the default
     })
 
     this.webTorrent.on('error', (error) => {
@@ -311,7 +311,7 @@ export class TorrentService {
           // Add a unique download location for this item
           path: this.getDownloadLocation(download),
           maxWebConns: 5,
-          announce: this.trackers,
+          announce: this.trackers
         },
         this.handleTorrent(resolve, item, download, magnet)
       )
@@ -375,27 +375,47 @@ export class TorrentService {
       // Keep track if we are currently updating the model, prevents updating same item twice at the same time
       let updatingModel = false
 
+      torrent.on('error', async (err) => {
+        this.logger.error(`[${download._id}]: Torrent error`, err)
+
+        await this.updateOne(item, {
+          download: {
+            downloadStatus: TorrentService.STATUS_FAILED,
+            downloading: false
+          }
+        })
+
+        // Remove from torrents
+        this.removeFromTorrents(download)
+
+        // Also cleanup this download
+        await this.cleanUpDownload(download)
+
+        this.removeFromWebTorrent(magnet)
+
+        // Resolve instead of reject as no try catch is around the method
+        resolve()
+      })
+
       torrent.on('noPeers', async (announceType) => {
-        if (announceType === 'dht') {
-          this.logger.warn(`[${download._id}]: No peers found`)
-          await this.updateOne(item, {
-            download: {
-              downloadStatus: TorrentService.STATUS_FAILED,
-              downloading: false
-            }
-          })
+        this.logger.warn(`[${download._id}]: No peers found, announce type: ${announceType}`)
+        await this.updateOne(item, {
+          download: {
+            downloadStatus: TorrentService.STATUS_FAILED,
+            downloading: false
+          }
+        })
 
-          // Remove from torrents
-          this.removeFromTorrents(download)
+        // Remove from torrents
+        this.removeFromTorrents(download)
 
-          // Also cleanup this download
-          await this.cleanUpDownload(download)
+        // Also cleanup this download
+        await this.cleanUpDownload(download)
 
-          this.removeFromWebTorrent(magnet)
+        this.removeFromWebTorrent(magnet)
 
-          // Resolve instead of reject as no try catch is around the method
-          resolve()
-        }
+        // Resolve instead of reject as no try catch is around the method
+        resolve()
       })
 
       torrent.on('download', async () => {
