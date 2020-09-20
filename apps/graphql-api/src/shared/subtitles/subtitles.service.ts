@@ -4,6 +4,7 @@ import { Download } from '@pct-org/mongo-models'
 import { TorrentFile } from 'webtorrent'
 import * as OpenSubtitles from 'opensubtitles-api'
 import { createWriteStream } from 'fs'
+import { resolve } from 'path'
 
 import { ConfigService } from '../config/config.service'
 import { SubtitleInterface } from './subtitle.interface'
@@ -52,7 +53,10 @@ export class SubtitlesService {
     this.logger.log(`[${download._id}]: Search for subtitles`)
 
     const filename = torrent.name
-    const location = `${this.configService.get(ConfigService.DOWNLOAD_LOCATION)}/${download._id}`
+    const location = resolve(
+      this.configService.get(ConfigService.DOWNLOAD_LOCATION),
+      download._id
+    )
 
     let imdbid = download._id
     let season = null
@@ -70,7 +74,7 @@ export class SubtitlesService {
       const subtitles = await this.client.search({
         sublanguageid: 'all',
         filesize: torrent.length,
-        path: `${location}/${torrent.path}`,
+        path: resolve(location, torrent.path),
         imdbid,
         filename,
         season,
