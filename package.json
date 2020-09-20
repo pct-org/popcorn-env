@@ -23,6 +23,8 @@
     "nx": "nx",
     "start": "nx serve",
     "start:graphql": "nx serve graphql-api",
+    "start:prod": "pm2 start ecosystem.config.js",
+    "stop:prod": "pm2 stop ecosystem.config.js",
     "test": "nx test",
     "update": "nx migrate latest",
     "workspace-schematic": "nx workspace-schematic"
@@ -48,6 +50,7 @@
     "mongoose": "5.9.12",
     "opensubtitles-api": "^5.1.2",
     "p-map": "4.0.0",
+    "pm2": "^4.4.1",
     "reflect-metadata": "^0.1.12",
     "rimraf": "3.0.2",
     "rxjs": "6.5.5",
