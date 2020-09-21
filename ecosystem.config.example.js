@@ -1,4 +1,4 @@
-const logsDir = process.cwd() + 'tmp/logs'
+const logsDir = process.cwd() + '/tmp/logs'
 
 const sharedEnv = {
   NODE_ENV: 'production',

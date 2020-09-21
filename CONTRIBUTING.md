@@ -13,9 +13,6 @@ There are lots and lots of ways to get involved, this document covers:
    - [JavaScript Styleguide](#javascript-styleguide)
    - [Tests Styleguide](#tests-styleguide)
    - [Documentation Styleguide](#documentation-styleguide)
- - [Setting up for development](#setting-up-for-development)
-   - [Yarn scripts](#yarn-scripts)
-   - [Git hooks](#git-hooks)
 
 ## Raising Issues
 
@@ -88,26 +85,6 @@ first before creating a commit message or a PR.
    * Reference classes with `{ClassName}`
    * Reference instance methods with `{ClassName.methodName}`
    * Reference class methods with `{ClassName#methodName}`
-
-## Setting up for development
-
-Each repo has it's own _Setting up for development_, read that closely before creating new tickets.
-
-### Yarn scripts
-
-The following yarn scripts are available in all repo's in order to help you with the
-development of the project. See the README's of the projects for the project specific scripts.
-
-```
- $ yarn build       # Create production build of the project
- $ yarn coveralls   # Upload code coverage to Coveralls
- $ yarn start:debug # Run the applicaiton in debug mode
- $ yarn start:dev   # Run the applicaiton in development mode
- $ yarn lint        # Check linting on the project
- $ yarn lint:fix    # Fix liting on the project
- $ yarn test        # Run unit tests of the project
- $ yarn test:watch  # Run unit tests in watch mode
-```
 
 ### Git hooks
 
