@@ -33,7 +33,6 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
    * Search for a episode
    *
    * @param episode
-   * @param isRetry
    * @returns {Promise<*>}
    */
   searchEpisode = async (episode: Episode) => {
@@ -67,12 +66,26 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
    * Search for movies
    *
    * @param movie
-   * @param isRetry
    * @returns {Promise<*>}
    */
   searchMovie = async (movie: Movie) => {
     try {
-      // TODO
+      const { torrents, domain } = await search({
+        query: movie.title,
+        category: 'Movies'
+      })
+
+      // Get all the torrents from trusted uploaders
+      const foundTorrents = torrents.filter((torrent) =>
+        this.trustedUploaders.includes(torrent.uploader)
+      )
+
+      const results = await Promise.all(
+        foundTorrents.map((torrent) => this.formatTorrent(torrent, domain))
+      )
+
+      return results.filter(Boolean)
+
     } catch (e) {
       this.logger.error('Error searching for movie!', e)
     }
