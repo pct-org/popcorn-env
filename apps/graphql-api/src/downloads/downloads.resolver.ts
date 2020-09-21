@@ -149,8 +149,12 @@ export class DownloadsResolver {
       )
     }
 
-    // Check if the download is not complete or downloading
-    if (![TorrentService.STATUS_COMPLETE, TorrentService.STATUS_DOWNLOADING].includes(download.status)) {
+    // Check if the download is not complete, downloading or connecting
+    if (![
+      TorrentService.STATUS_CONNECTING,
+      TorrentService.STATUS_COMPLETE,
+      TorrentService.STATUS_DOWNLOADING
+    ].includes(download.status)) {
       this.torrentService.startStreaming(download)
     }
 
