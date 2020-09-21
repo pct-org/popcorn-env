@@ -106,7 +106,7 @@ export class TorrentService {
     })
 
     this.webTorrent.on('error', (error) => {
-      this.logger.error(`[webTorrent]: ${JSON.stringify(error)}`)
+      this.logger.error('Webtorrent threw error', error)
 
       this.backgroundDownloading = false
       this.setupWebTorrent(true)
