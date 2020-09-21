@@ -258,6 +258,16 @@ export class TorrentService {
         return resolve()
       }
 
+      const downloadIsAlreadyConnecting = !!this.getConnectingTorrentForDownload(download)
+      const downloadIsAlreadyDownloading = !!this.getTorrentForDownload(download)
+
+      // Prevents the item from being added twice
+      if (downloadIsAlreadyConnecting || downloadIsAlreadyDownloading) {
+        this.logger.log(`[${download._id}]: Download is already going`)
+
+        return resolve()
+      }
+
       const item = await this.getItemForDownload(download)
 
       const { torrents, searchedTorrents } = item
