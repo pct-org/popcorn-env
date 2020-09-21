@@ -22,9 +22,9 @@ export class ShowsResolver {
     private readonly configService: ConfigService
   ) {
     this.trakt = new Trakt({
+      // eslint-disable-next-line @typescript-eslint/camelcase
       client_id: this.configService.get(ConfigService.TRAKT_KEY)
     })
-
   }
 
   /**

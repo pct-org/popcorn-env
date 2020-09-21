@@ -52,7 +52,6 @@ export class SubtitlesService {
 
     this.logger.log(`[${download._id}]: Search for subtitles`)
 
-    const filename = torrent.name
     const location = resolve(
       this.configService.get(ConfigService.DOWNLOAD_LOCATION),
       download._id
@@ -75,8 +74,8 @@ export class SubtitlesService {
         sublanguageid: 'all',
         filesize: torrent.length,
         path: resolve(location, torrent.path),
+        filename: torrent.name,
         imdbid,
-        filename,
         season,
         episode,
 
