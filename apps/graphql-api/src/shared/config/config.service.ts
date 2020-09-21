@@ -1,6 +1,5 @@
 import { LogLevel } from '@nestjs/common'
 import * as Joi from '@hapi/joi'
-import * as path from 'path'
 
 export interface EnvConfig {
   [key: string]: string;
@@ -25,13 +24,6 @@ export class ConfigService {
 
   constructor() {
     this.envConfig = this.validateInput(process.env)
-  }
-
-  /**
-   * Returns the current version of this API
-   */
-  get version() {
-    return require(path.resolve(process.cwd(), './package.json')).version
   }
 
   /**

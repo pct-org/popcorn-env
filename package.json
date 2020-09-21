@@ -21,7 +21,7 @@
     "format:write": "nx format:write",
     "help": "nx help",
     "lint": "nx workspace-lint && nx lint",
-    "logs": "tail -f ./tmp/logs/**/*.log",
+    "logs": "yarn pm2 logs",
     "nx": "nx",
     "start": "nx serve",
     "start:graphql": "nx serve graphql-api",
