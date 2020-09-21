@@ -184,6 +184,14 @@ export class TorrentService {
     this.downloads.push(download)
 
     this.logger.log(`[${download._id}]: Added to queue, new size: ${this.downloads.length}`)
+
+    // If the new length is 1 and the flag is still true something went wrong so put it to false
+    // and start downloads
+    if (this.downloads.length === 1 && this.backgroundDownloading) {
+      this.backgroundDownloading = false
+
+      this.startDownloads()
+    }
   }
 
   /**
