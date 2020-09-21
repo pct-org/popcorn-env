@@ -406,8 +406,6 @@ export class TorrentService {
         // Also cleanup this download
         await this.cleanUpDownload(download)
 
-        this.removeFromWebTorrent(magnet)
-
         // Resolve instead of reject as no try catch is around the method
         resolve()
       })
@@ -445,8 +443,8 @@ export class TorrentService {
         }
 
         const now = Date.now()
-        // Only update 0,5 seconds
-        if (lastUpdate === null || (lastUpdate + 5000) < now) {
+        // Only update every 1 second
+        if (lastUpdate === null || (lastUpdate + 1000) < now) {
           this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(1)}% at ${formatKbToString(torrent.downloadSpeed)}`)
 
           lastUpdate = now
@@ -565,8 +563,8 @@ export class TorrentService {
    */
   public cleanUpDownload(download: Model<Download>) {
     return new Promise(async (resolve) => {
-      // Delete the download
-      await download.delete()
+      // // Delete the download
+      // await download.delete()
 
       const down = this.downloads.find(findDown => findDown._id === download._id)
 
