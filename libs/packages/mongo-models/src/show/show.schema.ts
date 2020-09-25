@@ -27,7 +27,5 @@ export const showSchema = (new Schema(
     collection: 'shows'
   }
 )).index({
-  title: 'text',
-  synopsis: 'text',
-  _id: 1
+  'rating.watching': 1
 })

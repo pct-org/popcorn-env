@@ -21,6 +21,6 @@ export const movieSchema = (new Schema(
     collection: 'movies'
   }
 )).index({
-  title: 'text',
-  _id: 1
+  'watched.complete': 1,
+  'rating.watching': 1
 })
