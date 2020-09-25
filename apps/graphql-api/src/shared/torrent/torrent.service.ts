@@ -561,10 +561,12 @@ export class TorrentService {
   /**
    * Cleans up a download
    */
-  public cleanUpDownload(download: Model<Download>) {
+  public cleanUpDownload(download: Model<Download>, deleteDownload = false) {
     return new Promise(async (resolve) => {
-      // // Delete the download
-      // await download.delete()
+      if (deleteDownload) {
+        // Delete the download
+        await download.delete()
+      }
 
       const down = this.downloads.find(findDown => findDown._id === download._id)
 

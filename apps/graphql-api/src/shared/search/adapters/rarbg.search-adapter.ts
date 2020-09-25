@@ -148,8 +148,8 @@ export class RarbgSearchAdapter extends SearchAdapter {
     let timeout = 0
 
     // There is a 1 req / 2 sec limit
-    if (this.lastRequest !== null && (this.lastRequest + 2000) > Date.now()) {
-      timeout = (this.lastRequest + 2050) - Date.now()
+    if (this.lastRequest !== null && (this.lastRequest + 2200) > Date.now()) {
+      timeout = (this.lastRequest + 2200) - Date.now()
     }
 
     this.lastRequest = Date.now()

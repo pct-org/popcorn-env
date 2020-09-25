@@ -100,7 +100,7 @@ export class DownloadsResolver {
       // Only cleanup and update if the stop type is the same as the start type
       if (type === download.type) {
         await this.torrentService.stopDownloading(download)
-        await this.torrentService.cleanUpDownload(download)
+        await this.torrentService.cleanUpDownload(download, true)
 
         // Start the other queued items
         this.torrentService.startDownloads()
