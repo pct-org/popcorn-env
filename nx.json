@@ -26,7 +26,7 @@
       "tags": []
     },
     "packages-mongo-models": {
-      "tags": ["scope:public", "type:util", "target:all"]
+      "tags": []
     }
   }
 }
