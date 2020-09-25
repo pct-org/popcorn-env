@@ -7,6 +7,7 @@ import { ConfigService } from './shared/config/config.service'
 import { ModelsModule } from './shared/models/models.module'
 import { TorrentModule } from './shared/torrent/torrent.module'
 import { PubSubModule } from './shared/pub-sub/pub-sub.module'
+import { TraktModule } from './shared/trakt/trakt.module'
 
 import { StatusModule } from './status/status.module'
 import { CalendarModule } from './calendar/calendar.module'
@@ -29,6 +30,7 @@ import { WatchModule } from './watch/watch.module'
     ConfigModule,
     TorrentModule,
     PubSubModule,
+    TraktModule,
 
     // GraphQL
     StatusModule,
@@ -60,12 +62,17 @@ import { WatchModule } from './watch/watch.module'
     }),
 
     // Enable Graphql
-    GraphQLModule.forRoot({
-      debug: true,
-      playground: true,
-      installSubscriptionHandlers: true,
-      autoSchemaFile: 'schema.gql',
-      introspection: true
+    GraphQLModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        debug: configService.isDevelopment,
+        tracing: configService.isDevelopment,
+        playground: true,
+        installSubscriptionHandlers: true,
+        autoSchemaFile: 'schema.gql',
+        introspection: true,
+      })
     })
   ]
 })

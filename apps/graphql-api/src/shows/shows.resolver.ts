@@ -1,30 +1,23 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { Show, Season } from '@pct-org/mongo-models'
-import * as Trakt from 'trakt.tv'
 
 import { ShowArgs } from './dto/show.args'
 import { ShowsArgs } from './dto/shows.args'
 import { ShowsService } from './shows.service'
 
-import { ConfigService } from '../shared/config/config.service'
 import { SeasonsService } from '../seasons/seasons.service'
 import { DownloadsService } from '../downloads/downloads.service'
+import { TraktService } from '../shared/trakt/trakt.service'
 
 @Resolver(of => Show)
 export class ShowsResolver {
-
-  private readonly trakt
 
   constructor(
     private readonly showsService: ShowsService,
     private readonly seasonsService: SeasonsService,
     private readonly downloadsService: DownloadsService,
-    private readonly configService: ConfigService
+    private readonly traktService: TraktService
   ) {
-    this.trakt = new Trakt({
-      // eslint-disable-next-line @typescript-eslint/camelcase
-      client_id: this.configService.get(ConfigService.TRAKT_KEY)
-    })
   }
 
   /**
@@ -60,26 +53,7 @@ export class ShowsResolver {
    */
   @Query(returns => [Show], { description: 'Get most watched shows.' })
   async mostWatchedShows(): Promise<Show[]> {
-    let showIds = []
-
-    try {
-      const traktMostWatched = await this.trakt.shows.watched({
-        period: 'weekly'
-      })
-
-      showIds = traktMostWatched.map((item) => item.show.ids.imdb)
-    } catch (e) {
-    }
-
-    if (showIds.length === 0) {
-      return []
-    }
-
-    const shows = await this.showsService.findAllWithIDS(showIds)
-
-    return shows.sort((showA, showB) =>
-      showIds.indexOf(showA._id) - showIds.indexOf(showB._id),
-    )
+    return this.traktService.mostWatchedWeeklyShows()
   }
 
   /**

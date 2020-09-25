@@ -3,7 +3,6 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Movie } from '@pct-org/mongo-models'
 
-import { MovieArgs } from './dto/movie.args'
 import { MoviesArgs } from './dto/movies.args'
 import { ContentService } from '../shared/content/content.service'
 
@@ -31,6 +30,20 @@ export class MoviesService extends ContentService {
       this.getQuery(moviesArgs),
       {},
       this.getOptions(moviesArgs, lean)
+    )
+  }
+
+  findAllWithIDS(ids: string[], lean = true): Promise<Movie[]> {
+    return this.movieModel.find(
+      {
+        _id: {
+          $in: ids
+        }
+      },
+      {},
+      {
+        lean
+      }
     )
   }
 
