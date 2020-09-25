@@ -14,14 +14,22 @@ export class Download {
   @Field({ description: 'The item\'s of the download, episode or movie.' })
   itemType: string
 
-  @Field({ description: 'The type of torrent, default or searched.', defaultValue: 'default' })
+  @Field({ description: 'The type of torrent, default or searched.', defaultValue: 'scraped' })
   torrentType: string
 
-  @Field(type => Episode, { description: 'The episode if type === "episode".', defaultValue: null })
-  episode: Episode
+  @Field(type => Episode, {
+    description: 'The episode if type === "episode".',
+    defaultValue: null,
+    nullable: true
+  })
+  episode?: Episode
 
-  @Field(type => Movie, { description: 'The movie if type === "movie".', defaultValue: null })
-  movie: Movie
+  @Field(type => Movie, {
+    description: 'The movie if type === "movie".',
+    defaultValue: null,
+    nullable: true
+  })
+  movie?: Movie
 
   @Field({ description: 'The quality of the download.' })
   quality: string
