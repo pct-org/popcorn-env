@@ -561,7 +561,7 @@ export class TorrentService {
   /**
    * Cleans up a download
    */
-  public cleanUpDownload(download: Model<Download>, deleteDownload = false) {
+  public cleanUpDownload(download: Model<Download>, deleteDownload = false): Promise<void> {
     return new Promise(async (resolve) => {
       if (deleteDownload) {
         // Delete the download

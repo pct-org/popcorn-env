@@ -18,6 +18,14 @@ export class SubtitlesService {
 
   private readonly enabled: boolean = true
 
+  /**
+   * TODO:: Get from ENV
+   */
+  private readonly supportedLanguages = [
+    'en',
+    'nl'
+  ]
+
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService
@@ -83,7 +91,7 @@ export class SubtitlesService {
         limit: 'best'
       })
 
-      const subtitleLanguages = Object.keys(subtitles)
+      const subtitleLanguages = Object.keys(subtitles).filter(lang => this.supportedLanguages.includes(lang))
 
       if (subtitleLanguages.length > 0) {
         const formattedSubs = []
@@ -92,9 +100,9 @@ export class SubtitlesService {
 
         await Promise.all(
           subtitleLanguages.map(async (language) => {
-            try {
-              const subtitle: SubtitleInterface = subtitles[language]
+            const subtitle: SubtitleInterface = subtitles[language]
 
+            try {
               const subLocation = await this.downloadSubtitle(download, subtitle, location)
 
               formattedSubs.push({
@@ -104,7 +112,7 @@ export class SubtitlesService {
                 score: subtitle.score
               })
             } catch (err) {
-              this.logger.error(`[${download._id}]: Could not download subtitle "${language}"`, err)
+              this.logger.error(`[${download._id}]: Could not download subtitle "${language}" (${subtitle.url})`, err)
             }
           })
         )
