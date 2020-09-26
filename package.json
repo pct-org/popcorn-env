@@ -32,6 +32,11 @@
     "update": "nx migrate latest",
     "workspace-schematic": "nx workspace-schematic"
   },
+  "resolutions": {
+    "webtorrent": "0.107.16",
+    "webtorrent-cli": "3.0.4",
+    "wrtc": "0.4.1"
+  },
   "dependencies": {
     "@hapi/joi": "17.1.1",
     "@nestjs/cli": "7.5.1",
@@ -50,7 +55,7 @@
     "graphql": "15.3.0",
     "graphql-subscriptions": "^1.1.0",
     "ical-generator": "^1.10.0",
-    "mongoose": "5.9.12",
+    "mongoose": "5.10.7",
     "opensubtitles-api": "^5.1.2",
     "p-map": "4.0.0",
     "pm2": "^4.4.1",
