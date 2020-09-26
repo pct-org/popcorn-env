@@ -23,4 +23,8 @@ export const movieSchema = (new Schema(
 )).index({
   'watched.complete': 1,
   'rating.watching': 1
+}).index({
+  'rating.watching': 1
+}).index({
+  'bookmarked': 1
 })

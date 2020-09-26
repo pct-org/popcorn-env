@@ -28,4 +28,6 @@ export const showSchema = (new Schema(
   }
 )).index({
   'rating.watching': 1
+}).index({
+  'bookmarked': 1
 })
