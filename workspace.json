@@ -77,7 +77,7 @@
             "passWithNoTests": true
           }
         },
-        "build": {
+        "build-pacakge": {
           "builder": "@nrwl/node:package",
           "options": {
             "outputPath": "dist/libs/packages/mongo-models",
