@@ -12,27 +12,13 @@
 
 ---
 
-This repo holds everything you need (except the app) to run the Popcorn ENV.
-
-## Projects
-
-Popcorn env consists of two projects:
-
-| Project                      | Description |
-| ---------------------------- | -------------------------------------------------------- |
-| [`@pct-org/popcorn-env`]     | Monorepo holding the backend, packages, scripts etc      |
-| [`@pct-org/native-app`]      | React Native App                                         |
+This repo holds everything you need (except the [app]) to run the PCT environment.
 
 ## In this repo
 
-| Project                      | Description |
-| ---------------------------- | -------------------------------------------------------- |
-| [`api`]                      | GraphQL API the app communicates with                    |
-| [`scraper`]                  | |
-
-| Libs                         | Description |
-| ---------------------------- | -------------------------------------------------------- |
-| [`mongo-modals`]             | Models used for MongoDB and GraphQL object types         |
+```
+// TODO:: All apps / internal libs / packages
+```
 
 ## Installation
 
@@ -75,5 +61,5 @@ File a bug against [pct-org/getting-started prefixed with \[getting-started\]](h
 This project is [MIT licensed](./LICENSE).
 
 [contributing guide]: ./CONTRIBUTING.md
-[`@pct-org/native-app`]: https://github.com/pct-org/native-app
+[app]: https://github.com/pct-org/native-app
 
