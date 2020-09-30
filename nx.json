@@ -22,7 +22,7 @@
     }
   },
   "projects": {
-    "graphql-api": {
+    "api": {
       "tags": []
     },
     "packages-mongo-models": {

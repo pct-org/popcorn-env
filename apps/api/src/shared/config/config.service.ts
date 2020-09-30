@@ -8,7 +8,7 @@ export interface EnvConfig {
 export class ConfigService {
 
   public static readonly NODE_ENV: string = 'NODE_ENV'
-  public static readonly PORT: string = 'GRAPHQL_PORT'
+  public static readonly PORT: string = 'API_PORT'
   public static readonly MONGO_USER: string = 'MONGO_USER'
   public static readonly MONGO_PASS: string = 'MONGO_PASS'
   public static readonly MONGO_URI: string = 'MONGO_URI'

@@ -3,7 +3,7 @@ const logsDir = process.cwd() + '/tmp/logs'
 const sharedEnv = {
   NODE_ENV: 'production',
 
-  GRAPHQL_PORT: 5000,
+  API_PORT: 5000,
 
   SCRAPER_PORT: 5001,
 
@@ -51,14 +51,14 @@ const sharedEnv = {
 module.exports = {
   apps: [
     {
-      name: 'GraphQL API',
-      script: 'dist/apps/graphql-api/main.js',
+      name: 'API',
+      script: 'dist/apps/api/main.js',
       instances: 1,
       max_restarts: 5,
       autorestart: true,
       watch: false,
-      error_file: `${logsDir}/graphql-api/error.log`,
-      out_file: `${logsDir}/graphql-api/out.log`,
+      error_file: `${logsDir}/api/error.log`,
+      out_file: `${logsDir}/api/out.log`,
       log_file: null,
       env: sharedEnv
     },

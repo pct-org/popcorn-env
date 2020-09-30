@@ -1,19 +1,19 @@
 {
   "version": 1,
   "projects": {
-    "graphql-api": {
-      "root": "apps/graphql-api",
-      "sourceRoot": "apps/graphql-api/src",
+    "api": {
+      "root": "apps/api",
+      "sourceRoot": "apps/api/src",
       "projectType": "application",
-      "prefix": "graphql-api",
+      "prefix": "api",
       "schematics": {},
       "architect": {
         "build": {
           "builder": "@nrwl/node:build",
           "options": {
-            "outputPath": "dist/apps/graphql-api",
-            "main": "apps/graphql-api/src/main.ts",
-            "tsConfig": "apps/graphql-api/tsconfig.app.json",
+            "outputPath": "dist/apps/api",
+            "main": "apps/api/src/main.ts",
+            "tsConfig": "apps/api/tsconfig.app.json",
             "assets": []
           },
           "configurations": {
@@ -27,7 +27,7 @@
         "serve": {
           "builder": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "graphql-api:build"
+            "buildTarget": "api:build"
           }
         },
         "lint": {
@@ -35,16 +35,16 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "apps/graphql-api/tsconfig.app.json",
-              "apps/graphql-api/tsconfig.spec.json"
+              "apps/api/tsconfig.app.json",
+              "apps/api/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/graphql-api/**/*"]
+            "exclude": ["**/node_modules/**", "!apps/api/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/graphql-api/jest.config.js",
+            "jestConfig": "apps/api/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -93,5 +93,5 @@
   "cli": {
     "defaultCollection": "@nrwl/nest"
   },
-  "defaultProject": "graphql-api"
+  "defaultProject": "api"
 }
