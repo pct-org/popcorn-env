@@ -181,7 +181,7 @@ export class TorrentService {
   /**
    * Adds a download to the queued items
    */
-  public addDownload(download: Download) {
+  public addDownload(download: Download): void {
     this.downloads.push(download)
 
     this.logger.log(`[${download._id}]: Added to queue, new size: ${this.downloads.length}`)
@@ -198,7 +198,7 @@ export class TorrentService {
   /**
    * Starts background downloads
    */
-  public async startDownloads() {
+  public async startDownloads(): Promise<void> {
     if (this.backgroundDownloading || this.downloads.length === 0) {
       return
     }

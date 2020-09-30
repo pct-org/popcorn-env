@@ -50,9 +50,9 @@
         }
       }
     },
-    "packages-mongo-models": {
-      "root": "libs/packages/mongo-models",
-      "sourceRoot": "libs/packages/mongo-models/src",
+    "internal-mongo-models": {
+      "root": "libs/internal/mongo-models",
+      "sourceRoot": "libs/internal/mongo-models/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -61,30 +61,20 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/packages/mongo-models/tsconfig.lib.json",
-              "libs/packages/mongo-models/tsconfig.spec.json"
+              "libs/internal/mongo-models/tsconfig.lib.json",
+              "libs/internal/mongo-models/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/packages/mongo-models/**/*"
+              "!libs/internal/mongo-models/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/packages/mongo-models/jest.config.js",
+            "jestConfig": "libs/internal/mongo-models/jest.config.js",
             "passWithNoTests": true
-          }
-        },
-        "build-pacakge": {
-          "builder": "@nrwl/node:package",
-          "options": {
-            "outputPath": "dist/libs/packages/mongo-models",
-            "tsConfig": "libs/packages/mongo-models/tsconfig.lib.json",
-            "packageJson": "libs/packages/mongo-models/package.json",
-            "main": "libs/packages/mongo-models/src/index.ts",
-            "assets": ["libs/packages/mongo-models/*.md"]
           }
         }
       }

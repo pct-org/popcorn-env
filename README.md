@@ -1,7 +1,7 @@
 <h1 align="center">
   <img height="200" width="200" src="https://github.com/pct-org/getting-started/blob/master/.github/logo.png" alt="logo" />
   <br />
-  Getting Started
+  Popcorn env
 </h1>
 
 <div align="center">
@@ -11,22 +11,28 @@
 </div>
 
 ---
-## Getting started
 
-This repo helps you to get an easier experience setting up this environment. If you want to develop on one specific [project](#Projects) please so the README of one of those [projects](#Projects).
+This repo holds everything you need (except the app) to run the Popcorn ENV.
 
 ## Projects
 
-Popcorn Time consists of several projects, each doing its own part.
+Popcorn env consists of two projects:
 
 | Project                      | Description |
 | ---------------------------- | -------------------------------------------------------- |
-| [`@pct-org/getting-started`] | Explains how to get started with this setup              |
-| [`@pct-org/graphql-api`]     | Serves the data to the clients from the MongoDB database |
-| [`@pct-org/scraper`]         | Scrapes everything and saves it to MongoDB database      |
-| [`@pct-org/mongo-models`]    | Models used for MongoDB and GraphQL object types         |
+| [`@pct-org/popcorn-env`]     | Monorepo holding the backend, packages, scripts etc      |
 | [`@pct-org/native-app`]      | React Native App                                         |
-| [`@pct-org/updater`]         | Updater that automatically updates the projects          |
+
+## In this repo
+
+| Project                      | Description |
+| ---------------------------- | -------------------------------------------------------- |
+| [`api`]                      | GraphQL API the app communicates with                    |
+| [`scraper`]                  | |
+
+| Libs                         | Description |
+| ---------------------------- | -------------------------------------------------------- |
+| [`mongo-modals`]             | Models used for MongoDB and GraphQL object types         |
 
 ## Installation
 
@@ -69,10 +75,5 @@ File a bug against [pct-org/getting-started prefixed with \[getting-started\]](h
 This project is [MIT licensed](./LICENSE).
 
 [contributing guide]: ./CONTRIBUTING.md
-[`@pct-org/graphql-api`]: https://github.com/pct-org/graphql-api
-[`@pct-org/getting-started`]: https://github.com/pct-org/getting-started
-[`@pct-org/mongo-models`]: https://github.com/pct-org/mongo-models
 [`@pct-org/native-app`]: https://github.com/pct-org/native-app
-[`@pct-org/scraper`]: https://github.com/pct-org/scraper
-[`@pct-org/updater`]: https://github.com/pct-org/updater
 

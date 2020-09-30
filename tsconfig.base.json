@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
-      "@pct-org/mongo-models": ["libs/packages/mongo-models/src/index.ts"]
+      "@pct-org/mongo-models": ["libs/internal/mongo-models/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
