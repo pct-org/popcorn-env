@@ -105,7 +105,8 @@ export class TorrentService {
       maxConns: 55 // Is the default
     })
 
-    this.webTorrent.on('error', (error) => {
+    this.webTorrent.on('error', (err) => {
+      const error = err instanceof Error ? err.message : err
       this.logger.error('Webtorrent threw error', error)
 
       this.backgroundDownloading = false
@@ -391,7 +392,8 @@ export class TorrentService {
       let updatingModel = false
 
       torrent.on('error', async (err) => {
-        this.logger.error(`[${download._id}]: Torrent error`, err)
+        const error = err instanceof Error ? err.message : err
+        this.logger.error(`[${download._id}]: Torrent error`, error)
 
         await this.updateOne(item, {
           download: {
@@ -522,7 +524,7 @@ export class TorrentService {
    */
   public async updateOne(item: Model<Download | Movie | Episode>, update): Promise<Download | Movie | Episode> {
     // Apply the update
-    if (Object.keys(update).length === 1 && update.hasOwnProperty('download')) {
+    if (Object.keys(update).length === 1 && update.download) {
       this.logger.debug(`[${item._id}]: Update download info to "${JSON.stringify(update.download)}"`)
 
       item.download = {

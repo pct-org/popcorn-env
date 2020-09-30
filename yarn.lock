@@ -1257,6 +1257,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bittorrent-protocol@*":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@types/bittorrent-protocol/-/bittorrent-protocol-3.1.1.tgz#76bfd5903d0f7c7b23289763f39aca9337b3b723"
+  integrity sha512-YY3j5aJNTjAt5SA1P+4mK4cU4QuxSN79T1mzdQMLeQL1eTrruU5AxKcgxKZOuatPET3wCDx5JQnq+4XWpFEb/A==
+  dependencies:
+    "@types/node" "*"
+
 "@types/body-parser@*":
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.0.tgz#0685b3c47eb3006ffed117cdd55164b61f80538f"
@@ -1451,6 +1458,13 @@
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.1.tgz#459c65fa1867dafe6a8f322c4c51695663cc55e9"
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
+"@types/magnet-uri@*":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/@types/magnet-uri/-/magnet-uri-5.1.2.tgz#7860417399d52ddc0be1021d570b4ac93ffc133e"
+  integrity sha512-bXFPXskwHoEYP6t8rq4nWchOlbUzXkyhnfCVZmq+zb25R5pWkasw7BmTIqDKQ6RAQmq89jll1v23yLa/SvPfAw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/mime@*":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-2.0.3.tgz#c893b73721db73699943bfc3653b1deb7faa4a3a"
@@ -1501,6 +1515,22 @@
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
+"@types/parse-torrent-file@*":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@types/parse-torrent-file/-/parse-torrent-file-4.0.2.tgz#40c96fc075aec256514807c6c381d11d9035bd9e"
+  integrity sha512-EzdzpcN0sStQ35sUV2SChTJErLsbotsxZ/RYeR9gf3zXKlPLKaA7aIAoS/nuLRvfxH8mbrWQmXSw76alKecSdg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/parse-torrent@*":
+  version "5.8.3"
+  resolved "https://registry.yarnpkg.com/@types/parse-torrent/-/parse-torrent-5.8.3.tgz#ff4e987d09ad27ccc1c8893b3a2c6a31a3bc4042"
+  integrity sha512-c0xAjnpov+Xk/2HTtpaBm0tukNIAoZoxrqgTDwSaIu6IVCynY+2YD9zcQNk2P6H4atcXzD78/LI2CQzLlMmAJg==
+  dependencies:
+    "@types/magnet-uri" "*"
+    "@types/node" "*"
+    "@types/parse-torrent-file" "*"
+
 "@types/prettier@^2.0.0":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.1.1.tgz#be148756d5480a84cde100324c03a86ae5739fb5"
@@ -1530,6 +1560,13 @@
   dependencies:
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
+
+"@types/simple-peer@*":
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/@types/simple-peer/-/simple-peer-9.6.0.tgz#b5828d835b7f42dde27db584ba127e7a9f9072f4"
+  integrity sha512-X2y6s+vE/3j03hkI90oqld2JH2J/m1L7yFCYYPyFV/whrOK1h4neYvJL3GIE+UcACJacXZqzdmDKudwec18RbA==
+  dependencies:
+    "@types/node" "*"
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -1587,6 +1624,16 @@
     "@types/uglify-js" "*"
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
+
+"@types/webtorrent@^0.107.2":
+  version "0.107.2"
+  resolved "https://registry.yarnpkg.com/@types/webtorrent/-/webtorrent-0.107.2.tgz#f8d6dba86ef11dfd5087dc82288a3137a03a0523"
+  integrity sha512-Jd8NzoF2FqQSo3Y7vPfJDW/vKCv8VDs+22yhzib4YdYEi4q5CfS+1wLZLvL5OpdpVnaxsVmXoVvTZTgrO7y6Qw==
+  dependencies:
+    "@types/bittorrent-protocol" "*"
+    "@types/node" "*"
+    "@types/parse-torrent" "*"
+    "@types/simple-peer" "*"
 
 "@types/ws@^7.0.0":
   version "7.2.6"
@@ -4405,6 +4452,14 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
+diskusage@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/diskusage/-/diskusage-1.1.3.tgz#680d7dbf1b679168a195c9240eb3552cbd2c067b"
+  integrity sha512-EAyaxl8hy4Ph07kzlzGTfpbZMNAAAHXSZtNEMwdlnSd1noHzvA6HsgKt4fEMSvaEXQYLSphe5rPMxN4WOj0hcQ==
+  dependencies:
+    es6-promise "^4.2.5"
+    nan "^2.14.0"
+
 dlnacasts@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/dlnacasts/-/dlnacasts-0.1.0.tgz#f805211dcac74f6bb3a4d5d5541ad783b1b67d22"
@@ -4739,7 +4794,7 @@ es6-iterator@^2.0.3, es6-iterator@~2.0.3:
     es5-ext "^0.10.35"
     es6-symbol "^3.1.1"
 
-es6-promise@^4.0.3:
+es6-promise@^4.0.3, es6-promise@^4.2.5:
   version "4.2.8"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
   integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
@@ -5660,6 +5715,11 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+gar@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/gar/-/gar-1.0.4.tgz#f777bc7db425c0572fdeb52676172ca1ae9888b8"
+  integrity sha512-w4n9cPWyP7aHxKxYHFQMegj7WIAsL/YX/C4Bs5Rr8s1H9M1rNtRWRsw+ovYMkXDQ5S4ZbYHsHAPmevPjPgw44w==
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -5693,6 +5753,14 @@ get-caller-file@^2.0.1:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
+
+get-folder-size@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/get-folder-size/-/get-folder-size-2.0.1.tgz#3fe0524dd3bad05257ef1311331417bcd020a497"
+  integrity sha512-+CEb+GDCM7tkOS2wdMKTn9vU7DgnKUTuDlehkNJKNSovdCOVxs14OfKCk4cvSaR3za4gj+OBdl9opPN9xrJ0zA==
+  dependencies:
+    gar "^1.0.4"
+    tiny-each-async "2.0.3"
 
 get-package-type@^0.1.0:
   version "0.1.0"
@@ -8309,7 +8377,7 @@ mute-stream@0.0.8, mute-stream@~0.0.4:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@^2.12.1:
+nan@^2.12.1, nan@^2.14.0:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
   integrity sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
@@ -11338,6 +11406,11 @@ timers-ext@^0.1.5, timers-ext@^0.1.7:
   dependencies:
     es5-ext "~0.10.46"
     next-tick "1"
+
+tiny-each-async@2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/tiny-each-async/-/tiny-each-async-2.0.3.tgz#8ebbbfd6d6295f1370003fbb37162afe5a0a51d1"
+  integrity sha1-jru/1tYpXxNwAD+7NxYq/loKUdE=
 
 tiny-lru@^7.0.2:
   version "7.0.6"

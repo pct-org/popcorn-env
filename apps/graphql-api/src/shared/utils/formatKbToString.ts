@@ -1,13 +1,15 @@
-const sizes = ['Bytes/s', 'KB/s', 'MB/s']
+const sizes = ['Bytes', 'KB', 'MB', 'GB']
 
 /**
  * Formats bytes to a nice string
  *
  * @param bytes
+ * @param perSecond
  */
-export default (bytes: number): string => {
+export default (bytes: number, perSecond = true): string => {
+  const postFix = perSecond ? '/s' : ''
   if (!bytes || bytes === 0) {
-    return '0 Byte'
+    return `0 Byte${postFix}`
   }
 
   const i = parseInt(
@@ -17,5 +19,5 @@ export default (bytes: number): string => {
     10
   )
 
-  return `${(bytes / (1024 ** i)).toFixed(2)} ${sizes[i]}`
+  return `${(bytes / (1024 ** i)).toFixed(2)} ${sizes[i]}${postFix}`
 }

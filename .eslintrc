@@ -28,7 +28,8 @@
           { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
         ]
       }
-    ]
+    ],
+    "no-async-promise-executor": "off"
   },
   "overrides": [
     {
