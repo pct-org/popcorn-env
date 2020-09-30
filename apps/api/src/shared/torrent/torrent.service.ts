@@ -457,7 +457,7 @@ export class TorrentService {
 
             // Update the item
             await this.updateOne(download, {
-              progress: newProgress.toFixed(1),
+              progress: newProgress.toFixed(2),
               status: TorrentService.STATUS_DOWNLOADING,
               timeRemaining: torrent.timeRemaining,
               speed: torrent.downloadSpeed,

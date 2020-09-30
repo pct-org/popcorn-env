@@ -174,7 +174,7 @@ export class DownloadsResolver {
    * @param {Download} download - The download to fetch the movie for
    */
   @ResolveField(type => Movie, { description: 'The movie of this download, only if itemType === "movie"' })
-  movie(@Parent() download) {
+  movie(@Parent() download): Promise<Movie> {
     if (download.itemType !== 'movie') {
       return null
     }
@@ -184,11 +184,9 @@ export class DownloadsResolver {
 
   /**
    * Fetch the episode of this download
-   *
-   * @param {Download} download - The download to fetch the episode for
    */
   @ResolveField(type => Episode, { description: 'The episode of this download, only if itemType === "episode"' })
-  episode(@Parent() download) {
+  episode(@Parent() download: Download): Promise<Episode> {
     if (download.itemType !== 'episode') {
       return null
     }
@@ -202,7 +200,7 @@ export class DownloadsResolver {
    * @param {Download} download - The download to format it on
    */
   @ResolveField(type => String)
-  speed(@Parent() download) {
+  speed(@Parent() download): string {
     return formatKbToString(download.speed)
   }
 
@@ -212,7 +210,7 @@ export class DownloadsResolver {
    * @param {Download} download - The download to format it on
    */
   @ResolveField(type => String)
-  timeRemaining(@Parent() download) {
+  timeRemaining(@Parent() download): string {
     return formatMsToRemaining(download.timeRemaining)
   }
 
