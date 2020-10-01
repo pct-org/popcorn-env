@@ -32,8 +32,8 @@ export class StatusService {
     const folderSize = await this.getFolderSize()
 
     const freePercentage = parseFloat(((disk.available / disk.total) * 100).toFixed(2))
-    const usedPercentage = parseFloat((((disk.total - disk.available) / folderSize) * 100).toFixed(2))
-    const sizePercentage = parseFloat((((disk.total - disk.available - folderSize) / disk.total) * 100).toFixed(2))
+    const usedPercentage = parseFloat(((folderSize / (disk.total - disk.available)) * 100).toFixed(2))
+    const sizePercentage = 100 - freePercentage - usedPercentage
 
     return {
       version: 'unknown', // TODO:: Get git tag
