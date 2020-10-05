@@ -3,9 +3,10 @@ import { Content } from '@pct-org/mongo-models'
 
 import { BookmarksArgs } from './dto/bookmarks.args'
 import { BookmarksService } from './bookmarks.service'
+import { BookmarksUnion } from './bookmarks.union'
 import { PubSubService } from '../shared/pub-sub/pub-sub.service'
 
-@Resolver(of => Content)
+@Resolver(of => BookmarksUnion)
 export class BookmarksResolver {
 
   constructor(
@@ -13,12 +14,12 @@ export class BookmarksResolver {
     private readonly pubSubService: PubSubService
   ) {}
 
-  @Query(returns => [Content])
+  @Query(returns => [BookmarksUnion])
   bookmarks(@Args() bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     return this.bookmarksService.findAll(bookmarksArgs)
   }
 
-  @Mutation(returns => Content)
+  @Mutation(returns => BookmarksUnion)
   async addBookmark(
     @Args('_id') _id: string,
     @Args('type') type: string
@@ -35,7 +36,7 @@ export class BookmarksResolver {
     return updateBookmark
   }
 
-  @Mutation(returns => Content)
+  @Mutation(returns => BookmarksUnion)
   async removeBookmark(
     @Args('_id') _id: string,
     @Args('type') type: string
@@ -52,7 +53,7 @@ export class BookmarksResolver {
     return updateBookmark
   }
 
-  @Subscription(returns => Content)
+  @Subscription(returns => BookmarksUnion)
   bookmarked() {
     return this.pubSubService.asyncIterator('bookmarked')
   }
