@@ -496,7 +496,7 @@ export class TorrentService {
           timeRemaining: null,
           speed: null,
           numPeers: null
-        })
+        }, true)
 
         await this.updateOne(item, {
           download: {
@@ -521,8 +521,9 @@ export class TorrentService {
    *
    * @param item
    * @param update
+   * @param retryIfError
    */
-  public async updateOne(item: Model<Download | Movie | Episode>, update): Promise<Download | Movie | Episode> {
+  public async updateOne(item: Model<Download | Movie | Episode>, update, retryIfError = false): Promise<Download | Movie | Episode> {
     // Apply the update
     if (Object.keys(update).length === 1 && update.download) {
       this.logger.debug(`[${item._id}]: Update download info to "${JSON.stringify(update.download)}"`)
@@ -543,6 +544,10 @@ export class TorrentService {
       return await item.save()
 
     } catch (e) {
+      if (retryIfError) {
+        return this.updateOne(item, update)
+      }
+
       this.logger.error(`[${item._id}]: ${e.message || e}`)
 
       return item
