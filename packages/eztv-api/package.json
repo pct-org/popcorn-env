@@ -1,0 +1,16 @@
+{
+  "name": "@pct-org/eztv-api-pt",
+  "version": "1.3.6",
+  "description": "An EZTV API wrapper to get data from eztv.ag.",
+  "keywords": [
+    "api",
+    "eztv",
+    "popcorn",
+    "torrent"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">=6.3.0"
+  }
+}

@@ -21,12 +21,36 @@
       }
     }
   },
+  "workspaceLayout": {
+    "libsDir": "internal"
+  },
   "projects": {
     "api": {
       "tags": []
     },
-    "internal-mongo-models": {
+    "mongo-models": {
       "tags": ["scope:internal"]
+    },
+    "package-eztv-api": {
+      "tags": ["scope:public"]
+    },
+    "package-solidtorrents-api": {
+      "tags": ["scope:public"]
+    },
+    "package-pop-api": {
+      "tags": ["scope:public"]
+    },
+    "package-zooqle-api": {
+      "tags": ["scope:public"]
+    },
+    "package-ettv-api": {
+      "tags": ["scope:public"]
+    },
+    "package-kat-api": {
+      "tags": ["scope:public"]
+    },
+    "package-pop-api-scraper": {
+      "tags": ["scope:public"]
     }
   }
 }

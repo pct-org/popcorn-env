@@ -38,7 +38,10 @@
               "apps/api/tsconfig.app.json",
               "apps/api/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/api/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/api/**/*"
+            ]
           }
         },
         "test": {
@@ -50,9 +53,9 @@
         }
       }
     },
-    "internal-mongo-models": {
-      "root": "libs/internal/mongo-models",
-      "sourceRoot": "libs/internal/mongo-models/src",
+    "mongo-models": {
+      "root": "libs/mongo-models",
+      "sourceRoot": "libs/mongo-models/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -61,20 +64,309 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/internal/mongo-models/tsconfig.lib.json",
-              "libs/internal/mongo-models/tsconfig.spec.json"
+              "libs/mongo-models/tsconfig.lib.json",
+              "libs/mongo-models/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/internal/mongo-models/**/*"
+              "!libs/mongo-models/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/internal/mongo-models/jest.config.js",
+            "jestConfig": "libs/mongo-models/jest.config.js",
             "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "package-eztv-api": {
+      "root": "packages/eztv-api",
+      "sourceRoot": "packages/eztv-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/eztv-api/tsconfig.lib.json",
+              "packages/eztv-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/eztv-api/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/eztv-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/eztv-api",
+            "tsConfig": "packages/eztv-api/tsconfig.lib.json",
+            "packageJson": "packages/eztv-api/package.json",
+            "main": "packages/eztv-api/src/index.ts",
+            "assets": [
+              "packages/eztv-api/*.md",
+              "packages/eztv-api/examples/**",
+              "packages/eztv-api/LICENSE"
+            ]
+          }
+        }
+      }
+    },
+    "package-solidtorrents-api": {
+      "root": "packages/solidtorrents-api",
+      "sourceRoot": "packages/solidtorrents-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/solidtorrents-api/tsconfig.lib.json",
+              "packages/solidtorrents-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/solidtorrents-api/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/solidtorrents-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/solidtorrents-api",
+            "tsConfig": "packages/solidtorrents-api/tsconfig.lib.json",
+            "packageJson": "packages/solidtorrents-api/package.json",
+            "main": "packages/solidtorrents-api/src/index.ts",
+            "assets": [
+              "packages/solidtorrents-api/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "package-pop-api": {
+      "root": "packages/pop-api",
+      "sourceRoot": "packages/pop-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/pop-api/tsconfig.lib.json",
+              "packages/pop-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/pop-api/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/pop-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/pop-api",
+            "tsConfig": "packages/pop-api/tsconfig.lib.json",
+            "packageJson": "packages/pop-api/package.json",
+            "main": "packages/pop-api/src/index.ts",
+            "assets": [
+              "packages/pop-api/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "package-zooqle-api": {
+      "root": "packages/zooqle-api",
+      "sourceRoot": "packages/zooqle-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/zooqle-api/tsconfig.lib.json",
+              "packages/zooqle-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/zooqle-api/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/zooqle-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/zooqle-api",
+            "tsConfig": "packages/zooqle-api/tsconfig.lib.json",
+            "packageJson": "packages/zooqle-api/package.json",
+            "main": "packages/zooqle-api/src/index.ts",
+            "assets": [
+              "packages/zooqle-api/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "package-ettv-api": {
+      "root": "packages/ettv-api",
+      "sourceRoot": "packages/ettv-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/ettv-api/tsconfig.lib.json",
+              "packages/ettv-api/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/ettv-api/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/ettv-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/ettv-api",
+            "tsConfig": "packages/ettv-api/tsconfig.lib.json",
+            "packageJson": "packages/ettv-api/package.json",
+            "main": "packages/ettv-api/src/index.ts",
+            "assets": [
+              "packages/ettv-api/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "package-kat-api": {
+      "root": "packages/kat-api",
+      "sourceRoot": "packages/kat-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/kat-ap/tsconfig.lib.json",
+              "packages/kat-ap/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/kat-api/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/kat-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/kat-ap",
+            "tsConfig": "packages/kat-ap/tsconfig.lib.json",
+            "packageJson": "packages/kat-ap/package.json",
+            "main": "packages/kat-ap/src/index.ts",
+            "assets": [
+              "packages/kat-ap/*.md"
+            ]
+          }
+        }
+      }
+    },
+    "package-pop-api-scraper": {
+      "root": "packages/pop-api-scraper",
+      "sourceRoot": "packages/pop-api-scraper/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/pop-api-scraper/tsconfig.lib.json",
+              "packages/pop-api-scraper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!packages/pop-api-scraper/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/pop-api-scraper/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/pop-api-scraper",
+            "tsConfig": "packages/pop-api-scraper/tsconfig.lib.json",
+            "packageJson": "packages/pop-api-scraper/package.json",
+            "main": "packages/pop-api-scraper/src/index.ts",
+            "assets": [
+              "packages/pop-api-scraper/*.md"
+            ]
           }
         }
       }

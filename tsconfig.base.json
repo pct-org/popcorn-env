@@ -10,15 +10,46 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
-      "@pct-org/mongo-models": ["libs/internal/mongo-models/src/index.ts"]
+      "@pct-org/mongo-models": [
+        "libs/mongo-models/src/index.ts"
+      ],
+      "@pct-org/eztv-api-pt": [
+        "packages/eztv-api/src/index.ts"
+      ],
+      "@pct-org/solidtorrents-api-pt": [
+        "packages/solidtorrents-api/src/index.ts"
+      ],
+      "@pct-org/pop-api": [
+        "packages/pop-api/src/index.ts"
+      ],
+      "@pct-org/zooqle-api-ts": [
+        "packages/zooqle-api/src/index.ts"
+      ],
+      "@pct-org/ettv-api": [
+        "packages/ettv-api/src/index.ts"
+      ],
+      "@pct-org/kat-api-pt": [
+        "packages/kat-api-pt/src/index.ts"
+      ],
+      "@pct-org/pop-api-scraper": [
+        "packages/pop-api-scraper/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
