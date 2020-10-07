@@ -283,17 +283,7 @@ export class TorrentService {
 
       // Check if we have a magnet to be sure
       if (!magnet) {
-        // No magnet found, update status to failed
-        await this.updateOne(download, {
-          status: TorrentService.STATUS_FAILED
-        })
-
-        await this.updateOne(item, {
-          download: {
-            downloadStatus: TorrentService.STATUS_FAILED,
-            downloading: false
-          }
-        })
+        await this.updateToStatusFailed(download, item)
 
         // Resolve instead of reject as no try catch is around the method
         return resolve()
@@ -395,12 +385,7 @@ export class TorrentService {
         const error = err instanceof Error ? err.message : err
         this.logger.error(`[${download._id}]: Torrent error`, error)
 
-        await this.updateOne(item, {
-          download: {
-            downloadStatus: TorrentService.STATUS_FAILED,
-            downloading: false
-          }
-        })
+        await this.updateToStatusFailed(download, item)
 
         // Remove from torrents
         this.removeFromTorrents(download)
@@ -414,12 +399,7 @@ export class TorrentService {
 
       torrent.on('noPeers', async (announceType) => {
         this.logger.warn(`[${download._id}]: No peers found, announce type: ${announceType}`)
-        await this.updateOne(item, {
-          download: {
-            downloadStatus: TorrentService.STATUS_FAILED,
-            downloading: false
-          }
-        })
+        await this.updateToStatusFailed(download, item)
 
         // Remove from torrents
         this.removeFromTorrents(download)
@@ -427,7 +407,8 @@ export class TorrentService {
         // Also cleanup this download
         await this.cleanUpDownload(download)
 
-        this.removeFromWebTorrent(magnet)
+        // Remove the torrent
+        torrent.destroy()
 
         // Resolve instead of reject as no try catch is around the method
         resolve()
@@ -485,30 +466,34 @@ export class TorrentService {
       torrent.on('done', async () => {
         this.logger.log(`[${download._id}]: Download complete`)
 
+        // Remove the magnet from the client
+        torrent.destroy()
+
         // Remove from torrents
         this.removeFromTorrents(download)
         // Remove from the queue as the item is downloaded
         this.removeFromDownloads(download)
 
-        await this.updateOne(download, {
-          progress: 100,
-          status: TorrentService.STATUS_COMPLETE,
-          timeRemaining: null,
-          speed: null,
-          numPeers: null
-        }, true)
+        // Wait at-least 0,5 second before updating, this is to prevent
+        // a double save happening
+        setTimeout(async () => {
+          await this.updateOne(download, {
+            progress: 100,
+            status: TorrentService.STATUS_COMPLETE,
+            timeRemaining: null,
+            speed: null,
+            numPeers: null
+          })
 
-        await this.updateOne(item, {
-          download: {
-            downloadStatus: TorrentService.STATUS_COMPLETE,
-            downloading: false,
-            downloadComplete: true,
-            downloadedOn: Number(new Date())
-          }
-        })
-
-        // Remove the magnet from the client
-        this.removeFromWebTorrent(magnet)
+          await this.updateOne(item, {
+            download: {
+              downloadStatus: TorrentService.STATUS_COMPLETE,
+              downloading: false,
+              downloadComplete: true,
+              downloadedOn: Number(new Date())
+            }
+          })
+        }, 500)
 
         // Where done, resolve
         resolve()
@@ -521,9 +506,8 @@ export class TorrentService {
    *
    * @param item
    * @param update
-   * @param retryIfError
    */
-  public async updateOne(item: Model<Download | Movie | Episode>, update, retryIfError = false): Promise<Download | Movie | Episode> {
+  public async updateOne(item: Model<Download | Movie | Episode>, update): Promise<Download | Movie | Episode> {
     // Apply the update
     if (Object.keys(update).length === 1 && update.download) {
       this.logger.debug(`[${item._id}]: Update download info to "${JSON.stringify(update.download)}"`)
@@ -544,10 +528,6 @@ export class TorrentService {
       return await item.save()
 
     } catch (e) {
-      if (retryIfError) {
-        return this.updateOne(item, update)
-      }
-
       this.logger.error(`[${item._id}]: ${e.message || e}`)
 
       return item
@@ -652,6 +632,23 @@ export class TorrentService {
    */
   private removeFromDownloads(download: Download) {
     this.downloads = this.downloads.filter(filterDown => filterDown._id !== download._id)
+  }
+
+  /**
+   * Updates the download and item to status failed
+   */
+  private async updateToStatusFailed(download: Download, item) {
+    // No magnet found, update status to failed
+    await this.updateOne(download, {
+      status: TorrentService.STATUS_FAILED
+    })
+
+    await this.updateOne(item, {
+      download: {
+        downloadStatus: TorrentService.STATUS_FAILED,
+        downloading: false
+      }
+    })
   }
 
 }
