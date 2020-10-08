@@ -146,7 +146,11 @@ export class TorrentService {
         this.logger.log(`[${download._id}]: Stop connecting`)
 
         // Remove the magnet from the client
-        this.removeFromWebTorrent(connectingTorrent.magnet)
+        connectingTorrent.torrent.destroy((err) => {
+          if (err) {
+            this.logger.error(`[${download._id}]: Error destroying connecting torrent`, err.toString())
+          }
+        })
 
         this.removeFromTorrents(download)
 
@@ -164,7 +168,7 @@ export class TorrentService {
       // Destroy the torrent
       downloadingTorrent.torrent.destroy((err) => {
         if (err) {
-          this.logger.error(`[${download._id}]: Error stopping download`, err.toString())
+          this.logger.error(`[${download._id}]: Error destroying downloading torrent`, err.toString())
         }
 
         this.logger.log(`[${download._id}]: Stopped download`)
@@ -287,8 +291,6 @@ export class TorrentService {
 
         // Resolve instead of reject as no try catch is around the method
         return resolve()
-      } else {
-        // TODO:: Check health otherwise search for a better one
       }
 
       // Update item that we are connecting
@@ -307,14 +309,7 @@ export class TorrentService {
         numPeers: null
       })
 
-      // Add to active torrents array
-      this.connectingTorrents.push({
-        _id: download._id,
-        magnet,
-        resolve
-      })
-
-      this.webTorrent.add(
+      const torrent = this.webTorrent.add(
         magnet.url,
         {
           // Add a unique download location for this item
@@ -324,6 +319,13 @@ export class TorrentService {
         },
         this.handleTorrent(resolve, item, download, magnet)
       )
+
+      // Add to active torrents array
+      this.connectingTorrents.push({
+        _id: download._id,
+        torrent,
+        resolve
+      })
     }))
   }
 
@@ -408,7 +410,11 @@ export class TorrentService {
         await this.cleanUpDownload(download)
 
         // Remove the torrent
-        torrent.destroy()
+        torrent.destroy((err) => {
+          if (err) {
+            this.logger.error(`[${download._id}]: Error destroying torrent in on('noPeers')`, err.toString())
+          }
+        })
 
         // Resolve instead of reject as no try catch is around the method
         resolve()
@@ -467,10 +473,15 @@ export class TorrentService {
         this.logger.log(`[${download._id}]: Download complete`)
 
         // Remove the magnet from the client
-        torrent.destroy()
+        torrent.destroy((err) => {
+          if (err) {
+            this.logger.error(`[${download._id}]: Error destroying torrent in on('done')`, err.toString())
+          }
+        })
 
         // Remove from torrents
         this.removeFromTorrents(download)
+
         // Remove from the queue as the item is downloaded
         this.removeFromDownloads(download)
 
@@ -611,20 +622,6 @@ export class TorrentService {
    */
   private getDownloadLocation(download: Download) {
     return `${this.configService.get(ConfigService.DOWNLOAD_LOCATION)}/${download._id}`
-  }
-
-  /**
-   * Removes the provided magnet from web torrent
-   */
-  private removeFromWebTorrent(magnet) {
-    try {
-      // Remove the magnet from the client
-      this.webTorrent.remove(
-        magnet.url
-      )
-    } catch (err) {
-      this.logger.error('Error while trying to remove magnet from web torrent!', err)
-    }
   }
 
   /**

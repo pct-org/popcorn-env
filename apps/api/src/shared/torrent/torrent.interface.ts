@@ -16,9 +16,7 @@ export interface ConnectingTorrentInterface {
 
   _id: string
 
-  magnet?: {
-    url: string
-  }
+  torrent: Torrent
 
   resolve: () => void
 

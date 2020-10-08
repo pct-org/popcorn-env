@@ -25,7 +25,7 @@ export class DownloadsResolver {
     return this.downloadsService.findAll(downloadsArgs)
   }
 
-  @Query(returns => Download, { description: 'Get one download.' })
+  @Query(returns => Download, { description: 'Get one download.', nullable: true })
   download(@Args() downloadArgs: DownloadArgs): Promise<Download> {
     return this.downloadsService.findOne(downloadArgs._id)
   }
@@ -37,7 +37,7 @@ export class DownloadsResolver {
     )
   }
 
-  @Mutation(returns => Download)
+  @Mutation(returns => Download, { description: 'Start downloading a quality.' })
   async startDownload(
     @Args('_id') _id: string,
     @Args('itemType') itemType: string,
@@ -50,7 +50,7 @@ export class DownloadsResolver {
     if (downloadExists) {
       // If the download exists but has status failed then remove everything so we can retry
       if (downloadExists.status === TorrentService.STATUS_FAILED) {
-        await this.torrentService.cleanUpDownload(downloadExists)
+        await this.torrentService.cleanUpDownload(downloadExists, true)
 
       } else {
         return downloadExists
@@ -89,7 +89,7 @@ export class DownloadsResolver {
     return download
   }
 
-  @Mutation(returns => Download)
+  @Mutation(returns => Download, { description: 'Remove an download and its files.', nullable: true })
   async removeDownload(
     @Args('_id') _id: string,
     @Args({ name: 'type', defaultValue: TorrentService.TYPE_DOWNLOAD, type: () => String }) type: string
@@ -130,7 +130,7 @@ export class DownloadsResolver {
     return null
   }
 
-  @Mutation(returns => Download)
+  @Mutation(returns => Download, { description: 'Start a download in stream mode.' })
   async startStream(
     @Args('_id') _id: string,
     @Args('itemType') itemType: string,
@@ -161,7 +161,7 @@ export class DownloadsResolver {
     return download
   }
 
-  @Mutation(returns => Download)
+  @Mutation(returns => Download, { description: 'Stop a stream and remove downloaded content.' })
   async stopStream(
     @Args('_id') _id: string
   ): Promise<Download> {
@@ -173,7 +173,7 @@ export class DownloadsResolver {
    *
    * @param {Download} download - The download to fetch the movie for
    */
-  @ResolveField(type => Movie, { description: 'The movie of this download, only if itemType === "movie"' })
+  @ResolveField(type => Movie, { description: 'The movie of this download, only if itemType === "movie".' })
   movie(@Parent() download): Promise<Movie> {
     if (download.itemType !== 'movie') {
       return null
@@ -185,7 +185,7 @@ export class DownloadsResolver {
   /**
    * Fetch the episode of this download
    */
-  @ResolveField(type => Episode, { description: 'The episode of this download, only if itemType === "episode"' })
+  @ResolveField(type => Episode, { description: 'The episode of this download, only if itemType === "episode".' })
   episode(@Parent() download: Download): Promise<Episode> {
     if (download.itemType !== 'episode') {
       return null
