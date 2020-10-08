@@ -14,8 +14,8 @@ export class StatusResolver {
     return this.statusService.getStatus()
   }
 
-  @Query(returns => StatusScraper, { deprecationReason: 'Use rest endpoint from scraper directly' })
-  scraper(): StatusScraper {
+  @Query(returns => StatusScraper)
+  scraper(): Promise<StatusScraper> {
     return this.statusService.getScraperStatus()
   }
 

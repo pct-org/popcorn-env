@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { HttpService, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { checkSync } from 'diskusage'
@@ -9,7 +9,7 @@ import { Movie, Show, Episode } from '@pct-org/mongo-models'
 import { Status } from './status.object-type'
 import { StatusScraper } from './status-scraper.object-type'
 import { ConfigService } from '../shared/config/config.service'
-import { formatKbToString } from '../shared/utils'
+import { formatKbToString, formatMsToRemaining } from '../shared/utils'
 
 @Injectable()
 export class StatusService {
@@ -21,7 +21,8 @@ export class StatusService {
     private readonly showModel: Model<Show>,
     @InjectModel('Episodes')
     private readonly episodesModel: Model<Episode>,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpService
   ) {}
 
   async getStatus(): Promise<Status> {
@@ -52,16 +53,28 @@ export class StatusService {
     }
   }
 
-  /**
-   * @deprecated will be removed in the next major version
-   */
-  getScraperStatus(): StatusScraper {
-    return {
-      version: 'unknown',
-      status: `unknown`,
-      updated: 'unknown',
-      nextUpdate: 'unknown',
-      uptime: 'unknown'
+  async getScraperStatus(): Promise<StatusScraper> {
+    try {
+      const response = await this.httpService.get(
+        `http://localhost:${this.configService.get(ConfigService.SCRAPER_PORT)}/status`
+      ).toPromise()
+
+      return {
+        version: response.data.version,
+        status: response.data.status,
+        updated: response.data.updated,
+        nextUpdate: response.data.nextUpdate,
+        uptime: formatMsToRemaining(response.data.uptime * 1000)
+      }
+
+    } catch (e) {
+      return {
+        version: 'unknown',
+        status: `offline - ${e.message || e}`,
+        updated: 'unknown',
+        nextUpdate: 'unknown',
+        uptime: 'unknown'
+      }
     }
   }
 
