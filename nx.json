@@ -22,7 +22,7 @@
     }
   },
   "workspaceLayout": {
-    "libsDir": "internal"
+    "libsDir": "libs"
   },
   "projects": {
     "api": {
@@ -37,9 +37,6 @@
     "package-solidtorrents-api": {
       "tags": ["scope:public"]
     },
-    "package-pop-api": {
-      "tags": ["scope:public"]
-    },
     "package-zooqle-api": {
       "tags": ["scope:public"]
     },
@@ -49,8 +46,41 @@
     "package-kat-api": {
       "tags": ["scope:public"]
     },
-    "package-pop-api-scraper": {
-      "tags": ["scope:public"]
+    "scraper": {
+      "tags": []
+    },
+    "scraper-base-provider": {
+      "tags": []
+    },
+    "scraper-show-helper": {
+      "tags": []
+    },
+    "scraper-movie-helper": {
+      "tags": []
+    },
+    "scraper-yts-provider": {
+      "tags": []
+    },
+    "torrent-utils": {
+      "tags": []
+    },
+    "scraper-base-helper": {
+      "tags": []
+    },
+    "services-trakt": {
+      "tags": []
+    },
+    "services-fanart": {
+      "tags": []
+    },
+    "services-omdb": {
+      "tags": []
+    },
+    "services-tmdb": {
+      "tags": []
+    },
+    "services-tvdb": {
+      "tags": []
     }
   }
 }
