@@ -38,3 +38,5 @@ export { Watched } from './shared/watched.object-type'
 export { watchedSchema } from './shared/watched.schema'
 export { Subtitle } from './shared/subtitle.object-type'
 export { subtitleSchema } from './shared/subtitle.schema'
+
+export { ModelsModule } from './models.module'

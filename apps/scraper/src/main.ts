@@ -2,14 +2,14 @@ import { NestFactory } from '@nestjs/core'
 import { Logger } from '@nestjs/common'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
-import { AppModule } from './app.module'
+import { ScraperModule } from './scraper.module'
 import { ConfigService } from './shared/config/config.service'
 
 declare const module: any
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
+    ScraperModule,
     new FastifyAdapter(),
     {
       logger: ConfigService.logLevel
