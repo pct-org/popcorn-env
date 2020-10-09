@@ -5,7 +5,7 @@ const got = require('got')
 const bytes = require('bytes')
 const { stringify } = require('querystring')
 
-const { name } = require('./package.json')
+const { name } = require('../package.json')
 
 /**
  * Show object which will be returned.
