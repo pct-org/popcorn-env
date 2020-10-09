@@ -1,4 +1,5 @@
 {
-  "name": "@pct-org/solidtorrents-api-pt",
-  "version": "0.0.1"
+  "name": "@pct-org/solidtorrents-api",
+  "version": "0.0.1",
+  "main": "src/index.js"
 }
