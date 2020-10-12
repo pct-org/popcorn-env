@@ -18,7 +18,7 @@ export class SubtitlesService {
 
   private readonly enabled: boolean = true
 
-  private readonly supportedLanguages
+  private readonly supportedLanguages: string[]
 
   constructor(
     private readonly httpService: HttpService,
@@ -36,6 +36,7 @@ export class SubtitlesService {
         password
       })
 
+      this.logger.log(`Subtitles service enabled for [${this.supportedLanguages.join(', ')}]`)
     } else {
       this.enabled = false
     }
