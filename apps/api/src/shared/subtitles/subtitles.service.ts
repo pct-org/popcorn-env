@@ -18,13 +18,7 @@ export class SubtitlesService {
 
   private readonly enabled: boolean = true
 
-  /**
-   * TODO:: Get from ENV
-   */
-  private readonly supportedLanguages = [
-    'en',
-    'nl'
-  ]
+  private readonly supportedLanguages
 
   constructor(
     private readonly httpService: HttpService,
@@ -32,6 +26,7 @@ export class SubtitlesService {
   ) {
     const username = this.configService.get(ConfigService.OPENSUBTITLES_USERNAME)
     const password = this.configService.get(ConfigService.OPENSUBTITLES_PASSWORD)
+    this.supportedLanguages = this.configService.get(ConfigService.SUBTITLES_LANGUAGES)
 
     if (username && password) {
       this.client = new OpenSubtitles({
@@ -52,7 +47,7 @@ export class SubtitlesService {
    * @param {TorrentFile} torrent - The torrent to search subtitles for.
    * @param {boolean} retry - Are we allowed to retry or not.
    */
-  public async searchForSubtitles(download: Model<Download>, torrent: TorrentFile, retry = true) {
+  public async searchForSubtitles(download: Model<Download>, torrent: TorrentFile, retry = true): Promise<void> {
     // Only search for subtitles when it's enabled
     if (!this.enabled) {
       return
