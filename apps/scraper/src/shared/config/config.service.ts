@@ -16,6 +16,10 @@ export class ConfigService {
   public static readonly MONGO_DATABASE: string = 'MONGO_DATABASE'
   public static readonly CRON_TIME: string = 'CRON_TIME'
   public static readonly TRAKT_KEY: string = 'TRAKT_KEY'
+  public static readonly TMDB_KEY: string = 'TMDB_KEY'
+  public static readonly TVDB_KEY: string = 'TVDB_KEY'
+  public static readonly OMDB_KEY: string = 'OMDB_KEY'
+  public static readonly FANART_KEY: string = 'FANART_KEY'
 
   private readonly envConfig: { [key: string]: string }
 
@@ -92,6 +96,18 @@ export class ConfigService {
         .required(),
 
       [ConfigService.TRAKT_KEY]: Joi.string()
+        .required(),
+
+      [ConfigService.TMDB_KEY]: Joi.string()
+        .required(),
+
+      [ConfigService.TVDB_KEY]: Joi.string()
+        .required(),
+
+      [ConfigService.OMDB_KEY]: Joi.string()
+        .required(),
+
+      [ConfigService.FANART_KEY]: Joi.string()
         .required(),
     })
 
