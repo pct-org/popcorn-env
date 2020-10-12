@@ -27,6 +27,7 @@ export class SubtitlesService {
     const username = this.configService.get(ConfigService.OPENSUBTITLES_USERNAME)
     const password = this.configService.get(ConfigService.OPENSUBTITLES_PASSWORD)
     this.supportedLanguages = this.configService.get(ConfigService.SUBTITLES_LANGUAGES)
+      .split(',')
 
     if (username && password) {
       this.client = new OpenSubtitles({
