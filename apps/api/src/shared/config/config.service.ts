@@ -18,6 +18,7 @@ export class ConfigService {
   public static readonly DOWNLOAD_LOCATION: string = 'DOWNLOAD_LOCATION'
   public static readonly OPENSUBTITLES_USERNAME: string = 'OPENSUBTITLES_USERNAME'
   public static readonly OPENSUBTITLES_PASSWORD: string = 'OPENSUBTITLES_PASSWORD'
+  public static readonly MAX_CONCURRENT_DOWNLOADS: string = 'MAX_CONCURRENT_DOWNLOADS'
   public static readonly TRAKT_KEY: string = 'TRAKT_KEY'
 
   private readonly envConfig: { [key: string]: string }
@@ -103,6 +104,8 @@ export class ConfigService {
       [ConfigService.OPENSUBTITLES_USERNAME]: Joi.string(),
 
       [ConfigService.OPENSUBTITLES_PASSWORD]: Joi.string()
+      [ConfigService.MAX_CONCURRENT_DOWNLOADS]: Joi.number()
+        .default(1),
     })
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig, { stripUnknown: true })

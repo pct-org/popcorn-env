@@ -30,7 +30,7 @@ export class TorrentService {
   /**
    * Maximum of concurrent downloads in the background
    */
-  private maxConcurrent = 1
+  private readonly maxConcurrent
 
   /**
    * Array of downloads that will be downloaded in the background
@@ -89,7 +89,7 @@ export class TorrentService {
     private readonly configService: ConfigService,
     private readonly subtitlesService: SubtitlesService
   ) {
-    this.setupWebTorrent()
+    this.maxConcurrent = this.configService.get(ConfigService.MAX_CONCURRENT_DOWNLOADS)
 
     // Check for incomplete downloads and add them to the downloads
     this.checkForIncompleteDownloads()
