@@ -101,6 +101,13 @@ export class TorrentService {
    * @param wasCrash
    */
   private setupWebTorrent(wasCrash = false) {
+    // If there is already a instance we don't need to do anything
+    if (this.webTorrent !== null) {
+      return
+    }
+
+    this.logger.log('Creating new WebTorrent client')
+
     this.webTorrent = new WebTorrent({
       maxConns: 55 // Is the default
     })
@@ -120,11 +127,30 @@ export class TorrentService {
   }
 
   /**
+   * Cleanup / destroy WebTorrent when there are not downloads / torrents left
+   */
+  private cleanupWebTorrent(): void {
+    // Check if we have a client, downloads and torrents if not then destroy the client
+    if (this.webTorrent && this.connectingTorrents.length === 0 && this.torrents.length === 0 && this.downloads.length === 0) {
+      this.webTorrent?.destroy((err) => {
+        if (err) {
+          this.logger.error('Error cleaning up WebTorrent', err.toString())
+
+        } else {
+          this.logger.log('No torrents left, WebTorrent client destroyed')
+        }
+      })
+
+      this.webTorrent = null
+    }
+  }
+
+  /**
    * Starts the streaming process of one item
    *
    * @param download
    */
-  public startStreaming(download: Model<Download>) {
+  public startStreaming(download: Model<Download>): void {
     this.logger.log(`[${download._id}]: Start streaming`)
 
     this.download(download)
@@ -204,6 +230,12 @@ export class TorrentService {
    */
   public async startDownloads(): Promise<void> {
     if (this.backgroundDownloading || this.downloads.length === 0) {
+      // If start downloads is called and we have no downlaods then also cleanup
+      // WebTorrent client to be sure
+      if (this.downloads.length === 0) {
+        this.cleanupWebTorrent()
+      }
+
       return
     }
 
@@ -222,6 +254,8 @@ export class TorrentService {
 
     // We are no longer downloading to disable
     this.backgroundDownloading = false
+    // Cleanup WebTorrent if needed
+    this.cleanupWebTorrent()
   }
 
   /**
@@ -250,7 +284,10 @@ export class TorrentService {
    *
    * @param {Download} download - Item to download
    */
-  private async download(download: Download) {
+  private async download(download: Download): Promise<void> {
+    // Make sure WebTorrent is setup
+    this.setupWebTorrent()
+
     return new Promise((async (resolve) => {
       this.logger.log(`[${download._id}]: Start download`)
 
@@ -317,7 +354,7 @@ export class TorrentService {
           maxWebConns: 5,
           announce: this.trackers
         },
-        this.handleTorrent(resolve, item, download, magnet)
+        this.handleTorrent(resolve, item, download)
       )
 
       // Add to active torrents array
@@ -331,13 +368,8 @@ export class TorrentService {
 
   /**
    * Handles the torrent and resolves when the torrent is done
-   *
-   * @param resolve
-   * @param item
-   * @param download
-   * @param magnet
    */
-  private handleTorrent(resolve, item, download, magnet) {
+  private handleTorrent(resolve, item, download) {
     return (torrent: Torrent) => {
       // Let's make sure all the not needed files are deselected
       const { file } = torrent.files.reduce((previous, current, index) => {
@@ -434,7 +466,7 @@ export class TorrentService {
         const now = Date.now()
         // Only update every 1 second
         if (lastUpdate === null || (lastUpdate + 1000) < now) {
-          this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(1)}% at ${formatKbToString(torrent.downloadSpeed)}`)
+          this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(2)}% at ${formatKbToString(torrent.downloadSpeed)} (${torrent.timeRemaining})`)
 
           lastUpdate = now
 
@@ -484,6 +516,9 @@ export class TorrentService {
 
         // Remove from the queue as the item is downloaded
         this.removeFromDownloads(download)
+
+        // Cleanup WebTorrent if there is nothing left anymore
+        this.cleanupWebTorrent()
 
         // Wait at-least 0,5 second before updating, this is to prevent
         // a double save happening
