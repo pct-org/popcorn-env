@@ -8,7 +8,7 @@ import { Episode, Movie, Download } from '@pct-org/mongo-models'
 import * as rimraf from 'rimraf'
 
 import { ConfigService } from '../config/config.service'
-import { formatKbToString } from '../utils'
+import { formatKbToString, formatMsToRemaining } from '../utils'
 import { TorrentInterface, ConnectingTorrentInterface } from './torrent.interface'
 import { SubtitlesService } from '../subtitles/subtitles.service'
 
@@ -466,7 +466,7 @@ export class TorrentService {
         const now = Date.now()
         // Only update every 1 second
         if (lastUpdate === null || (lastUpdate + 1000) < now) {
-          this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(2)}% at ${formatKbToString(torrent.downloadSpeed)} (${torrent.timeRemaining})`)
+          this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(2)}% at ${formatKbToString(torrent.downloadSpeed)} (${formatMsToRemaining(torrent.timeRemaining)})`)
 
           lastUpdate = now
 
