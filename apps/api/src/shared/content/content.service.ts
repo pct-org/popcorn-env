@@ -14,14 +14,7 @@ export abstract class ContentService {
   protected getQuery(contentArgs: ContentsArgs): object {
     let query = {}
 
-    if (contentArgs.noBookmarks) {
-      query = {
-        bookmarked: false
-      }
-    }
-
     if (contentArgs.query && contentArgs.query.trim().length > 0) {
-      // TODO:: Maybe implement Text index for improved search?
       query = {
         ...query,
         title: {
@@ -43,6 +36,7 @@ export abstract class ContentService {
         return {
           title: order
         }
+
       case 'rating':
         return {
           'rating.votes': order,
@@ -58,6 +52,11 @@ export abstract class ContentService {
       case 'trending':
         return {
           'rating.watching': order
+        }
+
+      case 'added':
+        return {
+          createdAt: order
         }
 
       case 'year':
