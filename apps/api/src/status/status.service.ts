@@ -1,10 +1,9 @@
 import { HttpService, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 import { checkSync } from 'diskusage'
 import * as getFolderSize from 'get-folder-size'
 
-import { Movie, Show, Episode } from '@pct-org/mongo-models'
+import { MovieModel, ShowModel, EpisodeModel } from '@pct-org/mongo-models'
 
 import { Status } from './status.object-type'
 import { StatusScraper } from './status-scraper.object-type'
@@ -14,13 +13,16 @@ import { formatKbToString, formatMsToRemaining } from '../shared/utils'
 @Injectable()
 export class StatusService {
 
+  @InjectModel('Movies')
+  private readonly movieModel: MovieModel
+
+  @InjectModel('Shows')
+  private readonly showModel: ShowModel
+
+  @InjectModel('Episodes')
+  private readonly episodesModel: EpisodeModel
+
   constructor(
-    @InjectModel('Movies')
-    private readonly movieModel: Model<Movie>,
-    @InjectModel('Shows')
-    private readonly showModel: Model<Show>,
-    @InjectModel('Episodes')
-    private readonly episodesModel: Model<Episode>,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService
   ) {}

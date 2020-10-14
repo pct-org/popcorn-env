@@ -17,6 +17,6 @@ export class BookmarksArgs {
   query: string = null
 
   @Field()
-  filter: string = 'none'
+  filter?: string = 'none'
 
 }

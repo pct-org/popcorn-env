@@ -1,6 +1,6 @@
 import { HttpService, Injectable, Logger } from '@nestjs/common'
-import { Model } from 'mongoose'
-import { Download } from '@pct-org/mongo-models'
+import { InjectModel } from '@nestjs/mongoose'
+import { Download, DownloadModel } from '@pct-org/mongo-models'
 import { TorrentFile } from 'webtorrent'
 import * as OpenSubtitles from 'opensubtitles-api'
 import { createWriteStream } from 'fs'
@@ -19,6 +19,9 @@ export class SubtitlesService {
   private readonly enabled: boolean = true
 
   private readonly supportedLanguages: string[]
+
+  @InjectModel('Downloads')
+  private readonly downloadModel: DownloadModel
 
   constructor(
     private readonly httpService: HttpService,
@@ -49,7 +52,7 @@ export class SubtitlesService {
    * @param {TorrentFile} torrent - The torrent to search subtitles for.
    * @param {boolean} retry - Are we allowed to retry or not.
    */
-  public async searchForSubtitles(download: Model<Download>, torrent: TorrentFile, retry = true): Promise<void> {
+  public async searchForSubtitles(download: Download, torrent: TorrentFile, retry = true): Promise<void> {
     // Only search for subtitles when it's enabled
     if (!this.enabled) {
       return
@@ -115,14 +118,16 @@ export class SubtitlesService {
         )
 
         // Add the subtitles to the download
-        download.subtitles = formattedSubs
-
-        // Update the download
-        download.save()
+        this.downloadModel.findByIdAndUpdate(
+          download._id,
+          {
+            subtitles: formattedSubs
+          }
+        )
       }
     } catch (e) {
       if (e.message.includes('no such file or directory') && retry) {
-        this.searchForSubtitles(download, torrent, false)
+        return this.searchForSubtitles(download, torrent, false)
 
       } else {
         this.logger.error(`[${download._id}]: Could not search for subtitles`, e)
@@ -137,13 +142,16 @@ export class SubtitlesService {
    * @param {SubtitleInterface} subtitle - The subtitle to download.
    * @param {string} downloadLocation - Base location where to download to
    */
-  private async downloadSubtitle(download: Model<Download>, subtitle: SubtitleInterface, downloadLocation: string) {
+  private async downloadSubtitle(download: Download, subtitle: SubtitleInterface, downloadLocation: string) {
     const subLocation = `${subtitle.langcode}.srt`
     const writer = createWriteStream(`${downloadLocation}/${subLocation}`)
 
-    const response = await this.httpService.get(subtitle.url, {
-      responseType: 'stream'
-    }).toPromise()
+    const response = await this.httpService.get(
+      subtitle.url,
+      {
+        responseType: 'stream'
+      }
+    ).toPromise()
 
     response.data.pipe(writer)
 

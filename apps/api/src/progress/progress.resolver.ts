@@ -27,7 +27,7 @@ export class ProgressResolver {
     private readonly episodesService: EpisodesService
   ) {}
 
-  @Mutation(returns => progressUnion)
+  @Mutation(returns => progressUnion, { description: 'Update the viewing progress of movie or episode.' })
   async progress(
     @Args('_id') _id: string,
     @Args('type') type: string,

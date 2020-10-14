@@ -10,7 +10,7 @@ export class SeasonsResolver {
     private readonly episodesService: EpisodesService
   ) {}
 
-  @ResolveField(type => [Episode])
+  @ResolveField(type => [Episode], { description: 'Get all episodes for an season.' })
   episodes(@Parent() season: Season): Promise<Episode[]> {
     // If we already have episodes then just get the full ones based on id
     if (season.episodes) {

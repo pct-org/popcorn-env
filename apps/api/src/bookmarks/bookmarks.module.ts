@@ -4,7 +4,10 @@ import { BookmarksResolver } from './bookmarks.resolver'
 import { BookmarksService } from './bookmarks.service'
 
 @Module({
-  providers: [BookmarksResolver, BookmarksService]
+  providers: [
+    BookmarksResolver,
+    BookmarksService
+  ]
 })
 export class BookmarksModule {
 }

@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 
-import { Movie, Show, Content } from '@pct-org/mongo-models'
+import { MovieModel, ShowModel, Content } from '@pct-org/mongo-models'
 
 import { BookmarksArgs } from './dto/bookmarks.args'
 import { NewBookmarkInput } from './dto/new-bookmark.input'
@@ -10,12 +9,13 @@ import { NewBookmarkInput } from './dto/new-bookmark.input'
 @Injectable()
 export class BookmarksService {
 
-  constructor(
-    @InjectModel('Movies') private readonly movieModel: Model<Movie>,
-    @InjectModel('Shows') private readonly showModel: Model<Show>
-  ) {}
+  @InjectModel('Movies')
+  private readonly movieModel: MovieModel
 
-  async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
+  @InjectModel('Shows')
+  private readonly showModel: ShowModel
+
+  public async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     const movies = ['none', 'movies'].includes(bookmarksArgs.filter)
       ? await this.findAllMovies(bookmarksArgs)
       : []
@@ -41,7 +41,7 @@ export class BookmarksService {
       })
   }
 
-  async findAllMovies(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
+  public async findAllMovies(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     return this.movieModel.find(
       this.getQuery(bookmarksArgs),
       {},
@@ -51,7 +51,7 @@ export class BookmarksService {
     )
   }
 
-  async findAllShows(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
+  public async findAllShows(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     return this.showModel.find(
       this.getQuery(bookmarksArgs),
       {},
@@ -66,8 +66,8 @@ export class BookmarksService {
    * @param addBookmarksArgs
    * @param {boolean} add - Do we need to add or remove the bookmark
    */
-  async updateBookmark(addBookmarksArgs: NewBookmarkInput, add): Promise<Content> {
-    return await (
+  public async updateBookmark(addBookmarksArgs: NewBookmarkInput, add: boolean): Promise<Content> {
+    return (
       addBookmarksArgs.type === 'movie'
         ? this.movieModel
         : this.showModel
@@ -82,7 +82,7 @@ export class BookmarksService {
       },
       {
         new: true, // Return the new updated object
-        lean: true,
+        lean: true
       }
     )
   }

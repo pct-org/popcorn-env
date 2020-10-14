@@ -67,16 +67,11 @@ export class DownloadsResolver {
 
     const item = await this.torrentService.getItemForDownload(download)
 
-    await this.torrentService.updateOne(
-      item,
-      {
-        download: {
-          downloadStatus: TorrentService.STATUS_QUEUED,
-          downloadQuality: quality,
-          downloading: true
-        }
-      }
-    )
+    await this.torrentService.updateItemDownload(item, {
+      downloadStatus: TorrentService.STATUS_QUEUED,
+      downloadQuality: quality,
+      downloading: true
+    })
 
     // Add the download to the queue
     this.torrentService.addDownload(download)
@@ -107,18 +102,13 @@ export class DownloadsResolver {
 
         const item = await this.torrentService.getItemForDownload(download)
 
-        await this.torrentService.updateOne(
-          item,
-          {
-            download: {
-              downloadedOn: null,
-              downloadStatus: null,
-              downloadQuality: null,
-              downloading: false,
-              downloadComplete: false
-            }
-          }
-        )
+        await this.torrentService.updateItemDownload(item, {
+          downloadedOn: null,
+          downloadStatus: null,
+          downloadQuality: null,
+          downloading: false,
+          downloadComplete: false
+        })
 
         download.status = TorrentService.STATUS_REMOVED
         download.progress = 0

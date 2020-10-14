@@ -14,19 +14,19 @@ export class EpisodesResolver {
     private readonly showsService: ShowsService
   ) {}
 
-  @Query(returns => [Episode])
+  @Query(returns => [Episode], { description: 'Get episodes from bookmarks that have aired in the past 7 days.' })
   myEpisodes(): Promise<Episode[]> {
     return this.episodesService.findMyEpisodes(this.bookmarksService)
   }
 
-  @Query(returns => Episode)
+  @Query(returns => Episode, { description: 'Get one episode.' })
   episode(
-    @Args('_id') _id: string,
+    @Args('_id') _id: string
   ): Promise<Episode> {
     return this.episodesService.findOne(_id)
   }
 
-  @ResolveField(type => Show)
+  @ResolveField(type => Show, { description: 'Get the show of the episode.' })
   show(@Parent() episode: Episode): Promise<Show> {
     return this.showsService.findOne(episode.showImdbId)
   }

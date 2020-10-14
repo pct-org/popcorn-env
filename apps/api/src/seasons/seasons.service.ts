@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 
-import { Season } from '@pct-org/mongo-models'
+import { Season, SeasonModel } from '@pct-org/mongo-models'
 
 @Injectable()
 export class SeasonsService {
 
-  constructor(
-    @InjectModel('Seasons') private readonly seasonModel: Model<Season>
-  ) {}
+  @InjectModel('Seasons')
+  private readonly seasonModel: SeasonModel
 
-  findAllForShow(id: string, lean = true): Promise<Season[]> {
+  public async findAllForShow(id: string, lean = true): Promise<Season[]> {
     return this.seasonModel.find(
       {
         showImdbId: id,
@@ -31,7 +29,7 @@ export class SeasonsService {
     )
   }
 
-  findOne(id: string, lean = true): Promise<Season[]> {
+  public async findOne(id: string, lean = true): Promise<Season[]> {
     return this.seasonModel.findById(
       id,
       {},

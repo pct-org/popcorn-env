@@ -15,17 +15,17 @@ export class MoviesResolver {
     private readonly traktService: TraktService
   ) {}
 
-  @Query(returns => Movie)
+  @Query(returns => Movie, { description: 'Get one movie.' })
   movie(@Args() movieArgs: MovieArgs): Promise<Movie> {
     return this.moviesService.findOne(movieArgs._id)
   }
 
-  @Query(returns => [Movie])
+  @Query(returns => [Movie], { description: 'Get all movies.' })
   movies(@Args() moviesArgs: MoviesArgs): Promise<Movie[]> {
     return this.moviesService.findAll(moviesArgs)
   }
 
-  @Query(returns => [Movie])
+  @Query(returns => [Movie], { description: 'Get related movies for an movie.' })
   relatedMovies(
     @Args({ name: '_id', description: 'Id of the movie to find related movies for.' }) _id: string
   ): Promise<Movie[]> {

@@ -4,7 +4,10 @@ import { MoviesResolver } from './movies.resolver'
 import { MoviesService } from './movies.service'
 
 @Module({
-  providers: [MoviesResolver, MoviesService]
+  providers: [
+    MoviesResolver,
+    MoviesService
+  ]
 })
 export class MoviesModule {
 }

@@ -1,16 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { Episode } from '@pct-org/mongo-models'
+import { Episode, EpisodeModel } from '@pct-org/mongo-models'
 
 import { BookmarksService } from '../bookmarks/bookmarks.service'
 
 @Injectable()
 export class EpisodesService {
 
-  constructor(
-    @InjectModel('Episodes') private readonly episodeModel: Model<Episode>
-  ) {}
+  @InjectModel('Episodes')
+  private readonly episodeModel: EpisodeModel
 
   /**
    * Returns all the episodes for the user that he did not watch
@@ -45,7 +43,7 @@ export class EpisodesService {
     )
   }
 
-  findOne(id: string, lean = true): Promise<Episode> {
+  public async findOne(id: string, lean = true): Promise<Episode> {
     return this.episodeModel.findById(
       id,
       {},
@@ -55,7 +53,7 @@ export class EpisodesService {
     )
   }
 
-  findAllForSeason(imdbId: string, seasonNumber: number, lean = true): Promise<Episode[]> {
+  public async findAllForSeason(imdbId: string, seasonNumber: number, lean = true): Promise<Episode[]> {
     return this.episodeModel.find(
       {
         showImdbId: imdbId,
@@ -76,7 +74,7 @@ export class EpisodesService {
     )
   }
 
-  findAllWithIDS(ids: string[], lean = true): Promise<Episode[]> {
+  public async findAllWithIDS(ids: string[], lean = true): Promise<Episode[]> {
     return this.episodeModel.find(
       {
         _id: {
@@ -95,7 +93,7 @@ export class EpisodesService {
     )
   }
 
-  findForCalendar(showImdbId, lean = true): Promise<Episode[]> {
+  public async findForCalendar(showImdbId: string, lean = true): Promise<Episode[]> {
     const fourteenDaysAgo = new Date(new Date().getTime() - (14 * 24 * 60 * 60 * 1000)).getTime()
 
     return this.episodeModel.find(
@@ -115,14 +113,13 @@ export class EpisodesService {
     )
   }
 
-  updateOne(episode: Episode): Promise<Episode> {
-    return this.episodeModel.findOneAndUpdate({
-        _id: episode._id
-      },
+  public async updateOne(episode: Partial<Episode>): Promise<Episode> {
+    return this.episodeModel.findByIdAndUpdate(
+      episode._id,
       episode,
       {
-        new: true,
-      },
+        new: true
+      }
     )
   }
 

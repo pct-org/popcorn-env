@@ -10,7 +10,10 @@ import { StatusController } from './status.controller'
       timeout: 1000
     })
   ],
-  providers: [StatusResolver, StatusService],
+  providers: [
+    StatusResolver,
+    StatusService
+  ],
   controllers: [StatusController],
 })
 export class StatusModule {

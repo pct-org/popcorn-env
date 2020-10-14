@@ -9,12 +9,12 @@ export class StatusResolver {
 
   constructor(private readonly statusService: StatusService) {}
 
-  @Query(returns => Status)
+  @Query(returns => Status, { description: 'Get the status of the api.' })
   status(): Promise<Status> {
     return this.statusService.getStatus()
   }
 
-  @Query(returns => StatusScraper)
+  @Query(returns => StatusScraper, {description: 'Get the status of the scraper.'})
   scraper(): Promise<StatusScraper> {
     return this.statusService.getScraperStatus()
   }

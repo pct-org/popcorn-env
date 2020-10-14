@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { Movie } from '@pct-org/mongo-models'
+import { Movie, MovieModel } from '@pct-org/mongo-models'
 
 import { MoviesArgs } from './dto/movies.args'
 import { ContentService } from '../shared/content/content.service'
@@ -9,13 +8,10 @@ import { ContentService } from '../shared/content/content.service'
 @Injectable()
 export class MoviesService extends ContentService {
 
-  constructor(
-    @InjectModel('Movies') private readonly movieModel: Model<Movie>
-  ) {
-    super()
-  }
+  @InjectModel('Movies')
+  private readonly movieModel: MovieModel
 
-  findOne(id: string, lean = true): Promise<Movie> {
+  public async findOne(id: string, lean = true): Promise<Movie> {
     return this.movieModel.findById(
       id,
       {},
@@ -25,7 +21,7 @@ export class MoviesService extends ContentService {
     )
   }
 
-  findAll(moviesArgs: MoviesArgs, lean = true): Promise<Movie[]> {
+  public async findAll(moviesArgs: MoviesArgs, lean = true): Promise<Movie[]> {
     return this.movieModel.find(
       this.getQuery(moviesArgs),
       {},
@@ -33,7 +29,7 @@ export class MoviesService extends ContentService {
     )
   }
 
-  findAllWithIDS(ids: string[], lean = true): Promise<Movie[]> {
+  public async findAllWithIDS(ids: string[], lean = true): Promise<Movie[]> {
     return this.movieModel.find(
       {
         _id: {
@@ -47,10 +43,9 @@ export class MoviesService extends ContentService {
     )
   }
 
-  updateOne(movie: Movie): Promise<Movie> {
-    return this.movieModel.findOneAndUpdate({
-        _id: movie._id
-      },
+  public async updateOne(movie: Partial<Movie>): Promise<Movie> {
+    return this.movieModel.findByIdAndUpdate(
+      movie._id,
       movie,
       {
         new: true

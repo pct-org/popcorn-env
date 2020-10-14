@@ -14,12 +14,12 @@ export class BookmarksResolver {
     private readonly pubSubService: PubSubService
   ) {}
 
-  @Query(returns => [BookmarksUnion])
+  @Query(returns => [BookmarksUnion], { description: 'Get all the users bookmarks.' })
   bookmarks(@Args() bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     return this.bookmarksService.findAll(bookmarksArgs)
   }
 
-  @Mutation(returns => BookmarksUnion)
+  @Mutation(returns => BookmarksUnion, { description: 'Add item to bookmarks.' })
   async addBookmark(
     @Args('_id') _id: string,
     @Args('type') type: string
@@ -36,7 +36,7 @@ export class BookmarksResolver {
     return updateBookmark
   }
 
-  @Mutation(returns => BookmarksUnion)
+  @Mutation(returns => BookmarksUnion, { description: 'Remove item from bookmarks.' })
   async removeBookmark(
     @Args('_id') _id: string,
     @Args('type') type: string
@@ -53,7 +53,7 @@ export class BookmarksResolver {
     return updateBookmark
   }
 
-  @Subscription(returns => BookmarksUnion)
+  @Subscription(returns => BookmarksUnion, { description: 'Subscribe to items being added / removed from bookmarks.' })
   bookmarked() {
     return this.pubSubService.asyncIterator('bookmarked')
   }
