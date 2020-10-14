@@ -54,7 +54,7 @@ export class ScraperModule implements OnApplicationBootstrap {
   ) {
   }
 
-  onApplicationBootstrap(): void {
+  protected onApplicationBootstrap(): void {
     const job = new CronJob(this.configService.get('CRON_TIME'), this.scrapeConfigs)
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
