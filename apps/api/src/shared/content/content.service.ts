@@ -64,6 +64,7 @@ export abstract class ContentService {
           year: order
         }
 
+      case 'popularity':
       default:
         return {
           'rating.votes': order,

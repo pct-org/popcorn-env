@@ -16,8 +16,13 @@ export class BookmarksService {
   ) {}
 
   async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
-    const movies = await this.findAllMovies(bookmarksArgs)
-    const shows = await this.findAllShows(bookmarksArgs)
+    const movies = ['none', 'movies'].includes(bookmarksArgs.filter)
+      ? await this.findAllMovies(bookmarksArgs)
+      : []
+
+    const shows = ['none', 'shows'].includes(bookmarksArgs.filter)
+      ? await this.findAllShows(bookmarksArgs)
+      : []
 
     // Return all bookmarks at once
     return [
@@ -76,7 +81,8 @@ export class BookmarksService {
           : null
       },
       {
-        new: true // Return the new updated object
+        new: true, // Return the new updated object
+        lean: true,
       }
     )
   }
