@@ -7,6 +7,9 @@ import { MoviesService } from './movies.service'
   providers: [
     MoviesResolver,
     MoviesService
+  ],
+  exports: [
+    MoviesService
   ]
 })
 export class MoviesModule {

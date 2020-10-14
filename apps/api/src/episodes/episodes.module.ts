@@ -11,6 +11,9 @@ import { ShowsService } from '../shows/shows.service'
     EpisodesService,
     BookmarksService,
     ShowsService
+  ],
+  exports: [
+    EpisodesService
   ]
 })
 export class EpisodesModule {

@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql'
-import { Movie, Episode, Download } from '@pct-org/mongo-models'
+import { Movie, Episode } from '@pct-org/mongo-models'
 
 import { EpisodesService } from '../episodes/episodes.service'
 import { MoviesService } from '../movies/movies.service'

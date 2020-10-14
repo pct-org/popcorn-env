@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import * as pMap from 'p-map'
 import * as WebTorrent from 'webtorrent-hybrid'
@@ -14,7 +14,7 @@ import { MoviesService } from '../../movies/movies.service'
 import { EpisodesService } from '../../episodes/episodes.service'
 
 @Injectable()
-export class TorrentService {
+export class TorrentService implements OnApplicationBootstrap {
 
   public static STATUS_QUEUED = 'queued'
   public static STATUS_DOWNLOADING = 'downloading'
@@ -32,6 +32,31 @@ export class TorrentService {
    * Maximum of concurrent downloads in the background
    */
   private readonly maxConcurrent
+
+  /**
+   * All the different supported formats
+   */
+  public readonly supportedFormats: string[] = ['mp4', 'ogg', 'mov', 'webmv', 'mkv', 'wmv', 'avi']
+
+  private readonly trackers: string[] = [
+    'udp://glotorrents.pw:6969',
+    'udp://tracker.opentrackr.org:1337',
+    'udp://torrent.gresille.org:80',
+    'udp://tracker.openbittorrent.com:1337',
+    'udp://tracker.coppersurfer.tk:6969',
+    'udp://tracker.leechers-paradise.org:6969',
+    'udp://p4p.arenabg.ch:1337',
+    'udp://p4p.arenabg.com:1337',
+    'udp://tracker.internetwarriors.net:1337',
+    'udp://9.rarbg.to:2710',
+    'udp://9.rarbg.me:2710',
+    'udp://exodus.desync.com:6969',
+    'udp://tracker.cyberia.is:6969',
+    'udp://tracker.torrent.eu.org:451',
+    'udp://tracker.open-internet.nl:6969',
+    'wss://tracker.openwebtorrent.com',
+    'wss://tracker.btorrent.xyz'
+  ]
 
   /**
    * Array of downloads that will be downloaded in the background
@@ -58,31 +83,6 @@ export class TorrentService {
    */
   private webTorrent: WebTorrentInstance = null
 
-  /**
-   * All the different supported formats
-   */
-  public supportedFormats: string[] = ['mp4', 'ogg', 'mov', 'webmv', 'mkv', 'wmv', 'avi']
-
-  private trackers: string[] = [
-    'udp://glotorrents.pw:6969',
-    'udp://tracker.opentrackr.org:1337',
-    'udp://torrent.gresille.org:80',
-    'udp://tracker.openbittorrent.com:1337',
-    'udp://tracker.coppersurfer.tk:6969',
-    'udp://tracker.leechers-paradise.org:6969',
-    'udp://p4p.arenabg.ch:1337',
-    'udp://p4p.arenabg.com:1337',
-    'udp://tracker.internetwarriors.net:1337',
-    'udp://9.rarbg.to:2710',
-    'udp://9.rarbg.me:2710',
-    'udp://exodus.desync.com:6969',
-    'udp://tracker.cyberia.is:6969',
-    'udp://tracker.torrent.eu.org:451',
-    'udp://tracker.open-internet.nl:6969',
-    'wss://tracker.openwebtorrent.com',
-    'wss://tracker.btorrent.xyz'
-  ]
-
   @InjectModel('Downloads')
   private readonly downloadModel: DownloadModel
 
@@ -93,7 +93,9 @@ export class TorrentService {
     private readonly episodesService: EpisodesService
   ) {
     this.maxConcurrent = this.configService.get(ConfigService.MAX_CONCURRENT_DOWNLOADS)
+  }
 
+  protected onApplicationBootstrap(): void {
     // Check for incomplete downloads and add them to the downloads
     this.checkForIncompleteDownloads()
   }
