@@ -42,7 +42,7 @@ export abstract class BaseHelper {
 
   public abstract addItemToDatabase(item: Movie | Show): Promise<void>
 
-  public abstract updateItemInDatabase(item: Movie | Show): Promise<void>
+  public abstract updateItemInDatabase(item: Movie | Show, hadMetadataUpdate?: boolean): Promise<void>
 
   /**
    * Formats runtime from minutes to, minutes, hours, short and full format
