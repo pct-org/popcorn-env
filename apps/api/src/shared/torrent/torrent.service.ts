@@ -95,7 +95,10 @@ export class TorrentService implements OnApplicationBootstrap {
     this.maxConcurrent = this.configService.get(ConfigService.MAX_CONCURRENT_DOWNLOADS)
   }
 
-  protected onApplicationBootstrap(): void {
+  /**
+   * When application boots we want to check for incomplete or queued downloads ti start
+   */
+  public onApplicationBootstrap(): void {
     // Check for incomplete downloads and add them to the downloads
     this.checkForIncompleteDownloads()
   }

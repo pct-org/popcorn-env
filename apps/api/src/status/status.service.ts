@@ -40,9 +40,9 @@ export class StatusService {
 
     return {
       version: 'unknown', // TODO:: Get git tag
-      totalMovies: this.movieModel.countDocuments(),
-      totalShows: this.showModel.countDocuments(),
-      totalEpisodes: this.episodesModel.countDocuments(),
+      totalMovies: await this.movieModel.countDocuments(),
+      totalShows: await this.showModel.countDocuments(),
+      totalEpisodes: await this.episodesModel.countDocuments(),
       disk: {
         free: formatKbToString(disk.available, false),
         used: formatKbToString(folderSize, false),

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-
 import { Season, SeasonModel } from '@pct-org/mongo-models'
 
 @Injectable()
@@ -29,16 +28,11 @@ export class SeasonsService {
     )
   }
 
-  public async findOne(id: string, lean = true): Promise<Season[]> {
+  public async findOne(id: string, lean = true): Promise<Season> {
     return this.seasonModel.findById(
       id,
       {},
       {
-        // skip: showsArgs.offset,
-        // limit: showsArgs.limit,
-        sort: {
-          number: 0 // Sort on season number
-        },
         lean
       }
     )
