@@ -4,8 +4,12 @@ import { MovieHelperService } from './movie-helper.service'
 
 @Global()
 @Module({
-  providers: [MovieHelperService],
-  exports: [MovieHelperService]
+  providers: [
+    MovieHelperService
+  ],
+  exports: [
+    MovieHelperService
+  ]
 })
 export class MovieHelperModule {
 }

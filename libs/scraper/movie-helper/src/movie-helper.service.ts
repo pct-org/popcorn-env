@@ -5,19 +5,27 @@ import { InjectModel } from '@nestjs/mongoose'
 import { MovieModel, Movie, Show } from '@pct-org/mongo-models'
 import { TraktService } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
+import { FanartService } from '@pct-org/services/fanart'
+import { OmdbService } from '@pct-org/services/omdb'
 import { formatTorrents } from '@pct-org/torrent/utils'
 
 @Injectable()
 export class MovieHelperService extends BaseHelper {
 
   @InjectModel('Movies')
-  private readonly movieModel: typeof MovieModel
+  private readonly movieModel: MovieModel
 
   @Inject()
   private readonly traktService: TraktService
 
   @Inject()
   private readonly tmdbService: TmdbService
+
+  @Inject()
+  private readonly fanartService: FanartService
+
+  @Inject()
+  private readonly omdbService: OmdbService
 
   protected readonly logger = new Logger('MovieHelper')
 
@@ -36,13 +44,18 @@ export class MovieHelperService extends BaseHelper {
     return undefined
   }
 
+  /**
+   * We only want to update the Movie metadata every 3 weeks so we can
+   * check here if the lastMetadataUpdate is older then 3 weeks
+   */
   public shouldUpdateExistingItem(item: Movie): boolean {
-    // TODO:: Determine if we need to update the trakt info / images
+    const threeWeeksAgo = new Date(Date.now() - (6.04e+8 * 3))
 
-    return true
+    return threeWeeksAgo.getTime() > item.lastMetadataUpdate
   }
 
   public updateTraktInfo(item: Movie): Promise<Movie> {
+    // TODO:: Implement a update
     return Promise.resolve(item)
   }
 
@@ -88,6 +101,7 @@ export class MovieHelperService extends BaseHelper {
         : null,
       createdAt: Number(new Date()),
       updatedAt: Number(new Date()),
+      lastMetadataUpdate: Number(new Date()),
       type: MovieType,
       torrents: [],
       searchedTorrents: [],
@@ -109,8 +123,8 @@ export class MovieHelperService extends BaseHelper {
 
   public async addImages(item: Movie): Promise<Movie> {
     return this.addTmdbImages(item)
-      // .catch(item => this.addOmdbImages(item))
-      // .catch(item => this.addFanartImages(item))
+      .catch((item) => this.addOmdbImages(item))
+      .catch((item) => this.addFanartImages(item))
       .catch((item) => item)
   }
 
@@ -126,11 +140,15 @@ export class MovieHelperService extends BaseHelper {
     await this.movieModel.create(item)
   }
 
-  public async updateItemInDatabase(item: Movie): Promise<void> {
+  public async updateItemInDatabase(item: Movie, hadMetadataUpdate = false): Promise<void> {
     this.logger.log(`'${item.title}' is an existing movie.`)
 
     // Also update the updated at timestamp
     item.updatedAt = Number(new Date())
+
+    if (hadMetadataUpdate) {
+      item.lastMetadataUpdate = Number(new Date())
+    }
 
     await this.movieModel.findByIdAndUpdate(item._id, item)
   }
@@ -141,12 +159,16 @@ export class MovieHelperService extends BaseHelper {
     return this.checkImages(item)
   }
 
-  // private addOmdbImages(item: Movie): Promise<Movie | Show> {
-  //
-  // }
-  //
-  // private addFanartImages(item: Movie): Promise<Movie | Show> {
-  //
-  // }
+  private async addOmdbImages(item: Movie): Promise<Movie | Show> {
+    item.images = await this.omdbService.getMovieImages(item)
+
+    return this.checkImages(item)
+  }
+
+  private async addFanartImages(item: Movie): Promise<Movie | Show> {
+    item.images = await this.fanartService.getMovieImages(item)
+
+    return this.checkImages(item)
+  }
 
 }
