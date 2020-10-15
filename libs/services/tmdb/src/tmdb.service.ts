@@ -50,8 +50,13 @@ export class TmdbService {
     }
 
     return {
-      poster: this.formatImage(poster),
-      backdrop: this.formatImage(backdrop)
+      poster: poster
+        ? this.formatImage(poster)
+        : item.images.poster,
+
+      backdrop: backdrop
+        ? this.formatImage(backdrop)
+        : item.images.backdrop
     }
   }
 

@@ -4,8 +4,12 @@ import { TmdbService } from './tmdb.service'
 
 @Global()
 @Module({
-  providers: [TmdbService],
-  exports: [TmdbService]
+  providers: [
+    TmdbService
+  ],
+  exports: [
+    TmdbService
+  ]
 })
 export class TmdbModule {
 }
