@@ -217,16 +217,20 @@ export abstract class BaseProvider {
     const updateExistingItem = existingItem && helper.shouldUpdateExistingItem(existingItem)
 
     let newItem
-    if (updateExistingItem) {
-      newItem = await helper.updateTraktInfo(existingItem)
+    // Check if we have a existing item
+    if (existingItem) {
+      // Only update the item if we need to
+      if (updateExistingItem) {
+        newItem = await helper.updateTraktInfo(existingItem)
+
+      } else {
+        // Use existing cached / old data
+        newItem = existingItem
+      }
 
     } else {
+      // Add trakt info to the item, will return null if trakt could not find it
       newItem = await helper.addTraktInfo(item)
-    }
-
-    let used = process.memoryUsage()
-    for (let key in used) {
-      console.log(`${key} ${Math.round(used[key] / 1024 / 1024 * 100) / 100} MB`)
     }
 
     // If Trakt could not find the item then add it to the blacklist
@@ -254,7 +258,7 @@ export abstract class BaseProvider {
       await helper.addItemToDatabase(newItem)
 
     } else {
-      await helper.updateItemInDatabase(newItem)
+      await helper.updateItemInDatabase(newItem, updateExistingItem)
     }
 
     return Promise.resolve()
@@ -338,15 +342,17 @@ export abstract class BaseProvider {
           ? res.data.movies // YTS
           : []
 
-    } catch (e) {
+    } catch (err) {
       // If we are allowed to retry then do else throw the error
       if (retry) {
         this.logger.warn(`On page ${page} "${e}", going to retry.`)
+
         return this.getOnePage(page, false)
 
       } else {
         this.logger.error(`On page ${page} "${e}"`)
-        throw e
+
+        throw err
       }
     }
   }
@@ -405,20 +411,4 @@ export abstract class BaseProvider {
     return result.totalPages
   }
 
-  // async scrapedConfigs(scraped) {
-  //   try {
-  //     if (this.contentType === BaseProvider.ContentTypes.Show) {
-  //       // TODO:: Do post call to the GraphQL api to check and start downloading new my episodes
-  //       logger.info(`Calling GraphQL to update my episodes`)
-  //
-  //     } else if (this.contentType === BaseProvider.ContentTypes.Movie) {
-  //       // TODO:: Do post call to the GraphQL api to check and start downloading better qualities
-  //       logger.info(`Calling GraphQL to qualities of downloaded movies`)
-  //     }
-  //   } catch (e) {
-  //
-  //   }
-  //
-  //   return scraped
-  // }
 }
