@@ -1,1 +1,2 @@
-export * from './lib/services-omdb';
+export * from './omdb.module'
+export * from './omdb.service'
