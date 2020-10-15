@@ -1,1 +1,2 @@
-export * from './lib/services-fanart';
+export * from './fanart.module'
+export * from './fanart.service'
