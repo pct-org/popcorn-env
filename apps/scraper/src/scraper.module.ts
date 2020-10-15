@@ -8,6 +8,8 @@ import { MovieHelperModule } from '@pct-org/scraper/movie-helper'
 
 import { TraktModule } from '@pct-org/services/trakt'
 import { TmdbModule } from '@pct-org/services/tmdb'
+import { FanartModule } from '@pct-org/services/fanart'
+import { OmdbModule } from '@pct-org/services/omdb'
 
 import { ConfigModule } from './shared/config/config.module'
 import { ConfigService } from './shared/config/config.service'
@@ -23,6 +25,8 @@ import { ProvidersService } from './providers/providers.service'
 
     TraktModule,
     TmdbModule,
+    FanartModule,
+    OmdbModule,
 
     ProvidersModule,
 
@@ -54,15 +58,13 @@ export class ScraperModule implements OnApplicationBootstrap {
   ) {
   }
 
-  protected onApplicationBootstrap(): void {
+  public onApplicationBootstrap(): void {
     const job = new CronJob(this.configService.get('CRON_TIME'), this.scrapeConfigs)
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
     job.start()
 
     this.logger.log(`Enabled cron on '${this.configService.get('CRON_TIME')}'`)
-
-    this.scrapeConfigs()
   }
 
   private async scrapeConfigs(): Promise<void> {
