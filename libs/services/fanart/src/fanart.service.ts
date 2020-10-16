@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import * as Fanart from 'fanart.tv-api'
-import { Images, Movie } from '@pct-org/mongo-models'
+import { Images, ImagesSizes, Movie, Show } from '@pct-org/mongo-models'
 
 @Injectable()
 export class FanartService {
@@ -42,22 +42,53 @@ export class FanartService {
 
     return {
       backdrop: backdrop
-        ? {
-          full: backdrop.url,
-          high: backdrop.url,
-          medium: backdrop.url,
-          thumb: backdrop.url
-        }
+        ? this.formatImage(backdrop)
         : item.images.backdrop,
 
       poster: poster
-        ? {
-          full: poster.url,
-          high: poster.url,
-          medium: poster.url,
-          thumb: poster.url
-        }
+        ? this.formatImage(poster)
         : item.images.poster
+    }
+  }
+
+  public async getShowImages(item: Show): Promise<Images> {
+    let poster = null
+    let backdrop = null
+
+    try {
+      const images = await this.fanart.getShowImages(item.tvdbId)
+
+      backdrop = !item.images.backdrop.full && images.showbackground
+        ? images.showbackground.shift()
+        : !item.images.backdrop && images.clearart
+          ? images.clearart.shift()
+          : null
+
+      poster = !item.images.poster.full && images.tvposter
+        ? images.tvposter.shift()
+        : null
+
+    } catch (err) {
+      this.logger.error(`Error happened getting images for '${item.slug}'`, err)
+    }
+
+    return {
+      backdrop: backdrop
+        ? this.formatImage(backdrop)
+        : item.images.backdrop,
+
+      poster: poster
+        ? this.formatImage(poster)
+        : item.images.poster
+    }
+  }
+
+  private formatImage(image: { url: string }): ImagesSizes {
+    return {
+      full: image.url,
+      high: image.url,
+      medium: image.url,
+      thumb: image.url
     }
   }
 
