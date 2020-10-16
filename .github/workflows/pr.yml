@@ -1,0 +1,33 @@
+name: PR
+
+on: [pull_request]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+
+      - name: Install dependencies
+        run: yarn
+
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
+        run: yarn affected:lint --base=develop --head=HEAD
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: yarn affected:test --base=develop --head=HEAD
