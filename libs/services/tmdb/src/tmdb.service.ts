@@ -32,13 +32,17 @@ export class TmdbService {
     try {
       const images = await this.tmdb.get(`${type}/${item._id}/images`)
 
-      poster = images.posters.filter(
-        poster => poster.iso6391 === 'en' || poster.iso6391 === null
-      ).shift()?.filePath ?? null
+      if (!item.images.poster.full) {
+        poster = images.posters.filter(
+          poster => poster.iso6391 === 'en' || poster.iso6391 === null
+        ).shift()?.filePath ?? null
+      }
 
-      backdrop = images.backdrops.filter(
-        backdrop => backdrop.iso6391 === 'en' || backdrop.iso6391 === null
-      ).shift()?.filePath ?? null
+      if (!item.images.backdrop.full) {
+        backdrop = images.backdrops.filter(
+          backdrop => backdrop.iso6391 === 'en' || backdrop.iso6391 === null
+        ).shift()?.filePath ?? null
+      }
 
     } catch (err) {
       if (err instanceof NotFoundError) {

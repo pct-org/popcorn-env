@@ -26,13 +26,13 @@ export class FanartService {
     try {
       const images = await this.fanart.getMovieImages(item.tmdbId)
 
-      backdrop = !item.images.backdrop && images.moviebackground
+      backdrop = !item.images.backdrop.full && images.moviebackground
         ? images.moviebackground.shift()
         : !item.images.backdrop && images.hdmovieclearart
           ? images.hdmovieclearart.shift()
           : null
 
-      poster = !item.images.poster && images.movieposter
+      poster = !item.images.poster.full && images.movieposter
         ? images.movieposter.shift()
         : null
 

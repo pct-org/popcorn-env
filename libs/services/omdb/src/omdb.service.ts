@@ -22,7 +22,7 @@ export class OmdbService {
   public async getMovieImages(item: Movie): Promise<Images> {
     let poster = null
 
-    if (item.images.poster?.full) {
+    if (item.images.poster.full) {
       return item.images
     }
 
