@@ -23,11 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Lint
-        run: yarn affected:lint --base=develop --head=HEAD
+        run: yarn affected:lint --base=master --head=HEAD
 
   test:
     needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Test
-        run: yarn affected:test --base=develop --head=HEAD
+        run: yarn affected:test --base=master --head=HEAD
