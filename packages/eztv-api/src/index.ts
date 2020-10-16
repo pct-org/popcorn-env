@@ -531,14 +531,14 @@ module.exports = class EztvApi {
         const entry = $(this)
         const href = entry.attr('href')
 
-        const show = entry.text()
+        const title = entry.text()
         const id = parseInt(href.match(regex)[1], 10)
 
         let slug = href.match(regex)[2]
         slug = slug in EztvApi._slugMap ? EztvApi._slugMap[slug] : slug
 
         return {
-          show,
+          title,
           id,
           slug,
         }
