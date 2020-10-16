@@ -1,10 +1,10 @@
-import { ScrapedMovieTorrent } from '@pct-org/scraper/base-provider'
+import { ScrapedTorrent } from '@pct-org/scraper/base-provider'
 import { Torrent } from '@pct-org/mongo-models'
 
 import { formatBytes } from './format-bytes'
 import { sortTorrents } from './sort-torrents'
 
-export type Torrents = ScrapedMovieTorrent[] | Torrent[]
+export type Torrents = ScrapedTorrent[] | Torrent[]
 
 export const formatTorrents = (torrents: Torrents, foundTorrents: Torrents = []): Torrent[] => {
   const allTorrents = [

@@ -44,7 +44,10 @@
       "@pct-org/services/fanart": ["libs/services/fanart/src/index.ts"],
       "@pct-org/services/omdb": ["libs/services/omdb/src/index.ts"],
       "@pct-org/services/tmdb": ["libs/services/tmdb/src/index.ts"],
-      "@pct-org/services/tvdb": ["libs/services/tvdb/src/index.ts"]
+      "@pct-org/services/tvdb": ["libs/services/tvdb/src/index.ts"],
+      "@pct-org/scraper/eztv-provider": [
+        "libs/scraper/eztv-provider/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -28,8 +28,8 @@ export abstract class BaseProvider {
   @Inject('MovieHelperService')
   protected readonly movieHelper: MovieHelperService
 
-  // @Inject('ShowHelperService')
-  // protected readonly showHelper: ShowHelperService
+  @Inject('ShowHelperService')
+  protected readonly showHelper: ShowHelperService
 
   abstract readonly logger: Logger
 
@@ -83,7 +83,7 @@ export abstract class BaseProvider {
   /**
    * Set the configuration to scrape with.
    */
-  private setConfig({ query, contentType, regexps = [], language = 'en' }: ScraperProviderConfig): void {
+  protected setConfig({ query, contentType, regexps = [], language = 'en' }: ScraperProviderConfig): void {
     this.contentType = contentType
     this.query = query
     this.language = language
@@ -172,7 +172,7 @@ export abstract class BaseProvider {
    * @param content - The content information.
    * @returns {Promise<Boolean|Error>}
    */
-  private async isItemBlackListed(content: ScrapedItem): Promise<boolean | Error> {
+  protected async isItemBlackListed(content: ScrapedItem): Promise<boolean | Error> {
     const { slug, imdb } = content
 
     const blacklistedItem = await this.blackListModel.findOne({ _id: imdb || slug })
@@ -206,7 +206,7 @@ export abstract class BaseProvider {
       helper = this.movieHelper
 
     } else if (this.contentType === ShowType) {
-      // helper = this.showHelper
+      helper = this.showHelper
     }
 
     if (!helper) {
@@ -224,7 +224,7 @@ export abstract class BaseProvider {
         newItem = await helper.updateTraktInfo(existingItem)
 
       } else {
-        // Use existing cached / old data
+        // Use existing item
         newItem = existingItem
       }
 
@@ -252,6 +252,7 @@ export abstract class BaseProvider {
       newItem = await helper.addImages(newItem)
     }
 
+    // Add the torrents to the item
     newItem = await helper.addTorrents(newItem, item.torrents)
 
     if (!existingItem) {

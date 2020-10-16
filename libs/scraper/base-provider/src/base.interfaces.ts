@@ -32,7 +32,7 @@ export interface ScraperProviderConfig {
 
 }
 
-export interface ScrapedMovieTorrent {
+export interface ScrapedTorrent {
 
   quality: string
 
@@ -52,17 +52,26 @@ export interface ScrapedMovieTorrent {
 
 }
 
-export interface ScrapedItem<Torrents = ScrapedMovieTorrent> {
+export interface ScrapedSeasonTorrent {
+
+  [episode: number]: ScrapedTorrent[]
+}
+
+export interface ScrapedShowTorrent {
+
+  [season: number]: ScrapedSeasonTorrent[]
+
+}
+
+export interface ScrapedItem<Torrents = ScrapedTorrent> {
 
   title: string
-
-  show?: string
 
   slug: string
 
   imdb?: string
 
-  year: string
+  year?: string
 
   torrents: Torrents[]
 

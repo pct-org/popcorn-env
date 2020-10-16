@@ -1,7 +1,7 @@
-import {  Logger } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel, Movie, Show, Runtime } from '@pct-org/mongo-models'
-import { ScrapedItem, MovieType, ScrapedMovieTorrent } from '@pct-org/scraper/base-provider'
+import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrent } from '@pct-org/scraper/base-provider'
 
 /**
  * Base class for scraping content from various sources.
@@ -38,7 +38,7 @@ export abstract class BaseHelper {
 
   public abstract addImages(item: Movie | Show): Promise<Movie | Show>
 
-  public abstract addTorrents(item: Movie | Show, torrents: ScrapedMovieTorrent[]): Promise<Movie | Show>
+  public abstract addTorrents(item: Movie | Show, torrents: ScrapedTorrent[] | ScrapedShowTorrent[]): Promise<Movie | Show>
 
   public abstract addItemToDatabase(item: Movie | Show): Promise<void>
 
@@ -79,9 +79,8 @@ export abstract class BaseHelper {
   /**
    * Adds a item to the blacklist
    */
-  public async addToBlacklist(content: ScrapedItem, type: string, reason: string, weeks = null, until = null): Promise<void> {
+  public async addToBlacklist(content: Pick<ScrapedItem, 'slug' | 'title'>, type: string, reason: string, weeks = null, until = null): Promise<void> {
     let expires = 0
-    let title
 
     if (until) {
       this.logger.warn(`Adding "${content.title}" with identifier "${content.slug}" to the blacklist until '${until}' because of reason '${reason}'`)
@@ -92,17 +91,9 @@ export abstract class BaseHelper {
       expires = Number(new Date(Date.now() + (6.04e+8 * weeks)))
     }
 
-    // Use the correct title
-    if (type === MovieType) {
-      title = content.title
-
-    } else {
-      title = content.show
-    }
-
     await this.blackListModel.create({
       _id: content.slug,
-      title,
+      title: content.title,
       type,
       reason,
       expires,

@@ -81,6 +81,9 @@
     },
     "services-tvdb": {
       "tags": []
+    },
+    "scraper-eztv-provider": {
+      "tags": []
     }
   }
 }
