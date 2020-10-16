@@ -3,6 +3,8 @@ import * as Trakt from 'trakt.tv'
 
 import { TraktMovie } from './interfaces/trakt.movie.interface'
 import { TraktShow } from './interfaces/trakt.show.interface'
+import { TraktSeason } from './interfaces/trakt.season.interface'
+import { TraktEpisode } from './interfaces/trakt.episode.interface'
 import { TraktWatching } from './interfaces/trakt.watching.interface'
 
 @Injectable()
@@ -37,6 +39,46 @@ export class TraktService {
 
   public getShowSummary(id: string): Promise<TraktShow | undefined> {
     return this.getSummary(id, TraktService.TYPE_SHOWS) as Promise<TraktShow | undefined>
+  }
+
+  public getShowWatching(id: string): Promise<TraktWatching[] | undefined> {
+    return this.getWatching(id, TraktService.TYPE_SHOWS)
+  }
+
+  public async getShowSeasons(id: string): Promise<TraktSeason[]> {
+    try {
+      return this.trakt.seasons.summary({
+        id,
+        extended: 'episodes,full'
+      })
+
+    } catch (err) {
+      return []
+    }
+  }
+
+  public getNextEpisodeForShow(id: string): Promise<TraktEpisode | undefined> {
+    try {
+      return this.trakt.shows.next_episode({
+        id,
+        extended: 'full',
+      })
+
+    } catch (err) {
+      return undefined
+    }
+  }
+
+  public getLastEpisodeForShow(id: string): Promise<TraktEpisode | undefined> {
+    try {
+      return this.trakt.shows.last_episode({
+        id,
+        extended: 'full',
+      })
+
+    } catch (err) {
+      return undefined
+    }
   }
 
   private getSummary(id: string, type): Promise<TraktMovie | TraktShow | undefined> {
