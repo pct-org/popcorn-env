@@ -345,12 +345,12 @@ export abstract class BaseProvider {
     } catch (err) {
       // If we are allowed to retry then do else throw the error
       if (retry) {
-        this.logger.warn(`On page ${page} "${e}", going to retry.`)
+        this.logger.warn(`On page ${page} "${err}", going to retry.`)
 
         return this.getOnePage(page, false)
 
       } else {
-        this.logger.error(`On page ${page} "${e}"`)
+        this.logger.error(`On page ${page} "${err}"`)
 
         throw err
       }
