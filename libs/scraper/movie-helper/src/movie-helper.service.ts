@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/base-helper'
-import { MovieType, ScrapedItem, ScrapedMovieTorrent } from '@pct-org/scraper/base-provider'
+import { MovieType, ScrapedItem, ScrapedTorrent } from '@pct-org/scraper/base-provider'
 import { InjectModel } from '@nestjs/mongoose'
 import { MovieModel, Movie, Show } from '@pct-org/mongo-models'
 import { TraktService } from '@pct-org/services/trakt'
@@ -30,18 +30,12 @@ export class MovieHelperService extends BaseHelper {
   protected readonly logger = new Logger('MovieHelper')
 
   public async getItem(imdb: string = null, slug: string = null): Promise<Movie | undefined> {
-    const item = await this.movieModel.findOne({
+    return this.movieModel.findOne({
         [imdb ? '_id' : 'slug']: imdb || slug
       },
       {},
       { lean: true }
     )
-
-    if (item) {
-      return item as Movie
-    }
-
-    return undefined
   }
 
   /**
@@ -54,18 +48,39 @@ export class MovieHelperService extends BaseHelper {
     return threeWeeksAgo.getTime() > item.lastMetadataUpdate
   }
 
-  public updateTraktInfo(item: Movie): Promise<Movie> {
-    // TODO:: Implement a update
-    return Promise.resolve(item)
+  public async updateTraktInfo(item: Movie): Promise<Movie> {
+    // Get new trakt item
+    const traktItem = await this.addTraktInfo({
+      imdb: item.imdbId,
+      slug: item.slug,
+      title: item.title
+    })
+
+    if (!traktItem) {
+      return item
+    }
+
+    // Restore props that don't need to change
+    traktItem.createdAt = item.createdAt
+    traktItem.watched = item.watched
+    traktItem.bookmarked = item.bookmarked
+    traktItem.bookmarkedOn = item.bookmarkedOn
+    traktItem.download = item.download
+    traktItem.searchedTorrents = item.searchedTorrents
+
+    return traktItem
   }
 
   /**
    * Add trakt info to the scraped item
    */
-  public async addTraktInfo(item: ScrapedItem): Promise<Movie | undefined> {
+  public async addTraktInfo(item: Pick<ScrapedItem, 'imdb' | 'slug' | 'title'>): Promise<Movie | undefined> {
     const traktMovie = await this.traktService.getMovieSummary(item.imdb)
 
     if (!traktMovie) {
+      // Try again in 1 week
+      await this.addToBlacklist(item, MovieType, '404', 1)
+
       return
     }
 
@@ -121,14 +136,14 @@ export class MovieHelperService extends BaseHelper {
     }
   }
 
-  public async addImages(item: Movie): Promise<Movie> {
+  public addImages(item: Movie): Promise<Movie> {
     return this.addTmdbImages(item)
       .catch((item) => this.addOmdbImages(item))
       .catch((item) => this.addFanartImages(item))
       .catch((item) => item)
   }
 
-  public addTorrents(item: Movie, torrents: ScrapedMovieTorrent[]): Promise<Movie | Show> {
+  public addTorrents(item: Movie, torrents: ScrapedTorrent[]): Promise<Movie> {
     item.torrents = formatTorrents(item.torrents, torrents)
 
     return Promise.resolve(item)
@@ -141,7 +156,7 @@ export class MovieHelperService extends BaseHelper {
   }
 
   public async updateItemInDatabase(item: Movie, hadMetadataUpdate = false): Promise<void> {
-    this.logger.log(`'${item.title}' is an existing movie.`)
+    this.logger.log(`'${item.title}' is an existing movie!`)
 
     // Also update the updated at timestamp
     item.updatedAt = Number(new Date())
