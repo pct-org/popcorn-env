@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { TraktSeason } from '@pct-org/services/trakt'
 
 import { Season } from '../season/season.object-type'
 import { Content } from '../shared/content.object-type'
@@ -24,5 +25,11 @@ export class Show extends Content {
 
   @Field({ description: 'The airtime of the next episode.', nullable: true })
   nextEpisodeAirs: number
+
+  /**
+   * Internally used only!
+   * For the scraper
+   */
+  _traktSeasons?: TraktSeason[]
 
 }
