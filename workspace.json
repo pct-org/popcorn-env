@@ -354,9 +354,9 @@
         }
       }
     },
-    "scraper-show-helper": {
-      "root": "libs/scraper/show-helper",
-      "sourceRoot": "libs/scraper/show-helper/src",
+    "scraper-helpers-show": {
+      "root": "libs/scraper/helpers/show",
+      "sourceRoot": "libs/scraper/helpers/show/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -365,24 +365,24 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/show-helper/tsconfig.lib.json",
-              "libs/scraper/show-helper/tsconfig.spec.json"
+              "libs/scraper/helpers/show/tsconfig.lib.json",
+              "libs/scraper/helpers/show/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/show-helper/**/*"]
+            "exclude": ["**/node_modules/**", "!libs/scraper/helpers/show/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/show-helper/jest.config.js",
+            "jestConfig": "libs/scraper/helpers/show/jest.config.js",
             "passWithNoTests": true
           }
         }
       }
     },
-    "scraper-movie-helper": {
-      "root": "libs/scraper/movie-helper",
-      "sourceRoot": "libs/scraper/movie-helper/src",
+    "scraper-helpers-movie": {
+      "root": "libs/scraper/helpers/movie",
+      "sourceRoot": "libs/scraper/helpers/movie/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -391,16 +391,19 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/movie-helper/tsconfig.lib.json",
-              "libs/scraper/movie-helper/tsconfig.spec.json"
+              "libs/scraper/helpers/movie/tsconfig.lib.json",
+              "libs/scraper/helpers/movie/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/movie-helper/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/scraper/helpers/movie/**/*"
+            ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/movie-helper/jest.config.js",
+            "jestConfig": "libs/scraper/helpers/movie/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -458,9 +461,9 @@
         }
       }
     },
-    "scraper-base-helper": {
-      "root": "libs/scraper/base-helper",
-      "sourceRoot": "libs/scraper/base-helper/src",
+    "scraper-helpers-base": {
+      "root": "libs/scraper/helpers/base",
+      "sourceRoot": "libs/scraper/helpers/base/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -469,16 +472,16 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/base-helper/tsconfig.lib.json",
-              "libs/scraper/base-helper/tsconfig.spec.json"
+              "libs/scraper/helpers/base/tsconfig.lib.json",
+              "libs/scraper/helpers/base/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/base-helper/**/*"]
+            "exclude": ["**/node_modules/**", "!libs/scraper/helpers/base/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/base-helper/jest.config.js",
+            "jestConfig": "libs/scraper/helpers/base/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -642,6 +645,60 @@
           }
         }
       }
+    },
+    "scraper-helpers-season": {
+      "root": "libs/scraper/helpers/season",
+      "sourceRoot": "libs/scraper/helpers/season/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/scraper/helpers/season/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scraper/helpers/season/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "scraper-helpers-episode": {
+      "root": "libs/scraper/helpers/episode",
+      "sourceRoot": "libs/scraper/helpers/episode/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/scraper/helpers/episode/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scraper/helpers/episode/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "constants-default-image-sizes": {
+      "root": "libs/constants/default-image-sizes",
+      "sourceRoot": "libs/constants/default-image-sizes",
+      "projectType": "library",
+      "schematics": {}
+    },
+    "constants-item-types": {
+      "root": "libs/constants/item-types",
+      "sourceRoot": "libs/constants/item-types",
+      "projectType": "library",
+      "schematics": {}
     }
   },
   "cli": {

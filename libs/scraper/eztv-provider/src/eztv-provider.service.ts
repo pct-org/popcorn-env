@@ -1,10 +1,14 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseProvider, ScrapedItem, ScraperProviderConfig, ShowType } from '@pct-org/scraper/base-provider'
 import * as Eztv from '@pct-org/eztv-api'
 import * as pMap from 'p-map'
+import { ShowHelperService } from '@pct-org/scraper/helpers/show'
 
 @Injectable()
 export class EztvProviderService extends BaseProvider {
+
+  @Inject('ShowHelperService')
+  protected readonly showHelper: ShowHelperService
 
   name = 'EZTV'
 

@@ -1,11 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseProvider, ScraperProviderConfig, MovieType, ScrapedItem } from '@pct-org/scraper/base-provider'
 import * as Yts from 'yts-api-pt'
 
 import { YtsTorrent } from './yts-provider.interfaces'
+import { MovieHelperService } from '@pct-org/scraper/helpers/movie'
 
 @Injectable()
 export class YtsProviderService extends BaseProvider {
+
+  @Inject('MovieHelperService')
+  protected readonly movieHelper: MovieHelperService
 
   name = 'YTS'
 

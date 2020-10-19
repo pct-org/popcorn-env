@@ -1,6 +1,6 @@
 module.exports = {
-  name: 'scraper-movie-helper',
-  preset: '../../../jest.config.js',
+  displayName: 'scraper-helpers-episode',
+  preset: '../../../../jest.preset.js',
   globals: {
     'ts-jest': {
       tsConfig: '<rootDir>/tsconfig.spec.json',
@@ -10,5 +10,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/scraper/movie-helper',
+  coverageDirectory: '../../../../coverage/libs/scraper/helpers/episode',
 };

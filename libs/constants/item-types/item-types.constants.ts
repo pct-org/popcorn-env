@@ -1,0 +1,6 @@
+export const TYPE_DOWNLOAD = 'download'
+export const TYPE_STREAM = 'stream'
+export const TYPE_MOVIE = 'movie'
+export const TYPE_SHOW = 'show'
+export const TYPE_SEASON = 'season'
+export const TYPE_EPISODE = 'episode'

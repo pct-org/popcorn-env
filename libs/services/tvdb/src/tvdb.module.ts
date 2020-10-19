@@ -1,8 +1,7 @@
-import { Module, Global } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 
-import { TvdbService } from './tmdb.service'
+import { TvdbService } from './tvdb.service'
 
-@Global()
 @Module({
   providers: [
     TvdbService

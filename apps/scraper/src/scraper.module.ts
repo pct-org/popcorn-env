@@ -4,12 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { CronJob } from 'cron'
 import * as pMap from 'p-map'
 import { ModelsModule } from '@pct-org/mongo-models'
-import { MovieHelperModule } from '@pct-org/scraper/movie-helper'
-
-import { TraktModule } from '@pct-org/services/trakt'
-import { TmdbModule } from '@pct-org/services/tmdb'
-import { FanartModule } from '@pct-org/services/fanart'
-import { OmdbModule } from '@pct-org/services/omdb'
 
 import { ConfigModule } from './shared/config/config.module'
 import { ConfigService } from './shared/config/config.service'
@@ -20,13 +14,6 @@ import { ProvidersService } from './providers/providers.service'
   imports: [
     ConfigModule,
     ModelsModule,
-
-    MovieHelperModule,
-
-    TraktModule,
-    TmdbModule,
-    FanartModule,
-    OmdbModule,
 
     ProvidersModule,
 

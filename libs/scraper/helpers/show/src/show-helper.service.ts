@@ -1,14 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { BaseHelper } from '@pct-org/scraper/base-helper'
+import { BaseHelper } from '@pct-org/scraper/helpers/base'
 import { ShowType, ScrapedItem, ScrapedShowTorrent } from '@pct-org/scraper/base-provider'
 import { InjectModel } from '@nestjs/mongoose'
-import { ShowModel, SeasonModel, EpisodeModel, Show, Movie, Season, Episode } from '@pct-org/mongo-models'
+import { ShowModel, SeasonModel, EpisodeModel, Show, Movie } from '@pct-org/mongo-models'
 import { TraktEpisode, TraktService, TraktShow } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
 import { FanartService } from '@pct-org/services/fanart'
 import { TvdbService } from '@pct-org/services/tvdb'
-
-import { SeasonHelperService } from './season-helper.service'
+import { SeasonHelperService } from '@pct-org/scraper/helpers/season'
 
 @Injectable()
 export class ShowHelperService extends BaseHelper {
@@ -198,7 +197,7 @@ export class ShowHelperService extends BaseHelper {
     delete item.seasons
 
     await this.showModel.create(item)
-    await this.seasonHelperService.addSeasonsInDatabase(seasons)
+    await this.seasonHelperService.addSeasonsToDatabase(seasons)
   }
 
   public async updateItemInDatabase(item: Show, hadMetadataUpdate?: boolean): Promise<void> {

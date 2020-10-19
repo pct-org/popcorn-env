@@ -1,10 +1,18 @@
 import { Module } from '@nestjs/common'
+import { ShowHelperModule } from '@pct-org/scraper/helpers/show'
 
-import { EztvProviderService } from './yts-provider.service'
+import { EztvProviderService } from './eztv-provider.service'
 
 @Module({
-  providers: [EztvProviderService],
-  exports: [EztvProviderService]
+  imports: [
+    ShowHelperModule
+  ],
+  providers: [
+    EztvProviderService
+  ],
+  exports: [
+    EztvProviderService
+  ]
 })
 export class EztvProviderModule {
 }

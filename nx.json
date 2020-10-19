@@ -52,10 +52,10 @@
     "scraper-base-provider": {
       "tags": []
     },
-    "scraper-show-helper": {
+    "scraper-helpers-show": {
       "tags": []
     },
-    "scraper-movie-helper": {
+    "scraper-helpers-movie": {
       "tags": []
     },
     "scraper-yts-provider": {
@@ -64,7 +64,7 @@
     "torrent-utils": {
       "tags": []
     },
-    "scraper-base-helper": {
+    "scraper-helpers-base": {
       "tags": []
     },
     "services-trakt": {
@@ -83,6 +83,18 @@
       "tags": []
     },
     "scraper-eztv-provider": {
+      "tags": []
+    },
+    "scraper-helpers-season": {
+      "tags": []
+    },
+    "scraper-helpers-episode": {
+      "tags": []
+    },
+    "constants-default-image-sizes": {
+      "tags": []
+    },
+    "constants-item-types": {
       "tags": []
     }
   }

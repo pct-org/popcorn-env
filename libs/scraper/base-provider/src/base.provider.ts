@@ -1,12 +1,11 @@
 import * as pMap from 'p-map'
 import * as pTimes from 'p-times'
-import { Inject, Logger } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel } from '@pct-org/mongo-models'
 import { formatTorrents } from '@pct-org/torrent/utils'
-import { BaseHelper } from '@pct-org/scraper/base-helper'
-import { MovieHelperService } from '@pct-org/scraper/movie-helper'
-import { ShowHelperService } from '@pct-org/scraper/show-helper'
+import { MovieHelperService } from '@pct-org/scraper/helpers/movie'
+import { ShowHelperService } from '@pct-org/scraper/helpers/show'
 
 import {
   MovieType,
@@ -25,11 +24,9 @@ export abstract class BaseProvider {
   @InjectModel('Blacklist')
   private readonly blackListModel: typeof BlacklistModel
 
-  @Inject('MovieHelperService')
-  protected readonly movieHelper: MovieHelperService
+  protected readonly movieHelper: MovieHelperService | undefined
 
-  @Inject('ShowHelperService')
-  protected readonly showHelper: ShowHelperService
+  protected readonly showHelper: ShowHelperService | undefined
 
   abstract readonly logger: Logger
 
@@ -201,11 +198,11 @@ export abstract class BaseProvider {
    * it into the MongoDB database.
    */
   protected async enhanceAndImport(item: ScrapedItem): Promise<void> {
-    let helper: BaseHelper = null
-    if (this.contentType === MovieType) {
+    let helper: MovieHelperService | ShowHelperService = null
+    if (this.contentType === MovieType && this.movieHelper) {
       helper = this.movieHelper
 
-    } else if (this.contentType === ShowType) {
+    } else if (this.contentType === ShowType && this.showHelper) {
       helper = this.showHelper
     }
 
