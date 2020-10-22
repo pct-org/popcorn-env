@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
-import { ShowType, ScrapedItem, ScrapedShowTorrent } from '@pct-org/scraper/base-provider'
+import { ShowType, ScrapedItem, ScrapedShowTorrent } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
 import { ShowModel, SeasonModel, EpisodeModel, Show, Movie } from '@pct-org/mongo-models'
 import { TraktEpisode, TraktService, TraktShow } from '@pct-org/services/trakt'

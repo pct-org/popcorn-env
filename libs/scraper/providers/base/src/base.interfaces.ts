@@ -65,14 +65,22 @@ export interface ScrapedShowTorrent {
 
 export interface ScrapedItem<Torrents = ScrapedTorrent> {
 
+  // eztv
+  id?: number
+
+  // eztv / yts
   title: string
 
+  // eztv / yts
   slug: string
 
+  // yts
   imdb?: string
 
+  // yts
   year?: string
 
-  torrents: Torrents[]
+  // eztv / yts
+  torrents?: Torrents[]
 
 }

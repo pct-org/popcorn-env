@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { BaseProvider, ScrapedItem, ScraperProviderConfig, ShowType } from '@pct-org/scraper/base-provider'
+import { BaseProvider, ScrapedItem, ScraperProviderConfig, ShowType } from '@pct-org/scraper/providers/base'
 import * as Eztv from '@pct-org/eztv-api'
 import * as pMap from 'p-map'
 import { ShowHelperService } from '@pct-org/scraper/helpers/show'

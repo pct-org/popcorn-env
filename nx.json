@@ -17,7 +17,12 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ]
       }
     }
   },
@@ -29,27 +34,39 @@
       "tags": []
     },
     "mongo-models": {
-      "tags": ["scope:internal"]
+      "tags": [
+        "scope:internal"
+      ]
     },
     "package-eztv-api": {
-      "tags": ["scope:public"]
+      "tags": [
+        "scope:public"
+      ]
     },
     "package-solidtorrents-api": {
-      "tags": ["scope:public"]
+      "tags": [
+        "scope:public"
+      ]
     },
     "package-zooqle-api": {
-      "tags": ["scope:public"]
+      "tags": [
+        "scope:public"
+      ]
     },
     "package-ettv-api": {
-      "tags": ["scope:public"]
+      "tags": [
+        "scope:public"
+      ]
     },
     "package-kat-api": {
-      "tags": ["scope:public"]
+      "tags": [
+        "scope:public"
+      ]
     },
     "scraper": {
       "tags": []
     },
-    "scraper-base-provider": {
+    "scraper-providers-base": {
       "tags": []
     },
     "scraper-helpers-show": {
@@ -58,7 +75,7 @@
     "scraper-helpers-movie": {
       "tags": []
     },
-    "scraper-yts-provider": {
+    "scraper-providers-yts": {
       "tags": []
     },
     "torrent-utils": {
@@ -82,7 +99,7 @@
     "services-tvdb": {
       "tags": []
     },
-    "scraper-eztv-provider": {
+    "scraper-providers-eztv": {
       "tags": []
     },
     "scraper-helpers-season": {

@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'scraper-eztv-provider',
+  name: 'scraper-yts-provider',
   preset: '../../../jest.config.js',
   globals: {
     'ts-jest': {
@@ -10,5 +10,5 @@ module.exports = {
     '^.+\\.[tj]sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/scraper/eztv-provider',
+  coverageDirectory: '../../../coverage/libs/scraper/providers/yts',
 };

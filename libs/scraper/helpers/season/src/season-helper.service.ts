@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { ScrapedShowTorrent } from '@pct-org/scraper/base-provider'
+import { ScrapedShowTorrent } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
 import { SeasonModel, Season } from '@pct-org/mongo-models'
 import { TraktSeason } from '@pct-org/services/trakt'
@@ -18,18 +18,20 @@ export class SeasonHelperService {
 
   public formatTraktSeasons(traktSeasons: TraktSeason[], torrents: ScrapedShowTorrent[]): Season[] {
     const formattedSeasons = []
-    let seasonNumbers = Object.keys(torrents)
+    let seasonNumbers: any[] = Object.keys(torrents)
 
     // If we don't have any episodes for specials then also remove it from trakt
     if (!seasonNumbers.includes('0') && !seasonNumbers.includes(0)) {
       traktSeasons = traktSeasons.filter((traktSeason) => traktSeason.number !== 0)
     }
 
+    // TODO:: Format the trakt seasons here
 
     return []
   }
 
   public async enhanceSeasons(seasons: Season[]): Promise<Season[]> {
+    // TODO:: Enhance the seasons here
     return seasons
   }
 

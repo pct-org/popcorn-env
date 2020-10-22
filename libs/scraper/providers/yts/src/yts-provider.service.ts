@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { BaseProvider, ScraperProviderConfig, MovieType, ScrapedItem } from '@pct-org/scraper/base-provider'
+import { BaseProvider, ScraperProviderConfig, MovieType, ScrapedItem } from '@pct-org/scraper/providers/base'
 import * as Yts from 'yts-api-pt'
 
 import { YtsTorrent } from './yts-provider.interfaces'

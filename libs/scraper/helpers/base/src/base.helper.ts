@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel, Movie, Show, Runtime } from '@pct-org/mongo-models'
-import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrent } from '@pct-org/scraper/base-provider'
+import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrent } from '@pct-org/scraper/providers/base'
 
 /**
  * Base class for scraping content from various sources.

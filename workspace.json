@@ -325,9 +325,9 @@
         }
       }
     },
-    "scraper-base-provider": {
-      "root": "libs/scraper/base-provider",
-      "sourceRoot": "libs/scraper/base-provider/src",
+    "scraper-providers-base": {
+      "root": "libs/scraper/providers/base",
+      "sourceRoot": "libs/scraper/providers/base/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -336,19 +336,19 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/base-provider/tsconfig.lib.json",
-              "libs/scraper/base-provider/tsconfig.spec.json"
+              "libs/scraper/providers/base/tsconfig.lib.json",
+              "libs/scraper/providers/base/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/scraper/base-provider/**/*"
+              "!libs/scraper/providers/base/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/base-provider/jest.config.js",
+            "jestConfig": "libs/scraper/providers/base/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -409,9 +409,9 @@
         }
       }
     },
-    "scraper-yts-provider": {
-      "root": "libs/scraper/yts-provider",
-      "sourceRoot": "libs/scraper/yts-provider/src",
+    "scraper-providers-yts": {
+      "root": "libs/scraper/providers/yts",
+      "sourceRoot": "libs/scraper/providers/yts/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -420,16 +420,16 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/yts-provider/tsconfig.lib.json",
-              "libs/scraper/yts-provider/tsconfig.spec.json"
+              "libs/scraper/providers/yts/tsconfig.lib.json",
+              "libs/scraper/providers/yts/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/yts-provider/**/*"]
+            "exclude": ["**/node_modules/**", "!libs/scraper/providers/yts/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/yts-provider/jest.config.js",
+            "jestConfig": "libs/scraper/providers/yts/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -617,9 +617,9 @@
         }
       }
     },
-    "scraper-eztv-provider": {
-      "root": "libs/scraper/eztv-provider",
-      "sourceRoot": "libs/scraper/eztv-provider/src",
+    "scraper-providers-eztv": {
+      "root": "libs/scraper/providers/eztv",
+      "sourceRoot": "libs/scraper/providers/eztv/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -628,19 +628,19 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/eztv-provider/tsconfig.lib.json",
-              "libs/scraper/eztv-provider/tsconfig.spec.json"
+              "libs/scraper/providers/eztv/tsconfig.lib.json",
+              "libs/scraper/providers/eztv/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**",
-              "!libs/scraper/eztv-provider/**/*"
+              "!libs/scraper/providers/eztv/**/*"
             ]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/eztv-provider/jest.config.js",
+            "jestConfig": "libs/scraper/providers/eztv/jest.config.js",
             "passWithNoTests": true
           }
         }

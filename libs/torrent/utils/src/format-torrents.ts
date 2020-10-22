@@ -1,4 +1,4 @@
-import { ScrapedTorrent } from '@pct-org/scraper/base-provider'
+import { ScrapedTorrent } from '@pct-org/scraper/providers/base'
 import { Torrent } from '@pct-org/mongo-models'
 
 import { formatBytes } from './format-bytes'

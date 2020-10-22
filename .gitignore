@@ -42,7 +42,3 @@ lerna-debug.log*
 /downloads
 
 ecosystem.config.js
-
-
-apps/scraper/src-old/**
-apps/scraper/src-old
