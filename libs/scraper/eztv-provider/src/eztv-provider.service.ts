@@ -31,7 +31,7 @@ export class EztvProviderService extends BaseProvider {
   protected async scrapeConfig(config: ScraperProviderConfig): Promise<void> {
     this.setConfig(config)
 
-    const contents: ScrapedItem[] = await this.api.getAll()
+    const contents: ScrapedItem[] = await this.api.getAllShows()
 
     this.logger.log(`${this.name}: Found ${contents.length} ${this.contentType}s.`)
 
@@ -44,7 +44,7 @@ export class EztvProviderService extends BaseProvider {
         if (!isInBlacklist) {
           try {
             // Get full show data
-            const show: ScrapedItem = this.api.getShowData(content)
+            const show: ScrapedItem = await this.api.getShowData(content)
 
             // Enhance and import the show
             await this.enhanceAndImport(show)
