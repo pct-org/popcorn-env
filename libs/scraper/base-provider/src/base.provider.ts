@@ -6,6 +6,7 @@ import { BlacklistModel } from '@pct-org/mongo-models'
 import { formatTorrents } from '@pct-org/torrent/utils'
 import { MovieHelperService } from '@pct-org/scraper/helpers/movie'
 import { ShowHelperService } from '@pct-org/scraper/helpers/show'
+import { BaseHelper } from '@pct-org/scraper/helpers/base'
 
 import {
   MovieType,
@@ -15,6 +16,7 @@ import {
   ScraperProviderConfig,
   ScraperProviderConfigRegex
 } from './base.interfaces'
+
 
 /**
  * Base class for scraping content from various sources.
@@ -141,29 +143,6 @@ export abstract class BaseProvider {
     }
   }
 
-  // /**
-  //  * Gets information about a show from Trakt.tv and insert the show into the
-  //  * MongoDB database.
-  //  * @protected
-  //  * @param {!Object} content - The show information.
-  //  * @returns {Promise<Object | Error>} - A show object.
-  //  */
-  // _getShowContent(content: object): Promise<object> {
-  //   const { episodes, slug } = content
-  //
-  //   if (!episodes || episodes.length === 0) {
-  //     return logger.warn(
-  //       `${this.name}: '${slug}' has no torrents`
-  //     )
-  //   }
-  //
-  //   return this.helper.getTraktInfo(content).then((res) => {
-  //     if (res && res.imdbId) {
-  //       return this.helper.addEpisodes(res, episodes, slug)
-  //     }
-  //   })
-  // }
-
   /**
    * Checks if the item is blacklisted, if so we skip it until the blacklist expires
    * @param content - The content information.
@@ -198,7 +177,7 @@ export abstract class BaseProvider {
    * it into the MongoDB database.
    */
   protected async enhanceAndImport(item: ScrapedItem): Promise<void> {
-    let helper: MovieHelperService | ShowHelperService = null
+    let helper: BaseHelper = null
     if (this.contentType === MovieType && this.movieHelper) {
       helper = this.movieHelper
 
