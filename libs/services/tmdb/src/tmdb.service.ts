@@ -30,7 +30,7 @@ export class TmdbService {
     let backdrop = null
 
     try {
-      const images = await this.tmdb.get(`${type}/${item._id}/images`)
+      const images = await this.tmdb.get(`${type}/${item.tmdbId}/images`)
 
       if (!item.images.poster.full) {
         poster = images.posters.filter(
