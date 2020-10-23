@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Tmdb, NotFoundError } from 'tmdb'
-import { Images, ImagesSizes, Movie, Show } from '@pct-org/mongo-models'
+import { Images, ImagesSizes, Movie, Season, Show } from '@pct-org/mongo-models'
+
+import { TmdbSeason } from './interfaces/tmdb.season.interface'
 
 @Injectable()
 export class TmdbService {
@@ -23,6 +25,22 @@ export class TmdbService {
 
   public getShowImages(item: Show): Promise<Images> {
     return this.getImages(item, 'tv')
+  }
+
+  public getSeasonInfo(item: Show, season: Season): Promise<TmdbSeason> {
+    try {
+      return this.tmdb.get(`tv/${item.tmdbId}/season/${season.number}`)
+
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        this.logger.warn(`Can't find season for slug '${item.slug}'  season '${season.number}'`)
+
+      } else {
+        this.logger.error(`Error happened getting season info for '${item.slug}' and  season '${season.number}'`, err)
+      }
+
+      throw err
+    }
   }
 
   private async getImages(item: Movie | Show, type: string): Promise<Images> {
@@ -67,7 +85,7 @@ export class TmdbService {
   /**
    * Formats imdb image sizes
    */
-  private formatImage(filePath: string = null): ImagesSizes {
+  public formatImage(filePath: string = null): ImagesSizes {
     const baseUrl = 'https://image.tmdb.org/t/p'
 
     return {
