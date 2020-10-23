@@ -34,7 +34,7 @@ export abstract class ContentService {
     switch (contentArgs.sort) {
       case 'name':
         return {
-          title: order
+          title: 1
         }
 
       case 'rating':
@@ -68,7 +68,7 @@ export abstract class ContentService {
       default:
         return {
           'rating.votes': order,
-          'rating.precentage': order,
+          'rating.percentage': order,
           'rating.watching': order
         }
     }
