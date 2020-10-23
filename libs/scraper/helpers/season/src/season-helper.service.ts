@@ -1,9 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { ScrapedShowTorrent } from '@pct-org/scraper/providers/base'
+import { ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
-import { SeasonModel, Season } from '@pct-org/mongo-models'
-import { TraktSeason } from '@pct-org/services/trakt'
+import { SeasonModel, Season, Show, Episode } from '@pct-org/mongo-models'
 import { EpisodeHelperService } from '@pct-org/scraper/helpers/episode'
+import { TYPE_SEASON } from '@pct-org/constants/item-types'
+import { defaultEpisodeImages, defaultSeasonImages } from '@pct-org/constants/default-image-sizes'
+import { TmdbService } from '@pct-org/services/tmdb'
+import * as pMap from 'p-map'
 
 @Injectable()
 export class SeasonHelperService {
@@ -14,10 +17,14 @@ export class SeasonHelperService {
   @Inject()
   private readonly episodeHelperService: EpisodeHelperService
 
+  @Inject()
+  private readonly tmdbService: TmdbService
+
   protected readonly logger = new Logger('SeasonHelper')
 
-  public formatTraktSeasons(traktSeasons: TraktSeason[], torrents: ScrapedShowTorrent[]): Season[] {
-    const formattedSeasons = []
+  public formatTraktSeasons(show: Show, torrents: ScrapedShowTorrents): Season[] {
+    const formattedSeasons: Season[] = []
+    let traktSeasons = show._traktSeasons
     let seasonNumbers: any[] = Object.keys(torrents)
 
     // If we don't have any episodes for specials then also remove it from trakt
@@ -25,18 +32,105 @@ export class SeasonHelperService {
       traktSeasons = traktSeasons.filter((traktSeason) => traktSeason.number !== 0)
     }
 
-    // TODO:: Format the trakt seasons here
+    traktSeasons.forEach((traktSeason) => {
+      const formattedEpisodes = traktSeason.episodes.map((traktEpisode) => (
+        this.episodeHelperService.formatTraktEpisode(
+          show,
+          traktEpisode,
+          torrents?.[traktEpisode.season]?.[traktEpisode.number] ?? []
+        )
+      ))
 
-    return []
+      // Remove it from the episodes seasons
+      seasonNumbers = seasonNumbers.filter((season) => parseInt(season, 10) !== traktSeason.number)
+
+      let seasonFirstAired = Number(new Date(traktSeason?.first_aired)) ?? 0
+
+      // If it's null then use the one from the first episode
+      if (seasonFirstAired === 0 && formattedEpisodes.length > 0) {
+        const firstEpisode = formattedEpisodes[0]
+
+        seasonFirstAired = firstEpisode.firstAired
+      }
+
+      formattedSeasons.push({
+        _id: `${show._id}-${traktSeason.number}`,
+        tmdbId: traktSeason.ids.tmdb,
+        showImdbId: show._id,
+
+        firstAired: seasonFirstAired,
+        number: traktSeason.number,
+        synopsis: null,
+        title: traktSeason.title,
+        type: TYPE_SEASON,
+        images: defaultSeasonImages,
+        createdAt: Number(new Date()),
+        updatedAt: Number(new Date()),
+
+        episodes: this.sortItems(formattedEpisodes) as Episode[],
+
+        _traktSeason: true
+      })
+    })
+
+    // If we still have some seasons left add them with what we can
+    if (seasonNumbers.length > 0) {
+      // TODO:: Maybe check the titles and check if they match the
+      // name of the show then _traktSeason can be true
+      // Also rename trakt season then to a better name
+      seasonNumbers.forEach((seasonNr) => {
+        const formattedEpisodes: Episode[] = []
+
+        Object.keys(torrents[seasonNr]).map((episodeNr) => {
+          formattedEpisodes.push(this.episodeHelperService.formatUnknownEpisode(
+            show,
+            parseInt(seasonNr, 10),
+            parseInt(episodeNr, 10),
+            torrents[seasonNr][episodeNr]
+          ))
+        })
+
+        formattedSeasons.push({
+          _id: `${show._id}-${seasonNr}`,
+          tmdbId: null,
+          showImdbId: show._id,
+
+          firstAired: Number(new Date()),
+          number: parseInt(seasonNr, 10),
+          synopsis: null,
+          title: `Season ${seasonNr}`,
+          type: TYPE_SEASON,
+          images: defaultSeasonImages,
+          createdAt: Number(new Date()),
+          updatedAt: Number(new Date()),
+
+          episodes: this.sortItems(formattedEpisodes) as Episode[],
+
+          _traktSeason: false
+        })
+      })
+    }
+
+    return this.sortItems(formattedSeasons) as Season[]
   }
 
-  public async enhanceSeasons(seasons: Season[]): Promise<Season[]> {
-    // TODO:: Enhance the seasons here
-    return seasons
+  public async enhanceSeasons(show: Show, seasons: Season[]): Promise<Season[]> {
+    const enhancedSeasons: (boolean | Season)[] = await pMap(
+      seasons,
+      (season) => {
+        return this.enhanceSeason(show, season)
+      },
+      {
+        concurrency: 1
+      }
+    )
+
+    // Remove all the falsy seasons
+    return enhancedSeasons.filter(Boolean) as Season[]
   }
 
   public async addSeasonsToDatabase(seasons: Season[]): Promise<void> {
-    await Promise.all(seasons.map(this.addSeasonToDatabase))
+    await Promise.all(seasons.map((season) => this.addSeasonToDatabase(season)))
   }
 
   public async updateSeasonsInDatabase(seasons: Season[]): Promise<void> {
@@ -69,6 +163,74 @@ export class SeasonHelperService {
 
     await this.seasonModel.findByIdAndUpdate(season._id, season)
     await this.episodeHelperService.updateEpisodesInDatabase(episodes)
+  }
+
+  private async enhanceSeason(show: Show, season: Season): Promise<Season | boolean> {
+    try {
+      const tmdbSeason = await this.tmdbService.getSeasonInfo(show, season)
+
+      // Also enhance all the episodes
+      season.episodes.map((episode) => {
+        const tmdbEpisode = tmdbSeason.episodes.find((tmdbEpisode) => (
+          tmdbEpisode.episodeNumber === episode.number
+        ))
+
+        // If we have a matching episode then enhance it
+        if (tmdbEpisode) {
+          return {
+            ...episode,
+
+            title: episode.title !== `Episode ${episode.number}`
+              ? episode.title
+              : tmdbEpisode.name,
+            synopsis: episode.synopsis || tmdbEpisode.overview,
+            firstAired: tmdbEpisode.airDate && episode.firstAired === 0
+              ? new Date(tmdbEpisode.airDate).getTime()
+              : episode.firstAired,
+            images: {
+              ...episode.images,
+
+              poster: tmdbEpisode.stillPath
+                ? this.tmdbService.formatImage(tmdbEpisode.stillPath)
+                : defaultEpisodeImages.poster
+            }
+          }
+        }
+
+        return episode
+      })
+
+      return {
+        ...season,
+
+        title: season.title !== `Season ${season.number}`
+          ? season.title
+          : tmdbSeason.name,
+        synopsis: season.synopsis || tmdbSeason.overview,
+        firstAired: tmdbSeason.airDate && season.firstAired === 0
+          ? new Date(tmdbSeason.airDate).getTime()
+          : season.firstAired,
+        images: {
+          ...season.images,
+
+          poster: tmdbSeason.posterPath
+            ? this.tmdbService.formatImage(tmdbSeason.posterPath)
+            : defaultSeasonImages.poster
+        }
+      }
+    } catch (err) {
+      // If it was not a trakt season don't return it at all
+      if (!season._traktSeason) {
+        return false
+      }
+    }
+
+    // We ware not able to enhance it, return trakt season
+    return season
+  }
+
+  private sortItems(items: Episode[] | Season[]): Episode[] | Season[] {
+    return items.sort((a, b) => a.number - b.number)
   }
 
 }
