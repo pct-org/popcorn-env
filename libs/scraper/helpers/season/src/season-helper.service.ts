@@ -170,7 +170,7 @@ export class SeasonHelperService {
       const tmdbSeason = await this.tmdbService.getSeasonInfo(show, season)
 
       // Also enhance all the episodes
-      season.episodes.map((episode) => {
+      season.episodes = season.episodes.map((episode) => {
         const tmdbEpisode = tmdbSeason.episodes.find((tmdbEpisode) => (
           tmdbEpisode.episodeNumber === episode.number
         ))
@@ -190,9 +190,7 @@ export class SeasonHelperService {
             images: {
               ...episode.images,
 
-              poster: tmdbEpisode.stillPath
-                ? this.tmdbService.formatImage(tmdbEpisode.stillPath)
-                : defaultEpisodeImages.poster
+              poster: this.tmdbService.formatImage(tmdbEpisode.stillPath)
             }
           }
         }
@@ -213,9 +211,7 @@ export class SeasonHelperService {
         images: {
           ...season.images,
 
-          poster: tmdbSeason.posterPath
-            ? this.tmdbService.formatImage(tmdbSeason.posterPath)
-            : defaultSeasonImages.poster
+          poster: this.tmdbService.formatImage(tmdbSeason.posterPath)
         }
       }
     } catch (err) {
