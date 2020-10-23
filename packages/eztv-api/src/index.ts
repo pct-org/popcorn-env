@@ -451,7 +451,7 @@ module.exports = class EztvApi {
       } else if (title.match(dateBased)) {
         // If a item becomes data based check if the name of the show is in the
         // item this prevents wrongly mapped items to be added
-        if (!data.dateBased && !title.toLowerCase().includes(data.show.toLowerCase())) {
+        if (!data.dateBased && !title.toLowerCase().includes(data.title.toLowerCase())) {
           return
         }
 
