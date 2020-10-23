@@ -1,8 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { EpisodeModel, Episode } from '@pct-org/mongo-models'
+import { EpisodeModel, Episode, Show } from '@pct-org/mongo-models'
 import { defaultEpisodeImages } from '@pct-org/constants/default-image-sizes'
 import { TYPE_EPISODE } from '@pct-org/constants/item-types'
+import { TraktEpisode } from '@pct-org/services/trakt'
+import { formatTorrents } from '@pct-org/torrent/utils'
+import { ScrapedTorrent } from '@pct-org/scraper/providers/base'
 
 @Injectable()
 export class EpisodeHelperService {
@@ -12,7 +15,7 @@ export class EpisodeHelperService {
 
   protected readonly logger = new Logger('EpisodeHelper')
 
-  public getEmptyEpisode(): Episode {
+  private getEmptyEpisode(): Episode {
     return {
       _id: null,
       firstAired: 0,
@@ -42,8 +45,40 @@ export class EpisodeHelperService {
     }
   }
 
+  public formatTraktEpisode(show: Show, episode: TraktEpisode, torrents: ScrapedTorrent[]): Episode {
+    return {
+      ...this.getEmptyEpisode(),
+
+      _id: `${show._id}-${episode.season}-${episode.number}`,
+      showImdbId: show._id,
+      tmdbId: episode.ids.tmdb,
+      number: episode.number,
+      season: episode.season,
+      title: episode.title,
+      synopsis: episode.overview,
+      firstAired: Number(new Date(episode.first_aired)) ?? 0,
+      torrents: formatTorrents(torrents)
+    }
+  }
+
+  public formatUnknownEpisode(show: Show, seasonNr: number, episodeNr: number, torrents: ScrapedTorrent[]): Episode {
+    return {
+      ...this.getEmptyEpisode(),
+
+      _id: `${show._id}-${seasonNr}-${episodeNr}`,
+      showImdbId: show._id,
+      number: episodeNr,
+      season: seasonNr,
+      title: `Episode ${episodeNr}`,
+      // Use the createdAt date, otherwise it wont show in the app, will be overwritten when
+      // metadata becomes available
+      firstAired: Number(new Date()),
+      torrents: formatTorrents(torrents)
+    }
+  }
+
   public async addEpisodesToDatabase(episodes: Episode[]): Promise<void> {
-    await Promise.all(episodes.map(this.addEpisodeToDatabase))
+    await Promise.all(episodes.map((episode) => this.addEpisodeToDatabase(episode)))
   }
 
   public async updateEpisodesInDatabase(episodes: Episode[]): Promise<void> {
