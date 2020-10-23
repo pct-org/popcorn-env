@@ -36,10 +36,6 @@ export class YtsProviderService extends BaseProvider {
     this.api = yts
   }
 
-  protected async getTotalPages(): Promise<number> {
-    return 10
-  }
-
   /**
    * Get content info from a given torrent
    */

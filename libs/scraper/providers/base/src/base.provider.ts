@@ -17,7 +17,6 @@ import {
   ScraperProviderConfigRegex
 } from './base.interfaces'
 
-
 /**
  * Base class for scraping content from various sources.
  */
@@ -125,7 +124,7 @@ export abstract class BaseProvider {
             } catch (err) {
               const errorMessage = err.message || err
 
-              this.logger.error(`BaseProvider.scrapeConfig: ${errorMessage}`, err.trace)
+              this.logger.error(`BaseProvider.scrapeConfig: ${errorMessage}`, err.stack)
 
               // Log the content so it can be better debugged from logs
               if (errorMessage.includes('Could not find any data with slug')) {
@@ -139,7 +138,7 @@ export abstract class BaseProvider {
         }
       )
     } catch (err) {
-      this.logger.error(`Catch BaseProvider.scrapeConfig: ${err.message || err}`, err.trace)
+      this.logger.error(`Catch BaseProvider.scrapeConfig: ${err.message || err}`, err.stack)
     }
   }
 
@@ -151,13 +150,18 @@ export abstract class BaseProvider {
   protected async isItemBlackListed(content: ScrapedItem): Promise<boolean | Error> {
     const { slug, imdb } = content
 
-    const blacklistedItem = await this.blackListModel.findOne({ _id: imdb || slug })
+    const blacklistedItem = await this.blackListModel.findOne({
+      $or: [
+        { _id: imdb },
+        { _id: slug }
+      ]
+    })
 
     if (blacklistedItem) {
       if (blacklistedItem.get('expires') > Date.now()) {
         const expires = new Date(blacklistedItem.get('expires'))
 
-        this.logger.warn(
+        this.logger.debug(
           `'${imdb || slug}' is in the blacklist until '${expires}' because of reason '${blacklistedItem.get('reason')}', skipping...`
         )
 
@@ -187,6 +191,13 @@ export abstract class BaseProvider {
 
     if (!helper) {
       return Promise.reject(new Error(`'${this.contentType}' is not a valid value for ContentTypes!`))
+    }
+
+    // Double check if the item has torrents
+    if (!item.torrents || item.torrents.length === 0) {
+      this.logger.warn(`'${item.slug}' has no torrents`)
+
+      return Promise.resolve()
     }
 
     const existingItem = await helper.getItem(item.imdb, item.slug)

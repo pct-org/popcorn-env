@@ -22,6 +22,7 @@ export class OmdbService {
   public async getMovieImages(item: Movie): Promise<Images> {
     let poster = null
 
+    // If we already have a poster we can skip this one
     if (item.images.poster.full) {
       return item.images
     }
@@ -36,7 +37,7 @@ export class OmdbService {
 
     } catch (err) {
       if (err.statusCode && err.statusCode === 404) {
-        this.logger.error(`Can't find images for '${item.slug}'`, err)
+        this.logger.warn(`Can't find images for '${item.slug}'`)
 
       } else if (err.statusCode && err.statusCode === 401) {
         this.logger.error(`Rate limit hit when fetching for '${item.slug}'`, err)

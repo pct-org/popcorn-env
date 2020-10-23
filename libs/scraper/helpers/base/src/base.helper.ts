@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel, Movie, Show, Runtime } from '@pct-org/mongo-models'
 import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
+import { holder } from '@pct-org/constants/default-image-sizes'
 
 /**
  * Base class for scraping content from various sources.
@@ -12,21 +13,6 @@ export abstract class BaseHelper {
   private readonly blackListModel: typeof BlacklistModel
 
   protected abstract readonly logger: Logger
-
-  /**
-   * The default image link.
-   */
-  static Holder: string = null
-
-  /**
-   * The default image sizes object.
-   */
-  static DefaultImageSizes = {
-    full: BaseHelper.Holder,
-    high: BaseHelper.Holder,
-    medium: BaseHelper.Holder,
-    thumb: BaseHelper.Holder
-  }
 
   public abstract getItem(imdb?: string, slug?: string): Promise<Movie | Show | undefined>
 
@@ -83,11 +69,11 @@ export abstract class BaseHelper {
     let expires = 0
 
     if (until) {
-      this.logger.warn(`Adding "${content.title}" with identifier "${content.slug}" to the blacklist until '${until}' because of reason '${reason}'`)
+      this.logger.debug(`Adding "${content.title}" with identifier "${content.slug}" to the blacklist until '${until}' because of reason '${reason}'`)
       expires = Number(until)
 
     } else if (weeks) {
-      this.logger.warn(`Adding "${content.title}" with identifier "${content.slug}" to the blacklist for ${weeks} weeks because of reason '${reason}'`)
+      this.logger.debug(`Adding "${content.title}" with identifier "${content.slug}" to the blacklist for ${weeks} weeks because of reason '${reason}'`)
       expires = Number(new Date(Date.now() + (6.04e+8 * weeks)))
     }
 
@@ -107,13 +93,13 @@ export abstract class BaseHelper {
    */
   protected checkImages(item: Show | Movie): Promise<Show | Movie> {
     for (const i in item.images.backdrop) {
-      if (item.images.backdrop[i] === BaseHelper.Holder) {
+      if (item.images.backdrop[i] === holder) {
         return Promise.reject(item)
       }
     }
 
     for (const i in item.images.poster) {
-      if (item.images.poster[i] === BaseHelper.Holder) {
+      if (item.images.poster[i] === holder) {
         return Promise.reject(item)
       }
     }

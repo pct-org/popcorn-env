@@ -8,6 +8,7 @@ import { TmdbService } from '@pct-org/services/tmdb'
 import { FanartService } from '@pct-org/services/fanart'
 import { OmdbService } from '@pct-org/services/omdb'
 import { formatTorrents } from '@pct-org/torrent/utils'
+import { defaultMovieImages } from '@pct-org/constants/default-image-sizes'
 
 @Injectable()
 export class MovieHelperService extends BaseHelper {
@@ -30,8 +31,18 @@ export class MovieHelperService extends BaseHelper {
   protected readonly logger = new Logger('MovieHelper')
 
   public async getItem(imdb: string = null, slug: string = null): Promise<Movie | undefined> {
+    const or = []
+
+    if (imdb) {
+      or.push({ _id: imdb })
+    }
+
+    if (slug) {
+      or.push({ slug })
+    }
+
     return this.movieModel.findOne({
-        [imdb ? '_id' : 'slug']: imdb || slug
+        $or: or
       },
       {},
       { lean: true }
@@ -78,9 +89,6 @@ export class MovieHelperService extends BaseHelper {
     const traktMovie = await this.traktService.getMovieSummary(item.imdb)
 
     if (!traktMovie) {
-      // Try again in 1 week
-      await this.addToBlacklist(item, MovieType, '404', 1)
-
       return
     }
 
@@ -88,10 +96,10 @@ export class MovieHelperService extends BaseHelper {
     const ratingPercentage = Math.round(traktMovie.rating * 10)
 
     return {
-      _id: traktMovie.ids.imdb,
+      _id: traktMovie.ids.imdb || item.imdb,
       imdbId: traktMovie.ids.imdb,
       tmdbId: traktMovie.ids.tmdb,
-      slug: traktMovie.ids.slug,
+      slug: item.slug,
       title: traktMovie.title,
       released: new Date(traktMovie.released).getTime(),
       certification: traktMovie.certification,
@@ -103,10 +111,7 @@ export class MovieHelperService extends BaseHelper {
         watching: traktWatchers?.length ?? 0,
         percentage: ratingPercentage
       },
-      images: {
-        backdrop: BaseHelper.DefaultImageSizes,
-        poster: BaseHelper.DefaultImageSizes
-      },
+      images: defaultMovieImages,
       genres: traktMovie.genres
         ? traktMovie.genres
         : ['unknown'],

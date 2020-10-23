@@ -47,7 +47,7 @@ export class TraktService {
 
   public async getShowSeasons(id: string): Promise<TraktSeason[]> {
     try {
-      return this.trakt.seasons.summary({
+      return await this.trakt.seasons.summary({
         id,
         extended: 'episodes,full'
       })
@@ -57,9 +57,9 @@ export class TraktService {
     }
   }
 
-  public getNextEpisodeForShow(id: string): Promise<TraktEpisode | undefined> {
+  public async getNextEpisodeForShow(id: string): Promise<TraktEpisode | undefined> {
     try {
-      return this.trakt.shows.next_episode({
+      return await this.trakt.shows.next_episode({
         id,
         extended: 'full',
       })
@@ -69,9 +69,9 @@ export class TraktService {
     }
   }
 
-  public getLastEpisodeForShow(id: string): Promise<TraktEpisode | undefined> {
+  public async getLastEpisodeForShow(id: string): Promise<TraktEpisode | undefined> {
     try {
-      return this.trakt.shows.last_episode({
+      return await this.trakt.shows.last_episode({
         id,
         extended: 'full',
       })
@@ -81,9 +81,9 @@ export class TraktService {
     }
   }
 
-  private getSummary(id: string, type): Promise<TraktMovie | TraktShow | undefined> {
+  private async getSummary(id: string, type): Promise<TraktMovie | TraktShow | undefined> {
     try {
-      return this.trakt[type].summary({
+      return await  this.trakt[type].summary({
         id,
         extended: 'full'
       })
@@ -93,9 +93,9 @@ export class TraktService {
     }
   }
 
-  private getWatching(id: string, type = TraktService.TYPE_MOVIES): Promise<TraktWatching[] | undefined> {
+  private async getWatching(id: string, type = TraktService.TYPE_MOVIES): Promise<TraktWatching[] | undefined> {
     try {
-      return this.trakt[type].watching({
+      return await this.trakt[type].watching({
         id
       })
 

@@ -33,13 +33,13 @@ export class SeasonHelperService {
     }
 
     traktSeasons.forEach((traktSeason) => {
-      const formattedEpisodes = traktSeason.episodes.map((traktEpisode) => (
+      const formattedEpisodes = traktSeason?.episodes?.map((traktEpisode) => (
         this.episodeHelperService.formatTraktEpisode(
           show,
           traktEpisode,
           torrents?.[traktEpisode.season]?.[traktEpisode.number] ?? []
         )
-      ))
+      )) ?? []
 
       // Remove it from the episodes seasons
       seasonNumbers = seasonNumbers.filter((season) => parseInt(season, 10) !== traktSeason.number)

@@ -36,7 +36,7 @@ export class TvdbService {
 
     } catch (err) {
       if (err.statusCode && err.statusCode === 404) {
-        this.logger.error(`Can't find images for '${item.slug}'`, err)
+        this.logger.warn(`Can't find images for '${item.slug}'`)
 
       } else {
         this.logger.error(`Error happened getting images for '${item.slug}'`, err)

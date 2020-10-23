@@ -33,10 +33,10 @@ export class TmdbService {
 
     } catch (err) {
       if (err instanceof NotFoundError) {
-        this.logger.warn(`Can't find season for slug '${item.slug}'  season '${season.number}'`)
+        this.logger.warn(`Can't find season for slug '${item.slug}' season '${season.number}'`)
 
       } else {
-        this.logger.error(`Error happened getting season info for '${item.slug}' and  season '${season.number}'`, err)
+        this.logger.error(`Error happened getting season info for '${item.slug}' and season '${season.number}'`, err)
       }
 
       throw err

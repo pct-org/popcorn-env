@@ -8,6 +8,7 @@ import { TmdbService } from '@pct-org/services/tmdb'
 import { FanartService } from '@pct-org/services/fanart'
 import { TvdbService } from '@pct-org/services/tvdb'
 import { SeasonHelperService } from '@pct-org/scraper/helpers/season'
+import { defaultShowImages } from '@pct-org/constants/default-image-sizes'
 
 @Injectable()
 export class ShowHelperService extends BaseHelper {
@@ -33,8 +34,18 @@ export class ShowHelperService extends BaseHelper {
   protected readonly logger = new Logger('ShowHelper')
 
   public async getItem(imdb?: string, slug?: string): Promise<Show | undefined> {
+    const or = []
+
+    if (imdb) {
+      or.push({ _id: imdb })
+    }
+
+    if (slug) {
+      or.push({ slug })
+    }
+
     return this.showModel.findOne({
-        [imdb ? '_id' : 'slug']: imdb || slug
+        $or: or
       },
       {},
       { lean: true }
@@ -42,7 +53,7 @@ export class ShowHelperService extends BaseHelper {
   }
 
   public shouldUpdateExistingItem(item: Show): boolean {
-    // Shows depends more heavily on the blacklist so we
+    // Shows depends more heavily on the blacklist so
     // if we have a existing item we need to update it.
     return true
   }
@@ -86,8 +97,6 @@ export class ShowHelperService extends BaseHelper {
     }
 
     if (!traktShow) {
-      // Try again in 1 week
-      await this.addToBlacklist(item, ShowType, '404', 1)
       return
     }
 
@@ -114,8 +123,8 @@ export class ShowHelperService extends BaseHelper {
     await this.addShowToBlackListIfNeeded(item, traktShow, traktNextEpisode, traktLastEpisode)
 
     return {
-      _id: traktShow.ids.imdb,
-      slug: traktShow.ids.slug,
+      _id: traktShow.ids.imdb || item.imdb,
+      slug: item.slug,
       imdbId: traktShow.ids.imdb,
       tmdbId: traktShow.ids.tmdb,
       tvdbId: traktShow.ids.tvdb,
@@ -132,10 +141,7 @@ export class ShowHelperService extends BaseHelper {
         watching: traktWatchers?.length ?? 0,
         percentage: ratingPercentage
       },
-      images: {
-        backdrop: BaseHelper.DefaultImageSizes,
-        poster: BaseHelper.DefaultImageSizes
-      },
+      images: defaultShowImages,
       type: ShowType,
       genres: traktShow.genres
         ? traktShow.genres
@@ -258,6 +264,7 @@ export class ShowHelperService extends BaseHelper {
    * - The show has a airing episode in the future
    */
   private async addShowToBlackListIfNeeded(item: Pick<ScrapedItem, 'imdb' | 'slug' | 'title'>, show: TraktShow, nextEpisode?: TraktEpisode, lastEpisode?: TraktEpisode) {
+    // Show is ended or canceled
     if (['ended', 'canceled'].includes(show.status)) {
       await this.addToBlacklist(
         item,

@@ -37,7 +37,12 @@ export class FanartService {
         : null
 
     } catch (err) {
-      this.logger.error(`Error happened getting images for '${item.slug}'`, err)
+      if (err.message.includes('404')) {
+        this.logger.warn(`Can't find images for slug '${item.slug}'`)
+
+      } else {
+        this.logger.error(`Error happened getting images for '${item.slug}' "${err.message}"`, err.stack)
+      }
     }
 
     return {
@@ -69,7 +74,12 @@ export class FanartService {
         : null
 
     } catch (err) {
-      this.logger.error(`Error happened getting images for '${item.slug}'`, err)
+      if (err.message.includes('404')) {
+        this.logger.warn(`Can't find images for slug '${item.slug}'`)
+
+      } else {
+        this.logger.error(`Error happened getting images for '${item.slug}' "${err.message}"`, err.stack)
+      }
     }
 
     return {

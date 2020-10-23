@@ -30,6 +30,6 @@ export interface TraktSeason {
 
   network: string
 
-  episodes: TraktEpisode[]
+  episodes?: TraktEpisode[]
 
 }

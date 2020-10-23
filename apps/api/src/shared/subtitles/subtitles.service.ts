@@ -112,7 +112,7 @@ export class SubtitlesService {
                 score: subtitle.score
               })
             } catch (err) {
-              this.logger.error(`[${download._id}]: Could not download subtitle "${language}" (${subtitle.url})`, err)
+              this.logger.error(`[${download._id}]: Could not download subtitle "${language}" (${subtitle.url})`, err.stack)
             }
           })
         )
