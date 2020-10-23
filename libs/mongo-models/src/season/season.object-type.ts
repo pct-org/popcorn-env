@@ -42,4 +42,9 @@ export class Season {
   @Field({ description: 'The time at which the content was last updated.' })
   updatedAt: number
 
+  /**
+   * Internally used only!
+   * For the scraper
+   */
+  _traktSeason?: boolean
 }
