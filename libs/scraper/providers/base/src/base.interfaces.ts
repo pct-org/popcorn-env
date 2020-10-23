@@ -52,14 +52,14 @@ export interface ScrapedTorrent {
 
 }
 
-export interface ScrapedSeasonTorrent {
+export interface ScrapedSeasonTorrents {
 
   [episode: number]: ScrapedTorrent[]
 }
 
-export interface ScrapedShowTorrent {
+export interface ScrapedShowTorrents {
 
-  [season: number]: ScrapedSeasonTorrent[]
+  [season: number]: ScrapedSeasonTorrents
 
 }
 

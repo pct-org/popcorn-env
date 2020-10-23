@@ -52,7 +52,7 @@ export class EztvProviderService extends BaseProvider {
           } catch (err) {
             const errorMessage = err.message || err
 
-            this.logger.error(`BaseProvider.scrapeConfig`, err)
+            this.logger.error(`EztvProviderService.scrapeConfig: ${errorMessage}`, err.trace)
 
             // Log the content so it can be better debugged from logs
             if (errorMessage.includes('Could not find any data with slug')) {

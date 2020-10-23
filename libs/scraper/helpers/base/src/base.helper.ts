@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel, Movie, Show, Runtime } from '@pct-org/mongo-models'
-import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrent } from '@pct-org/scraper/providers/base'
+import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 
 /**
  * Base class for scraping content from various sources.
@@ -38,7 +38,7 @@ export abstract class BaseHelper {
 
   public abstract addImages(item: Movie | Show): Promise<Movie | Show>
 
-  public abstract addTorrents(item: Movie | Show, torrents: ScrapedTorrent[] | ScrapedShowTorrent[]): Promise<Movie | Show>
+  public abstract addTorrents(item: Movie | Show, torrents: ScrapedTorrent[] | ScrapedShowTorrents): Promise<Movie | Show>
 
   public abstract addItemToDatabase(item: Movie | Show): Promise<void>
 

@@ -1,8 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
-import { ShowType, ScrapedItem, ScrapedShowTorrent } from '@pct-org/scraper/providers/base'
+import { ShowType, ScrapedItem, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
-import { ShowModel, SeasonModel, EpisodeModel, Show, Movie } from '@pct-org/mongo-models'
+import { ShowModel, Show, Movie } from '@pct-org/mongo-models'
 import { TraktEpisode, TraktService, TraktShow } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
 import { FanartService } from '@pct-org/services/fanart'
@@ -14,12 +14,6 @@ export class ShowHelperService extends BaseHelper {
 
   @InjectModel('Shows')
   private readonly showModel: ShowModel
-
-  @InjectModel('Seasons')
-  private readonly seasonModel: SeasonModel
-
-  @InjectModel('Episodes')
-  private readonly episodeModel: EpisodeModel
 
   @Inject()
   private readonly traktService: TraktService
@@ -176,14 +170,17 @@ export class ShowHelperService extends BaseHelper {
       .catch((item) => item)
   }
 
-  public async addTorrents(item: Show, torrents: ScrapedShowTorrent[]): Promise<Show> {
+  public async addTorrents(item: Show, torrents: ScrapedShowTorrents): Promise<Show> {
     item.seasons = this.seasonHelperService.formatTraktSeasons(
-      item._traktSeasons,
+      item,
       torrents
     )
     item.numSeasons = item.seasons.length + 1
 
-    item.seasons = await this.seasonHelperService.enhanceSeasons(item.seasons)
+    item.seasons = await this.seasonHelperService.enhanceSeasons(
+      item,
+      item.seasons
+    )
 
     return Promise.resolve(item)
   }
