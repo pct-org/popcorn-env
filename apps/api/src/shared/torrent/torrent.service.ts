@@ -34,6 +34,11 @@ export class TorrentService implements OnApplicationBootstrap {
   private readonly maxConcurrent
 
   /**
+   * Maximum of concurrent connections
+   */
+  private readonly maxConns
+
+  /**
    * All the different supported formats
    */
   public readonly supportedFormats: string[] = ['mp4', 'ogg', 'mov', 'webmv', 'mkv', 'wmv', 'avi']
@@ -93,6 +98,7 @@ export class TorrentService implements OnApplicationBootstrap {
     private readonly episodesService: EpisodesService
   ) {
     this.maxConcurrent = this.configService.get(ConfigService.MAX_CONCURRENT_DOWNLOADS)
+    this.maxConns = this.configService.get(ConfigService.MAX_CONNS)
   }
 
   /**
@@ -117,7 +123,7 @@ export class TorrentService implements OnApplicationBootstrap {
     this.logger.log('Creating new WebTorrent client')
 
     this.webTorrent = new WebTorrent({
-      maxConns: 35
+      maxConns: this.maxConns
     })
 
     this.webTorrent.on('error', (err) => {
