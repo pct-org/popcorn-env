@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Download, DownloadModel } from '@pct-org/mongo-models'
+import { TYPE_EPISODE } from '@pct-org/constants/item-types'
 
 import { DownloadsArgs } from './dto/downloads.args'
 import { NewDownloadInput } from './dto/new-download.input'
@@ -76,8 +77,7 @@ export class DownloadsService {
   public async getAllEpisodes(): Promise<Download[]> {
     return this.downloadModel.find(
       {
-        // TODO:: Constants?
-        itemType: 'episode'
+        itemType: TYPE_EPISODE
       },
       {},
       {

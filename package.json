@@ -112,7 +112,7 @@
     "typescript": "~4.0.3"
   },
   "resolutions": {
-    "webtorrent": "0.108.6",
+    "webtorrent": "0.109.1",
     "webtorrent-cli": "3.0.7",
     "wrtc": "0.4.5"
   }

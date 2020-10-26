@@ -6,6 +6,7 @@ import { TraktShow } from './interfaces/trakt.show.interface'
 import { TraktSeason } from './interfaces/trakt.season.interface'
 import { TraktEpisode } from './interfaces/trakt.episode.interface'
 import { TraktWatching } from './interfaces/trakt.watching.interface'
+import { Movie, Show } from '@pct-org/mongo-models'
 
 @Injectable()
 export class TraktService {
@@ -61,7 +62,7 @@ export class TraktService {
     try {
       return await this.trakt.shows.next_episode({
         id,
-        extended: 'full',
+        extended: 'full'
       })
 
     } catch (err) {
@@ -73,7 +74,7 @@ export class TraktService {
     try {
       return await this.trakt.shows.last_episode({
         id,
-        extended: 'full',
+        extended: 'full'
       })
 
     } catch (err) {
@@ -81,9 +82,53 @@ export class TraktService {
     }
   }
 
+  public async mostWatchedWeeklyShows(): Promise<string[]> {
+    // Trakt is not setup
+    if (!this.trakt) {
+      return []
+    }
+
+    let showIds = []
+
+    try {
+      const traktMostWatched = await this.trakt.shows.watched({
+        period: 'weekly',
+        limit: 20
+      })
+
+      showIds = traktMostWatched.map((item) => item.show.ids.imdb)
+    } catch (err) {
+      return []
+    }
+
+    return showIds
+  }
+
+  public async findRelatedMovies(movieImdbId): Promise<string[]> {
+    // Trakt is not setup
+    if (!this.trakt) {
+      return []
+    }
+
+    let movieIds = []
+
+    try {
+      const traktRelatedMovies = await this.trakt.movies.related({
+        id: movieImdbId,
+        limit: 30
+      })
+
+      movieIds = traktRelatedMovies.map((item) => item.ids.imdb)
+    } catch (err) {
+      return []
+    }
+
+    return movieIds
+  }
+
   private async getSummary(id: string, type): Promise<TraktMovie | TraktShow | undefined> {
     try {
-      return await  this.trakt[type].summary({
+      return await this.trakt[type].summary({
         id,
         extended: 'full'
       })

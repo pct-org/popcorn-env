@@ -1,4 +1,5 @@
 import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql'
+import { Inject } from '@nestjs/common'
 
 import { PubSubService } from '../shared/pub-sub/pub-sub.service'
 
@@ -10,12 +11,11 @@ export class WatchOnTvResolver {
   static TRIGGER_TV = 'watchTv'
   static TRIGGER_MOBILE = 'watchMobile'
 
-  constructor(
-    private readonly pubSubService: PubSubService
-  ) {}
+  @Inject()
+  private readonly pubSubService: PubSubService
 
   @Mutation(returns => WatchOnTv)
-  async commandToTv(
+  public async commandToTv(
     @Args('command') command: string,
     @Args('_id') _id: string,
     @Args('quality') quality: string,
@@ -42,7 +42,7 @@ export class WatchOnTvResolver {
   }
 
   @Mutation(returns => WatchOnTv)
-  async commandToMobile(
+  public async commandToMobile(
     @Args('command') command: string
   ): Promise<WatchOnTv> {
     await this.pubSubService.publish(WatchOnTvResolver.TRIGGER_MOBILE, {
@@ -57,12 +57,12 @@ export class WatchOnTvResolver {
   }
 
   @Subscription(returns => WatchOnTv)
-  watchTv() {
+  public watchTv() {
     return this.pubSubService.asyncIterator(WatchOnTvResolver.TRIGGER_TV)
   }
 
   @Subscription(returns => WatchOnTv)
-  watchMobile() {
+  public watchMobile() {
     return this.pubSubService.asyncIterator(WatchOnTvResolver.TRIGGER_MOBILE)
   }
 

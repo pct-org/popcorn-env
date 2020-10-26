@@ -248,8 +248,8 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "packages/kat-ap/tsconfig.lib.json",
-              "packages/kat-ap/tsconfig.spec.json"
+              "packages/kat-api/tsconfig.lib.json",
+              "packages/kat-api/tsconfig.spec.json"
             ],
             "exclude": ["**/node_modules/**", "!packages/kat-api/**/*"]
           }

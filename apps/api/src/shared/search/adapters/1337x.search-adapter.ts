@@ -29,13 +29,14 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
     'bone111',
     'Silmarillion'
   ]
+
   /**
    * Search for a episode
    *
    * @param episode
    * @returns {Promise<*>}
    */
-  searchEpisode = async (episode: Episode) => {
+  public async searchEpisode(episode: Episode): Promise<Torrent[]> {
     try {
       const { torrents, domain } = await search({
         query: this.getEpisodeQuery(episode),
@@ -53,10 +54,10 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
         foundTorrents.map((torrent) => this.formatTorrent(torrent, domain))
       )
 
-      return results.filter(Boolean)
+      return results.filter(Boolean) as Torrent[]
 
-    } catch (e) {
-      this.logger.error('Error searching for episode!', e)
+    } catch (err) {
+      this.logger.error('Error searching for episode!', err)
     }
 
     return []
@@ -68,7 +69,7 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
    * @param movie
    * @returns {Promise<*>}
    */
-  searchMovie = async (movie: Movie) => {
+  public async searchMovie(movie: Movie): Promise<Torrent[]> {
     try {
       const { torrents, domain } = await search({
         query: movie.title,
@@ -84,16 +85,16 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
         foundTorrents.map((torrent) => this.formatTorrent(torrent, domain))
       )
 
-      return results.filter(Boolean)
+      return results.filter(Boolean) as Torrent[]
 
-    } catch (e) {
-      this.logger.error('Error searching for movie!', e)
+    } catch (err) {
+      this.logger.error('Error searching for movie!', err)
     }
 
     return []
   }
 
-  formatTorrent = async (torrent, domain: string): Promise<Torrent | boolean> => {
+  private async formatTorrent(torrent, domain: string): Promise<Torrent | boolean> {
     const quality = this.determineQuality(torrent.title)
 
     // If we could not determine the quality we are not adding it

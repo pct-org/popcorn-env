@@ -1,5 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql'
 import { Movie, Episode } from '@pct-org/mongo-models'
+import { Inject } from '@nestjs/common'
 
 import { EpisodesService } from '../episodes/episodes.service'
 import { MoviesService } from '../movies/movies.service'
@@ -9,15 +10,20 @@ import { ShowsService } from '../shows/shows.service'
 @Resolver(of => Episode || Movie)
 export class SearchBetterResolver {
 
-  constructor(
-    private readonly moviesService: MoviesService,
-    private readonly episodesService: EpisodesService,
-    private readonly showsService: ShowsService,
-    private readonly searchService: SearchService
-  ) {}
+  @Inject()
+  private readonly moviesService: MoviesService
+
+  @Inject()
+  private readonly episodesService: EpisodesService
+
+  @Inject()
+  private readonly showsService: ShowsService
+
+  @Inject()
+  private readonly searchService: SearchService
 
   @Mutation(returns => Episode, { description: 'Search for better qualities.' })
-  async getBetterQualitiesForEpisode(@Args('_id') _id: string): Promise<Episode> {
+  public async getBetterQualitiesForEpisode(@Args('_id') _id: string): Promise<Episode> {
     const episode = await this.episodesService.findOne(_id)
 
     // Set the show so we can properly build the search query
@@ -31,7 +37,7 @@ export class SearchBetterResolver {
   }
 
   @Mutation(type => Movie, { description: 'Search for better qualities.' })
-  async getBetterQualitiesForMovie(@Args('_id') _id: string): Promise<Movie> {
+  public async getBetterQualitiesForMovie(@Args('_id') _id: string): Promise<Movie> {
     const movie = await this.moviesService.findOne(_id)
 
     // Add the searched torrents

@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { Controller, Get, Res, Req, Param, Logger } from '@nestjs/common'
+import { Controller, Get, Res, Req, Param, Logger, Inject } from '@nestjs/common'
 
 import { ConfigService } from '../shared/config/config.service'
 import { TorrentService } from '../shared/torrent/torrent.service'
@@ -10,27 +10,22 @@ export class WatchController {
 
   private readonly logger = new Logger(WatchController.name)
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly torrentService: TorrentService
-  ) {}
+  @Inject()
+  private readonly configService: ConfigService
+
+  @Inject()
+  private readonly torrentService: TorrentService
 
   /**
    * Get's all the files from a directory
    * @param dir
    */
   private getFiles = (dir) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
     const filesInDirectory = fs.readdirSync(dir, { withFileTypes: true })
 
     const files = filesInDirectory.map((file) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
       const res = path.resolve(dir, file.name)
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
       return file.isDirectory()
         ? this.getFiles(res)
         : res
@@ -40,7 +35,7 @@ export class WatchController {
   }
 
   @Get('watch/:_id')
-  watch(
+  public watch(
     @Param() params,
     @Res() res,
     @Req() req

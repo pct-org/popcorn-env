@@ -1,6 +1,6 @@
 import * as path from 'path'
 import * as fs from 'fs'
-import { Controller, Get, Res, Req, Param, Logger } from '@nestjs/common'
+import { Controller, Get, Res, Req, Param, Logger, Inject } from '@nestjs/common'
 import * as srtToVtt from 'srt-to-vtt'
 
 import { ConfigService } from '../shared/config/config.service'
@@ -10,12 +10,11 @@ export class SubtitleController {
 
   private readonly logger = new Logger(SubtitleController.name)
 
-  constructor(
-    private readonly configService: ConfigService
-  ) {}
+  @Inject()
+  private readonly configService: ConfigService
 
   @Get('subtitle/:_id/:code')
-  subtitle(
+  public subtitle(
     @Param() params,
     @Res() res,
     @Req() req

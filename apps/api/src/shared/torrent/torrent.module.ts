@@ -12,8 +12,12 @@ import { EpisodesModule } from '../../episodes/episodes.module'
     MoviesModule,
     EpisodesModule
   ],
-  providers: [TorrentService],
-  exports: [TorrentService]
+  providers: [
+    TorrentService
+  ],
+  exports: [
+    TorrentService
+  ]
 })
 export class TorrentModule {
 }

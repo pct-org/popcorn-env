@@ -1,14 +1,13 @@
-import { HttpService, Injectable } from '@nestjs/common'
+import { HttpService, Inject, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { checkSync } from 'diskusage'
 import * as getFolderSize from 'get-folder-size'
-
+import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
 import { MovieModel, ShowModel, EpisodeModel } from '@pct-org/mongo-models'
 
 import { Status } from './status.object-type'
 import { StatusScraper } from './status-scraper.object-type'
 import { ConfigService } from '../shared/config/config.service'
-import { formatKbToString, formatMsToRemaining } from '../shared/utils'
 
 @Injectable()
 export class StatusService {
@@ -22,12 +21,13 @@ export class StatusService {
   @InjectModel('Episodes')
   private readonly episodesModel: EpisodeModel
 
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly httpService: HttpService
-  ) {}
+  @Inject()
+  private readonly configService: ConfigService
 
-  async getStatus(): Promise<Status> {
+  @Inject()
+  private readonly httpService: HttpService
+
+  public async getStatus(): Promise<Status> {
     const disk = await checkSync(
       this.configService.get(ConfigService.DOWNLOAD_LOCATION)
     )
@@ -44,9 +44,9 @@ export class StatusService {
       totalShows: await this.showModel.countDocuments(),
       totalEpisodes: await this.episodesModel.countDocuments(),
       disk: {
-        free: formatKbToString(disk.available, false),
-        used: formatKbToString(folderSize, false),
-        size: formatKbToString(disk.total, false),
+        free: formatBytes(disk.available),
+        used: formatBytes(folderSize),
+        size: formatBytes(disk.total),
 
         freePercentage,
         usedPercentage,
@@ -55,7 +55,7 @@ export class StatusService {
     }
   }
 
-  async getScraperStatus(): Promise<StatusScraper> {
+  public async getScraperStatus(): Promise<StatusScraper> {
     try {
       const response = await this.httpService.get(
         `http://localhost:${this.configService.get(ConfigService.SCRAPER_PORT)}/status`

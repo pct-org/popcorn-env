@@ -4,7 +4,7 @@ import { Controller, Get } from '@nestjs/common'
 export class StatusController {
 
   @Get('status')
-  watch() {
+  public watch() {
     return 'ok'
   }
 

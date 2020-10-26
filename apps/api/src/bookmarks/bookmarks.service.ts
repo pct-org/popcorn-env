@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-
+import { TYPE_MOVIES, TYPE_SHOWS } from '@pct-org/constants/item-types'
 import { MovieModel, ShowModel, Content } from '@pct-org/mongo-models'
 
 import { BookmarksArgs } from './dto/bookmarks.args'
@@ -16,11 +16,11 @@ export class BookmarksService {
   private readonly showModel: ShowModel
 
   public async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
-    const movies = ['none', 'movies'].includes(bookmarksArgs.filter)
+    const movies = ['none', TYPE_MOVIES].includes(bookmarksArgs.filter)
       ? await this.findAllMovies(bookmarksArgs)
       : []
 
-    const shows = ['none', 'shows'].includes(bookmarksArgs.filter)
+    const shows = ['none', TYPE_SHOWS].includes(bookmarksArgs.filter)
       ? await this.findAllShows(bookmarksArgs)
       : []
 
@@ -30,12 +30,9 @@ export class BookmarksService {
       ...shows
     ]
       .sort((itemA, itemB) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        const itemACompare = itemA?.latestEpisodeAired ?? itemA.bookmarkedOn
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        const itemBCompare = itemB?.latestEpisodeAired ?? itemB.bookmarkedOn
+        // Use [] to get around typescript error
+        const itemACompare = itemA?.['latestEpisodeAired'] ?? itemA.bookmarkedOn
+        const itemBCompare = itemB?.['latestEpisodeAired'] ?? itemB.bookmarkedOn
 
         return itemBCompare - itemACompare
       })
@@ -91,7 +88,13 @@ export class BookmarksService {
    * Get's the correct query to get the correct bookmarks
    * @param bookmarksArgs
    */
-  private getQuery(bookmarksArgs: BookmarksArgs): object {
+  private getQuery(bookmarksArgs: BookmarksArgs): {
+    bookmarked?: boolean,
+    title?: {
+      $regex: string,
+      $options: string
+    }
+  } {
     if (bookmarksArgs.query && bookmarksArgs.query.trim().length > 0) {
       return {
         bookmarked: true,

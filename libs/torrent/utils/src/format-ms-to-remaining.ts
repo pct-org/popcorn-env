@@ -3,7 +3,7 @@
  *
  * @param duration
  */
-export default (duration: number): string => {
+export const formatMsToRemaining = (duration: number): string => {
   let remain = duration || 0
 
   const days = Math.floor(remain / (1000 * 60 * 60 * 24))

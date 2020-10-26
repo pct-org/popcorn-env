@@ -1,10 +1,6 @@
 import { HttpService } from '@nestjs/common'
 import { Episode, Movie, Torrent } from '@pct-org/mongo-models'
 
-/**
- * TODO:: Move almost all logic from this to a utils package as the scraper also
- * uses some of this logic and so the app can also use it
- */
 export abstract class SearchAdapter {
 
   public static TORRENT_TYPE = 'searched'
@@ -14,9 +10,9 @@ export abstract class SearchAdapter {
   ) {
   }
 
-  searchEpisode: (episode: Episode) => Promise<any>
+  public abstract searchEpisode(episode: Episode): Promise<Torrent[]>
 
-  searchMovie: (episode: Movie) => Promise<any>
+  public abstract searchMovie(episode: Movie): Promise<Torrent[]>
 
   protected buildSeasonEpisodeString = (episode: Episode): string => {
     const seasonNr = `0${episode.season}`
@@ -64,21 +60,6 @@ export abstract class SearchAdapter {
     if (lowerCaseMetadata.includes('hdtv')) return '720p-ish'
 
     return null
-  }
-
-  protected getStringSize = (bytes: number): string => {
-    if (!bytes || bytes === 0) {
-      return '0 Byte'
-    }
-
-    const i = parseInt(
-      `${Math.floor(
-        Math.log(bytes) / Math.log(1024)
-      )}`,
-      10
-    )
-
-    return `${(bytes / (1024 ** i)).toFixed(2)} ${['Bytes', 'KB', 'MB', 'GB'][i]}`
   }
 
   /**
