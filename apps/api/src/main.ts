@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core'
+import { Logger } from '@nestjs/common'
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
 
 import { AppModule } from './app.module'
@@ -16,11 +17,11 @@ async function bootstrap() {
   )
 
   const configService = app.get('ConfigService')
+  const port = configService.get(ConfigService.PORT)
 
-  await app.listen(
-    configService.get(ConfigService.PORT),
-    '0.0.0.0'
-  )
+  await app.listen(port, '0.0.0.0').then(() => {
+    Logger.log(`Server running on http://localhost:${port}`)
+  })
 
   if (module.hot) {
     module.hot.accept()

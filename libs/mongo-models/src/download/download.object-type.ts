@@ -1,6 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
-import { Episode, Movie, Subtitle } from '../'
+import { Episode } from '../episode/episode.object-type'
+import { Movie } from '../movie/movie.object-type'
+import { Subtitle } from '../shared/subtitle.object-type'
 
 @ObjectType()
 export class Download {
@@ -15,7 +17,7 @@ export class Download {
   itemType: string
 
   @Field({ description: 'The type of torrent, default or searched.', defaultValue: 'scraped' })
-  torrentType: string
+  torrentType?: string
 
   @Field(type => Episode, {
     description: 'The episode if type === "episode".',
@@ -38,16 +40,16 @@ export class Download {
   progress: number
 
   @Field({ description: 'Status of the download.', defaultValue: 'queued' })
-  status: string
+  status?: string
 
   @Field({ description: 'Remaining time for the download.', nullable: true })
-  timeRemaining: string
+  timeRemaining?: string
 
   @Field({ description: 'Formatted download speed.', nullable: true })
-  speed: string
+  speed?: string
 
   @Field({ description: 'Number of peers of the download.', nullable: true })
-  numPeers: number
+  numPeers?: number
 
   @Field({ description: 'The time at which the download was created.' })
   createdAt: number
@@ -55,7 +57,7 @@ export class Download {
   @Field({ description: 'The time at which the download was last updated.' })
   updatedAt: number
 
-  @Field(type => [Subtitle], { description: 'Subtitles for the download.' })
-  subtitles: Subtitle[]
+  @Field(type => [Subtitle], { description: 'Subtitles for the download.', defaultValue: [] })
+  subtitles?: Subtitle[] = []
 
 }

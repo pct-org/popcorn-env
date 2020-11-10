@@ -61,6 +61,6 @@ export class Episode {
   updatedAt: number
 
   @Field(tye => Show, { description: 'The show this episode belongs to.' })
-  show: Show
+  show?: Show
 
 }

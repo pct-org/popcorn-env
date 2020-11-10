@@ -1,39 +1,35 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { Episode, Movie, Download } from '@pct-org/mongo-models'
+import { Download, DownloadModel } from '@pct-org/mongo-models'
+import { TYPE_EPISODE } from '@pct-org/constants/item-types'
 
 import { DownloadsArgs } from './dto/downloads.args'
-import { DownloadArgs } from './dto/download.args'
 import { NewDownloadInput } from './dto/new-download.input'
 import { TorrentService } from '../shared/torrent/torrent.service'
 
 @Injectable()
 export class DownloadsService {
 
-  constructor(
-    @InjectModel('Movies') private readonly movieModel: Model<Movie>,
-    @InjectModel('Episodes') private readonly episodeModel: Model<Episode>,
-    @InjectModel('Downloads') private readonly downloadModel: Model<Download>
-  ) {}
+  @InjectModel('Downloads')
+  private readonly downloadModel: DownloadModel
 
   /**
    * Add's one download
    */
-  addOne(newDownloadData: NewDownloadInput): Promise<Download> {
-    return new this.downloadModel({
+  public addOne(newDownloadData: NewDownloadInput): Promise<Download> {
+    return this.downloadModel.create({
       ...newDownloadData,
       status: TorrentService.STATUS_QUEUED,
       progress: 0,
       createdAt: Number(new Date()),
       updatedAt: Number(new Date())
-    }).save()
+    })
   }
 
   /**
    * Find one download, for downloads lean is false as there is a bigger change we are going to edit it
    */
-  findOne(id: string, lean = false): Promise<Download> {
+  public async findOne(id: string, lean = false): Promise<Download> {
     return this.downloadModel.findById(
       id,
       {},
@@ -46,13 +42,14 @@ export class DownloadsService {
   /**
    * Get all downloads
    */
-  findAll(downloadsArgs: DownloadsArgs): Promise<Download[]> {
+  public async findAll(downloadsArgs: DownloadsArgs): Promise<Download[]> {
     return this.downloadModel.find(
       {},
       {},
       {
         skip: downloadsArgs.offset,
-        limit: downloadsArgs.limit
+        limit: downloadsArgs.limit,
+        lean: true
       }
     )
   }
@@ -60,12 +57,16 @@ export class DownloadsService {
   /**
    * Get all the downloads with a certain id
    */
-  findAllWithIds(ids: string[]): Promise<Download[]> {
+  public async findAllWithIds(ids: string[]): Promise<Download[]> {
     return this.downloadModel.find(
       {
         _id: {
           $in: ids
         }
+      },
+      {},
+      {
+        lean: true
       }
     )
   }
@@ -73,11 +74,16 @@ export class DownloadsService {
   /**
    * Get all downloads
    */
-  getAllEpisodes(): Promise<Download[]> {
-    return this.downloadModel.find({
-      // TODO:: Constants?
-      itemType: 'episode'
-    })
+  public async getAllEpisodes(): Promise<Download[]> {
+    return this.downloadModel.find(
+      {
+        itemType: TYPE_EPISODE
+      },
+      {},
+      {
+        lean: true
+      }
+    )
   }
 
 }

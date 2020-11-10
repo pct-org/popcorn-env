@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-
-import { Movie, Show, Content } from '@pct-org/mongo-models'
+import { TYPE_MOVIES, TYPE_SHOWS } from '@pct-org/constants/item-types'
+import { MovieModel, ShowModel, Content } from '@pct-org/mongo-models'
 
 import { BookmarksArgs } from './dto/bookmarks.args'
 import { NewBookmarkInput } from './dto/new-bookmark.input'
@@ -10,14 +9,20 @@ import { NewBookmarkInput } from './dto/new-bookmark.input'
 @Injectable()
 export class BookmarksService {
 
-  constructor(
-    @InjectModel('Movies') private readonly movieModel: Model<Movie>,
-    @InjectModel('Shows') private readonly showModel: Model<Show>
-  ) {}
+  @InjectModel('Movies')
+  private readonly movieModel: MovieModel
 
-  async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
-    const movies = await this.findAllMovies(bookmarksArgs)
-    const shows = await this.findAllShows(bookmarksArgs)
+  @InjectModel('Shows')
+  private readonly showModel: ShowModel
+
+  public async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
+    const movies = ['none', TYPE_MOVIES].includes(bookmarksArgs.filter)
+      ? await this.findAllMovies(bookmarksArgs)
+      : []
+
+    const shows = ['none', TYPE_SHOWS].includes(bookmarksArgs.filter)
+      ? await this.findAllShows(bookmarksArgs)
+      : []
 
     // Return all bookmarks at once
     return [
@@ -25,18 +30,15 @@ export class BookmarksService {
       ...shows
     ]
       .sort((itemA, itemB) => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        const itemACompare = itemA?.latestEpisodeAired ?? itemA.bookmarkedOn
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        const itemBCompare = itemB?.latestEpisodeAired ?? itemB.bookmarkedOn
+        // Use [] to get around typescript error
+        const itemACompare = itemA?.['latestEpisodeAired'] ?? itemA.bookmarkedOn
+        const itemBCompare = itemB?.['latestEpisodeAired'] ?? itemB.bookmarkedOn
 
         return itemBCompare - itemACompare
       })
   }
 
-  async findAllMovies(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
+  public async findAllMovies(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     return this.movieModel.find(
       this.getQuery(bookmarksArgs),
       {},
@@ -46,7 +48,7 @@ export class BookmarksService {
     )
   }
 
-  async findAllShows(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
+  public async findAllShows(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     return this.showModel.find(
       this.getQuery(bookmarksArgs),
       {},
@@ -61,8 +63,8 @@ export class BookmarksService {
    * @param addBookmarksArgs
    * @param {boolean} add - Do we need to add or remove the bookmark
    */
-  async updateBookmark(addBookmarksArgs: NewBookmarkInput, add): Promise<Content> {
-    return await (
+  public async updateBookmark(addBookmarksArgs: NewBookmarkInput, add: boolean): Promise<Content> {
+    return (
       addBookmarksArgs.type === 'movie'
         ? this.movieModel
         : this.showModel
@@ -76,7 +78,8 @@ export class BookmarksService {
           : null
       },
       {
-        new: true // Return the new updated object
+        new: true, // Return the new updated object
+        lean: true
       }
     )
   }
@@ -85,7 +88,13 @@ export class BookmarksService {
    * Get's the correct query to get the correct bookmarks
    * @param bookmarksArgs
    */
-  private getQuery(bookmarksArgs: BookmarksArgs): object {
+  private getQuery(bookmarksArgs: BookmarksArgs): {
+    bookmarked?: boolean,
+    title?: {
+      $regex: string,
+      $options: string
+    }
+  } {
     if (bookmarksArgs.query && bookmarksArgs.query.trim().length > 0) {
       return {
         bookmarked: true,

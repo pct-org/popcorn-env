@@ -1,0 +1,9 @@
+{
+  "name": "@pct-org/scraper",
+  "version": "4.0.0-alpha.1",
+  "description": "Scraper part of PCT environment",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pct-org/popcorn-env.git"
+  }
+}

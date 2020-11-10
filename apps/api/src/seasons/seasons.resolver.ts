@@ -1,17 +1,17 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql'
 import { Season, Episode } from '@pct-org/mongo-models'
+import { Inject } from '@nestjs/common'
 
 import { EpisodesService } from '../episodes/episodes.service'
 
 @Resolver(of => Season)
 export class SeasonsResolver {
 
-  constructor(
-    private readonly episodesService: EpisodesService
-  ) {}
+  @Inject()
+  private readonly episodesService: EpisodesService
 
-  @ResolveField(type => [Episode])
-  episodes(@Parent() season: Season): Promise<Episode[]> {
+  @ResolveField(type => [Episode], { description: 'Get all episodes for an season.' })
+  public episodes(@Parent() season: Season): Promise<Episode[]> {
     // If we already have episodes then just get the full ones based on id
     if (season.episodes) {
       return this.episodesService.findAllWithIDS(

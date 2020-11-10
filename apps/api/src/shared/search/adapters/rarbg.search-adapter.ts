@@ -1,5 +1,6 @@
 import { Episode, Movie, Torrent } from '@pct-org/mongo-models'
 import { Logger } from '@nestjs/common'
+import { formatBytes } from '@pct-org/torrent/utils'
 
 import { SearchAdapter } from '../search-base.adapter'
 
@@ -9,18 +10,18 @@ export class RarbgSearchAdapter extends SearchAdapter {
 
   private readonly logger = new Logger(RarbgSearchAdapter.name)
 
-  url = 'https://torrentapi.org/pubapi_v2.php'
+  private url = 'https://torrentapi.org/pubapi_v2.php'
 
-  defaultParams = {
+  private defaultParams = {
     app_id: 'popsticle',
     format: 'json_extended'
   }
 
-  token = null
-  tokenExpires = null
-  lastRequest = null
+  private token = null
+  private tokenExpires = null
+  private lastRequest = null
 
-  getToken = async () => {
+  private getToken = async () => {
     if (this.token === null || (this.tokenExpires - Date.now()) < 0) {
       const ttl = Date.now() + 900000
 
@@ -32,8 +33,8 @@ export class RarbgSearchAdapter extends SearchAdapter {
     return this.token
   }
 
-  getRequestParams = (item: Episode | Movie) => {
-    let params = {
+  private getRequestParams = (item: Episode | Movie) => {
+    const params = {
       mode: 'search',
       category: item.type === 'episode'
         ? 'tv'
@@ -61,7 +62,7 @@ export class RarbgSearchAdapter extends SearchAdapter {
    * @param episode
    * @returns {Promise<*>}
    */
-  searchEpisode = async (episode: Episode) => {
+  public async searchEpisode(episode: Episode): Promise<Torrent[]> {
     try {
       const token = await this.getToken()
 
@@ -85,12 +86,14 @@ export class RarbgSearchAdapter extends SearchAdapter {
             )
 
           // Format all the torrents and remove the ones that returned false
-          return foundTorrents.map(this.formatTorrent).filter(Boolean)
+          return foundTorrents
+            .map(this.formatTorrent)
+            .filter(Boolean) as Torrent[]
         }
       }
 
-    } catch (e) {
-      this.logger.error('Error searching for episode!', e)
+    } catch (err) {
+      this.logger.error('Error searching for episode!', err)
     }
 
     return []
@@ -102,7 +105,7 @@ export class RarbgSearchAdapter extends SearchAdapter {
    * @param movie
    * @returns {Promise<*>}
    */
-  searchMovie = async (movie: Movie) => {
+  public async searchMovie(movie: Movie): Promise<Torrent[]> {
     try {
       const token = await this.getToken()
 
@@ -112,17 +115,17 @@ export class RarbgSearchAdapter extends SearchAdapter {
         // Return the best torrents
         return torrent_results
           .map(this.formatTorrent)
-          .filter(Boolean)
+          .filter(Boolean) as Torrent[]
       }
 
-    } catch (e) {
-      this.logger.error('Error searching for movie!', e)
+    } catch (err) {
+      this.logger.error('Error searching for movie!', err)
     }
 
     return []
   }
 
-  formatTorrent = (torrent): Torrent | boolean => {
+  private formatTorrent(torrent): Torrent | boolean {
     const quality = this.determineQuality(torrent.title)
 
     // If we could not determine the quality we are not adding it
@@ -137,39 +140,41 @@ export class RarbgSearchAdapter extends SearchAdapter {
       quality: quality,
       seeds: parseInt(torrent.seeders, 10),
       size: torrent.size,
-      sizeString: this.getStringSize(torrent.size),
+      sizeString: formatBytes(torrent.size),
       title: torrent.title,
       type: SearchAdapter.TORRENT_TYPE,
       url: torrent.download
     }
   }
 
-  private get = (params): Promise<any> => new Promise((resolve, reject) => {
-    let timeout = 0
+  private get(params): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let timeout = 0
 
-    // There is a 1 req / 2 sec limit
-    if (this.lastRequest !== null && (this.lastRequest + 2200) > Date.now()) {
-      timeout = (this.lastRequest + 2200) - Date.now()
-    }
+      // There is a 1 req / 2 sec limit
+      if (this.lastRequest !== null && (this.lastRequest + 2200) > Date.now()) {
+        timeout = (this.lastRequest + 2200) - Date.now()
+      }
 
-    this.lastRequest = Date.now()
+      this.lastRequest = Date.now()
 
-    setTimeout(() => {
-      this.httpService.get(
-        this.url,
-        {
-          params: {
-            ...params,
-            ...this.defaultParams
+      setTimeout(() => {
+        this.httpService.get(
+          this.url,
+          {
+            params: {
+              ...params,
+              ...this.defaultParams
+            }
           }
-        }
-      ).toPromise()
-        .then(({ data }) => {
-          resolve(data)
-        }).catch(reject)
+        ).toPromise()
+          .then(({ data }) => {
+            resolve(data)
+          }).catch(reject)
 
-    }, timeout)
-  })
+      }, timeout)
+    })
+  }
 
 }
 

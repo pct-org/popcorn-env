@@ -14,6 +14,7 @@ export const contentSchema: object = {
   synopsis: String,
   createdAt: Number,
   updatedAt: Number,
+  lastMetadataUpdate: Number,
   runtime: {
     full: {
       type: String

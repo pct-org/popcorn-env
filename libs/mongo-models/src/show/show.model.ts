@@ -1,5 +1,11 @@
-import { model } from 'mongoose'
+import { Model, Document } from 'mongoose'
 
-import { showSchema } from './show.schema'
+import { Show } from './show.object-type'
 
-export const ShowModel = model('Show', showSchema)
+export interface ShowDocument extends Show, Document {
+
+  _id: string
+
+}
+
+export type ShowModel = Model<ShowDocument>

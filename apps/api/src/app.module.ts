@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { MongooseModule } from '@nestjs/mongoose'
+import { ModelsModule } from '@pct-org/mongo-models'
 
 import { ConfigModule } from './shared/config/config.module'
 import { ConfigService } from './shared/config/config.service'
-import { ModelsModule } from './shared/models/models.module'
 import { TorrentModule } from './shared/torrent/torrent.module'
 import { PubSubModule } from './shared/pub-sub/pub-sub.module'
-import { TraktModule } from './shared/trakt/trakt.module'
 
 import { StatusModule } from './status/status.module'
 import { CalendarModule } from './calendar/calendar.module'
@@ -30,7 +29,6 @@ import { WatchModule } from './watch/watch.module'
     ConfigModule,
     TorrentModule,
     PubSubModule,
-    TraktModule,
 
     // GraphQL
     StatusModule,

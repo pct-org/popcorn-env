@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res } from '@nestjs/common'
+import { Controller, Get, Inject, Res } from '@nestjs/common'
 import * as ical from 'ical-generator'
 
 import { BookmarksService } from '../bookmarks/bookmarks.service'
@@ -7,13 +7,14 @@ import { EpisodesService } from '../episodes/episodes.service'
 @Controller()
 export class CalendarController {
 
-  constructor(
-    private readonly episodesService: EpisodesService,
-    private readonly bookmarksService: BookmarksService
-  ) {}
+  @Inject()
+  private readonly episodesService: EpisodesService
+
+  @Inject()
+  private readonly bookmarksService: BookmarksService
 
   @Get('calendar.ics')
-  async calendar(
+  public async calendar(
     @Res() res
   ) {
     const cal = ical()

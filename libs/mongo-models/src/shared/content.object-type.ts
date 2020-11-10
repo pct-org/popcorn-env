@@ -64,4 +64,7 @@ export class Content {
   @Field({ description: 'The time at which the content was last updated.' })
   updatedAt: number
 
+  @Field({ description: 'The time at which the metadata was last updated.' })
+  lastMetadataUpdate: number
+
 }

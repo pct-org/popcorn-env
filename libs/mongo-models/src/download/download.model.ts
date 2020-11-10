@@ -1,5 +1,11 @@
-import { model } from 'mongoose'
+import { Model, Document } from 'mongoose'
 
-import { downloadSchema } from './download.schema'
+import { Download } from './download.object-type'
 
-export const DownloadModel = model('Download', downloadSchema)
+export interface DownloadDocument extends Download, Document {
+
+  _id: string
+
+}
+
+export type DownloadModel = Model<DownloadDocument>

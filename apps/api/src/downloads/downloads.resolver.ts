@@ -1,44 +1,50 @@
 import { Args, Parent, Query, ResolveField, Resolver, Mutation } from '@nestjs/graphql'
 import { Movie, Episode, Download } from '@pct-org/mongo-models'
+import { Inject } from '@nestjs/common'
+import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
 
 import { DownloadsArgs } from './dto/downloads.args'
 import { DownloadArgs } from './dto/download.args'
 import { DownloadsService } from './downloads.service'
 
 import { TorrentService } from '../shared/torrent/torrent.service'
-import { formatKbToString, formatMsToRemaining } from '../shared/utils'
 import { MoviesService } from '../movies/movies.service'
 import { EpisodesService } from '../episodes/episodes.service'
 
 @Resolver(of => Download)
 export class DownloadsResolver {
 
-  constructor(
-    private readonly downloadsService: DownloadsService,
-    private readonly torrentService: TorrentService,
-    private readonly moviesService: MoviesService,
-    private readonly episodesService: EpisodesService
-  ) {}
+  @Inject()
+  private readonly downloadsService: DownloadsService
+
+  @Inject()
+  private readonly torrentService: TorrentService
+
+  @Inject()
+  private readonly moviesService: MoviesService
+
+  @Inject()
+  private readonly episodesService: EpisodesService
 
   @Query(returns => [Download], { description: 'Get all downloads.' })
-  downloads(@Args() downloadsArgs: DownloadsArgs): Promise<Download[]> {
+  public downloads(@Args() downloadsArgs: DownloadsArgs): Promise<Download[]> {
     return this.downloadsService.findAll(downloadsArgs)
   }
 
   @Query(returns => Download, { description: 'Get one download.', nullable: true })
-  download(@Args() downloadArgs: DownloadArgs): Promise<Download> {
+  public download(@Args() downloadArgs: DownloadArgs): Promise<Download> {
     return this.downloadsService.findOne(downloadArgs._id)
   }
 
   @Query(returns => [Download], { description: 'Get all active/queued downloads.' })
-  activeDownloads(): Promise<Download[]> {
+  public activeDownloads(): Promise<Download[]> {
     return this.downloadsService.findAllWithIds(
       this.torrentService.downloads.map((download) => download._id)
     )
   }
 
   @Mutation(returns => Download, { description: 'Start downloading a quality.' })
-  async startDownload(
+  public async startDownload(
     @Args('_id') _id: string,
     @Args('itemType') itemType: string,
     @Args('quality') quality: string,
@@ -67,16 +73,11 @@ export class DownloadsResolver {
 
     const item = await this.torrentService.getItemForDownload(download)
 
-    await this.torrentService.updateOne(
-      item,
-      {
-        download: {
-          downloadStatus: TorrentService.STATUS_QUEUED,
-          downloadQuality: quality,
-          downloading: true
-        }
-      }
-    )
+    await this.torrentService.updateItemDownload(item, {
+      downloadStatus: TorrentService.STATUS_QUEUED,
+      downloadQuality: quality,
+      downloading: true
+    })
 
     // Add the download to the queue
     this.torrentService.addDownload(download)
@@ -90,7 +91,7 @@ export class DownloadsResolver {
   }
 
   @Mutation(returns => Download, { description: 'Remove an download and its files.', nullable: true })
-  async removeDownload(
+  public async removeDownload(
     @Args('_id') _id: string,
     @Args({ name: 'type', defaultValue: TorrentService.TYPE_DOWNLOAD, type: () => String }) type: string
   ): Promise<Download> {
@@ -107,18 +108,13 @@ export class DownloadsResolver {
 
         const item = await this.torrentService.getItemForDownload(download)
 
-        await this.torrentService.updateOne(
-          item,
-          {
-            download: {
-              downloadedOn: null,
-              downloadStatus: null,
-              downloadQuality: null,
-              downloading: false,
-              downloadComplete: false
-            }
-          }
-        )
+        await this.torrentService.updateItemDownload(item, {
+          downloadedOn: null,
+          downloadStatus: null,
+          downloadQuality: null,
+          downloading: false,
+          downloadComplete: false
+        })
 
         download.status = TorrentService.STATUS_REMOVED
         download.progress = 0
@@ -131,7 +127,7 @@ export class DownloadsResolver {
   }
 
   @Mutation(returns => Download, { description: 'Start a download in stream mode.' })
-  async startStream(
+  public async startStream(
     @Args('_id') _id: string,
     @Args('itemType') itemType: string,
     @Args('quality') quality: string,
@@ -162,9 +158,7 @@ export class DownloadsResolver {
   }
 
   @Mutation(returns => Download, { description: 'Stop a stream and remove downloaded content.' })
-  async stopStream(
-    @Args('_id') _id: string
-  ): Promise<Download> {
+  public async stopStream(@Args('_id') _id: string): Promise<Download> {
     return this.removeDownload(_id, TorrentService.TYPE_STREAM)
   }
 
@@ -174,7 +168,7 @@ export class DownloadsResolver {
    * @param {Download} download - The download to fetch the movie for
    */
   @ResolveField(type => Movie, { description: 'The movie of this download, only if itemType === "movie".' })
-  movie(@Parent() download): Promise<Movie> {
+  public movie(@Parent() download): Promise<Movie> {
     if (download.itemType !== 'movie') {
       return null
     }
@@ -186,7 +180,7 @@ export class DownloadsResolver {
    * Fetch the episode of this download
    */
   @ResolveField(type => Episode, { description: 'The episode of this download, only if itemType === "episode".' })
-  episode(@Parent() download: Download): Promise<Episode> {
+  public episode(@Parent() download: Download): Promise<Episode> {
     if (download.itemType !== 'episode') {
       return null
     }
@@ -200,8 +194,8 @@ export class DownloadsResolver {
    * @param {Download} download - The download to format it on
    */
   @ResolveField(type => String)
-  speed(@Parent() download): string {
-    return formatKbToString(download.speed)
+  public speed(@Parent() download): string {
+    return formatBytes(download.speed, true)
   }
 
   /**
@@ -210,7 +204,7 @@ export class DownloadsResolver {
    * @param {Download} download - The download to format it on
    */
   @ResolveField(type => String)
-  timeRemaining(@Parent() download): string {
+  public timeRemaining(@Parent() download): string {
     return formatMsToRemaining(download.timeRemaining)
   }
 

@@ -7,6 +7,8 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowJs": true,
+    "checkJs": false,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -25,26 +27,77 @@
       "@pct-org/mongo-models": [
         "libs/mongo-models/src/index.ts"
       ],
-      "@pct-org/eztv-api-pt": [
+      "@pct-org/mongo-models/dist/*": [
+        "libs/mongo-models/src/*"
+      ],
+      "@pct-org/eztv-api": [
         "packages/eztv-api/src/index.ts"
       ],
-      "@pct-org/solidtorrents-api-pt": [
+      "@pct-org/solidtorrents-api": [
         "packages/solidtorrents-api/src/index.ts"
       ],
-      "@pct-org/pop-api": [
-        "packages/pop-api/src/index.ts"
-      ],
-      "@pct-org/zooqle-api-ts": [
+      "@pct-org/zooqle-api": [
         "packages/zooqle-api/src/index.ts"
       ],
       "@pct-org/ettv-api": [
         "packages/ettv-api/src/index.ts"
       ],
-      "@pct-org/kat-api-pt": [
+      "@pct-org/kat-api": [
         "packages/kat-api-pt/src/index.ts"
       ],
-      "@pct-org/pop-api-scraper": [
-        "packages/pop-api-scraper/src/index.ts"
+      "@pct-org/yts-module": [
+        "internal/yts-module/src/index.ts"
+      ],
+      "@pct-org/database": [
+        "libs/database/src/index.ts"
+      ],
+      "@pct-org/scraper/providers/base": [
+        "libs/scraper/providers/base/src/index.ts"
+      ],
+      "@pct-org/scraper/helpers/show": [
+        "libs/scraper/helpers/show/src/index.ts"
+      ],
+      "@pct-org/scraper/helpers/movie": [
+        "libs/scraper/helpers/movie/src/index.ts"
+      ],
+      "@pct-org/scraper/providers/yts": [
+        "libs/scraper/providers/yts/src/index.ts"
+      ],
+      "@pct-org/torrent/utils": [
+        "libs/torrent/utils/src/index.ts"
+      ],
+      "@pct-org/scraper/helpers/base": [
+        "libs/scraper/helpers/base/src/index.ts"
+      ],
+      "@pct-org/services/trakt": [
+        "libs/services/trakt/src/index.ts"
+      ],
+      "@pct-org/services/fanart": [
+        "libs/services/fanart/src/index.ts"
+      ],
+      "@pct-org/services/omdb": [
+        "libs/services/omdb/src/index.ts"
+      ],
+      "@pct-org/services/tmdb": [
+        "libs/services/tmdb/src/index.ts"
+      ],
+      "@pct-org/services/tvdb": [
+        "libs/services/tvdb/src/index.ts"
+      ],
+      "@pct-org/scraper/providers/eztv": [
+        "libs/scraper/providers/eztv/src/index.ts"
+      ],
+      "@pct-org/scraper/helpers/season": [
+        "libs/scraper/helpers/season/src/index.ts"
+      ],
+      "@pct-org/scraper/helpers/episode": [
+        "libs/scraper/helpers/episode/src/index.ts"
+      ],
+      "@pct-org/constants/default-image-sizes": [
+        "libs/constants/default-image-sizes/index.ts"
+      ],
+      "@pct-org/constants/item-types": [
+        "libs/constants/item-types/index.ts"
       ]
     }
   },

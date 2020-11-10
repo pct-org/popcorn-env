@@ -1,4 +1,18 @@
 {
-  "name": "@pct-org/zooqle-api-ts",
-  "version": "0.0.1"
+  "name": "@pct-org/zooqle-api",
+  "version": "1.0.49",
+  "description": "Promise based Zooqle Torrent Scraper written in TypeScript.",
+  "main": "src/index.js",
+  "keywords": [
+    "zooqle",
+    "api",
+    "torrent",
+    "scraper",
+    "promise",
+    "pirate",
+    "piratebay",
+    "rargb",
+    "imdb",
+    "hash"
+  ]
 }

@@ -27,4 +27,16 @@ export const movieSchema = (new Schema(
   'rating.watching': 1
 }).index({
   'bookmarked': 1
+}).index({
+  'released': 1
+}).index({
+  'year': 1
+}).index({
+  'createdAt': 1
+}).index({
+  'rating.votes': 1,
+  'rating.percentage': 1,
+  'rating.watching': 1,
+}).index({
+  'title': 1,
 })

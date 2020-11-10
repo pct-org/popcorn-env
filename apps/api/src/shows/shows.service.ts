@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { Show, Download } from '@pct-org/mongo-models'
+import { Show, Download, ShowModel } from '@pct-org/mongo-models'
 
 import { ContentService } from '../shared/content/content.service'
 
@@ -10,13 +9,10 @@ import { ShowsArgs } from './dto/shows.args'
 @Injectable()
 export class ShowsService extends ContentService {
 
-  constructor(
-    @InjectModel('Shows') private readonly showModel: Model<Show>
-  ) {
-    super()
-  }
+  @InjectModel('Shows')
+  private readonly showModel: ShowModel
 
-  findOne(id: string, lean = true): Promise<Show> {
+  public async findOne(id: string, lean = true): Promise<Show> {
     return this.showModel.findById(
       id,
       {},
@@ -26,7 +22,7 @@ export class ShowsService extends ContentService {
     )
   }
 
-  findAll(contentArgs: ShowsArgs, lean = true): Promise<Show[]> {
+  public async findAll(contentArgs: ShowsArgs, lean = true): Promise<Show[]> {
     return this.showModel.find(
       this.getQuery(contentArgs),
       {},
@@ -34,7 +30,7 @@ export class ShowsService extends ContentService {
     )
   }
 
-  findAllWithIDS(ids: string[], lean = true): Promise<Show[]> {
+  public async findAllWithIDS(ids: string[], lean = true): Promise<Show[]> {
     return this.showModel.find(
       {
         _id: {
@@ -54,7 +50,7 @@ export class ShowsService extends ContentService {
    *
    * @param {array<Download>} downloads - Downloads from mongo db
    */
-  getShowIDsFromDownloads(downloads: Download[]) {
+  public getShowIDsFromDownloads(downloads: Download[]) {
     let shows = []
 
     // Flatten the id's of shows to a usable list for graph

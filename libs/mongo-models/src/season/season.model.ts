@@ -1,5 +1,11 @@
-import { model } from 'mongoose'
+import { Model, Document } from 'mongoose'
 
-import { seasonSchema } from './season.schema'
+import { Season } from './season.object-type'
 
-export const SeasonModel = model('Season', seasonSchema)
+export interface SeasonDocument extends Season, Document {
+
+  _id: string
+
+}
+
+export type SeasonModel = Model<SeasonDocument>

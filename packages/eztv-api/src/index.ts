@@ -5,7 +5,7 @@ const got = require('got')
 const bytes = require('bytes')
 const { stringify } = require('querystring')
 
-const { name } = require('./package.json')
+const { name } = require('../package.json')
 
 /**
  * Show object which will be returned.
@@ -60,7 +60,7 @@ module.exports = class EztvApi {
    * @param {!Object} config={} - The configuration object for the module.
    * @param {!string} baseUrl=https://eztv.ag/ - The base url of eztv.
    */
-  constructor({ baseUrl = 'https://eztv.io/' } = {}) {
+  constructor({ baseUrl = 'https://eztv.re/' } = {}) {
     /**
      * The base url of eztv.
      * @type {string}
@@ -451,7 +451,7 @@ module.exports = class EztvApi {
       } else if (title.match(dateBased)) {
         // If a item becomes data based check if the name of the show is in the
         // item this prevents wrongly mapped items to be added
-        if (!data.dateBased && !title.toLowerCase().includes(data.show.toLowerCase())) {
+        if (!data.dateBased && !title.toLowerCase().includes(data.title.toLowerCase())) {
           return
         }
 
@@ -464,16 +464,16 @@ module.exports = class EztvApi {
       }
 
       if (season !== null && episode !== null) {
-        if (!data.episodes) {
-          data.episodes = {}
+        if (!data.torrents) {
+          data.torrents = {}
         }
 
-        if (!data.episodes[season]) {
-          data.episodes[season] = {}
+        if (!data.torrents[season]) {
+          data.torrents[season] = {}
         }
 
-        if (!data.episodes[season][episode]) {
-          data.episodes[season][episode] = []
+        if (!data.torrents[season][episode]) {
+          data.torrents[season][episode] = []
         }
 
         const quality = title.match(/(\d{3,4})p/)
@@ -491,7 +491,7 @@ module.exports = class EztvApi {
 
         const size = bytes(sizeText.trim())
 
-        data.episodes[season][episode].push({
+        data.torrents[season][episode].push({
           title,
           url: magnet,
           seeds: isNaN(seeds) ? 0 : seeds,
@@ -531,14 +531,14 @@ module.exports = class EztvApi {
         const entry = $(this)
         const href = entry.attr('href')
 
-        const show = entry.text()
+        const title = entry.text()
         const id = parseInt(href.match(regex)[1], 10)
 
         let slug = href.match(regex)[2]
         slug = slug in EztvApi._slugMap ? EztvApi._slugMap[slug] : slug
 
         return {
-          show,
+          title,
           id,
           slug,
         }

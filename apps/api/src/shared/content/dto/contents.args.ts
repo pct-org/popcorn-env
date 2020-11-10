@@ -16,9 +16,6 @@ export class ContentsArgs {
   @Field()
   sort: string = 'trending'
 
-  @Field()
-  noBookmarks: boolean = false
-
   @Field({ nullable: true })
   query: string = null
 

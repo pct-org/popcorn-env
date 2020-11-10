@@ -1,19 +1,21 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
 import * as pMap from 'p-map'
 import * as WebTorrent from 'webtorrent-hybrid'
 import { Torrent, Instance as WebTorrentInstance } from 'webtorrent'
-import { Episode, Movie, Download } from '@pct-org/mongo-models'
+import { Episode, Movie, Download, DownloadModel, DownloadInfo } from '@pct-org/mongo-models'
+import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
+import { TYPE_MOVIE } from '@pct-org/constants/item-types'
 import * as rimraf from 'rimraf'
 
-import { ConfigService } from '../config/config.service'
-import { formatKbToString } from '../utils'
 import { TorrentInterface, ConnectingTorrentInterface } from './torrent.interface'
+import { ConfigService } from '../config/config.service'
 import { SubtitlesService } from '../subtitles/subtitles.service'
+import { MoviesService } from '../../movies/movies.service'
+import { EpisodesService } from '../../episodes/episodes.service'
 
 @Injectable()
-export class TorrentService {
+export class TorrentService implements OnApplicationBootstrap {
 
   public static STATUS_QUEUED = 'queued'
   public static STATUS_DOWNLOADING = 'downloading'
@@ -30,7 +32,45 @@ export class TorrentService {
   /**
    * Maximum of concurrent downloads in the background
    */
-  private maxConcurrent = 1
+  private readonly maxConcurrent
+
+  /**
+   * Maximum of concurrent connections
+   */
+  private readonly maxConns
+
+  /**
+   * All the different supported formats
+   */
+  public readonly supportedFormats: string[] = [
+    'mp4',
+    'ogg',
+    'mov',
+    'webmv',
+    'mkv',
+    'wmv',
+    'avi'
+  ]
+
+  private readonly trackers: string[] = [
+    'udp://glotorrents.pw:6969',
+    'udp://tracker.opentrackr.org:1337',
+    'udp://torrent.gresille.org:80',
+    'udp://tracker.openbittorrent.com:1337',
+    'udp://tracker.coppersurfer.tk:6969',
+    'udp://tracker.leechers-paradise.org:6969',
+    'udp://p4p.arenabg.ch:1337',
+    'udp://p4p.arenabg.com:1337',
+    'udp://tracker.internetwarriors.net:1337',
+    'udp://9.rarbg.to:2710',
+    'udp://9.rarbg.me:2710',
+    'udp://exodus.desync.com:6969',
+    'udp://tracker.cyberia.is:6969',
+    'udp://tracker.torrent.eu.org:451',
+    'udp://tracker.open-internet.nl:6969',
+    'wss://tracker.openwebtorrent.com',
+    'wss://tracker.btorrent.xyz'
+  ]
 
   /**
    * Array of downloads that will be downloaded in the background
@@ -57,40 +97,23 @@ export class TorrentService {
    */
   private webTorrent: WebTorrentInstance = null
 
-  /**
-   * All the different supported formats
-   */
-  public supportedFormats: string[] = ['mp4', 'ogg', 'mov', 'webmv', 'mkv', 'wmv', 'avi']
-
-  private trackers: string[] = [
-    'udp://glotorrents.pw:6969',
-    'udp://tracker.opentrackr.org:1337',
-    'udp://torrent.gresille.org:80',
-    'udp://tracker.openbittorrent.com:1337',
-    'udp://tracker.coppersurfer.tk:6969',
-    'udp://tracker.leechers-paradise.org:6969',
-    'udp://p4p.arenabg.ch:1337',
-    'udp://p4p.arenabg.com:1337',
-    'udp://tracker.internetwarriors.net:1337',
-    'udp://9.rarbg.to:2710',
-    'udp://9.rarbg.me:2710',
-    'udp://exodus.desync.com:6969',
-    'udp://tracker.cyberia.is:6969',
-    'udp://tracker.torrent.eu.org:451',
-    'udp://tracker.open-internet.nl:6969',
-    'wss://tracker.openwebtorrent.com',
-    'wss://tracker.btorrent.xyz'
-  ]
+  @InjectModel('Downloads')
+  private readonly downloadModel: DownloadModel
 
   constructor(
-    @InjectModel('Movies') private readonly movieModel: Model<Movie>,
-    @InjectModel('Episodes') private readonly episodeModel: Model<Episode>,
-    @InjectModel('Downloads') private readonly downloadModel: Model<Download>,
     private readonly configService: ConfigService,
-    private readonly subtitlesService: SubtitlesService
+    private readonly subtitlesService: SubtitlesService,
+    private readonly moviesService: MoviesService,
+    private readonly episodesService: EpisodesService
   ) {
-    this.setupWebTorrent()
+    this.maxConcurrent = this.configService.get(ConfigService.MAX_CONCURRENT_DOWNLOADS)
+    this.maxConns = this.configService.get(ConfigService.MAX_CONNS)
+  }
 
+  /**
+   * When application boots we want to check for incomplete or queued downloads ti start
+   */
+  public onApplicationBootstrap(): void {
     // Check for incomplete downloads and add them to the downloads
     this.checkForIncompleteDownloads()
   }
@@ -100,9 +123,16 @@ export class TorrentService {
    *
    * @param wasCrash
    */
-  private setupWebTorrent(wasCrash = false) {
+  private setupWebTorrent(wasCrash = false): void {
+    // If there is already a instance we don't need to do anything
+    if (this.webTorrent !== null) {
+      return
+    }
+
+    this.logger.log('Creating new WebTorrent client')
+
     this.webTorrent = new WebTorrent({
-      maxConns: 55 // Is the default
+      maxConns: this.maxConns
     })
 
     this.webTorrent.on('error', (err) => {
@@ -120,11 +150,30 @@ export class TorrentService {
   }
 
   /**
+   * Cleanup / destroy WebTorrent when there are not downloads / torrents left
+   */
+  private cleanupWebTorrent(): void {
+    // Check if we have a client, downloads and torrents if not then destroy the client
+    if (this.webTorrent && this.connectingTorrents.length === 0 && this.torrents.length === 0 && this.downloads.length === 0) {
+      this.webTorrent?.destroy((err) => {
+        if (err) {
+          this.logger.error('Error cleaning up WebTorrent', err.toString())
+
+        } else {
+          this.logger.log('No torrents left, WebTorrent client destroyed')
+        }
+      })
+
+      this.webTorrent = null
+    }
+  }
+
+  /**
    * Starts the streaming process of one item
    *
    * @param download
    */
-  public startStreaming(download: Model<Download>) {
+  public startStreaming(download: Download): void {
     this.logger.log(`[${download._id}]: Start streaming`)
 
     this.download(download)
@@ -135,7 +184,7 @@ export class TorrentService {
    *
    * @param download
    */
-  public stopDownloading(download: Download): Promise<any> {
+  public stopDownloading(download: Download): Promise<void> {
     return new Promise((resolve) => {
       const connectingTorrent = this.getConnectingTorrentForDownload(download)
       const downloadingTorrent = this.getTorrentForDownload(download)
@@ -204,6 +253,12 @@ export class TorrentService {
    */
   public async startDownloads(): Promise<void> {
     if (this.backgroundDownloading || this.downloads.length === 0) {
+      // If start downloads is called and we have no downlaods then also cleanup
+      // WebTorrent client to be sure
+      if (this.downloads.length === 0) {
+        this.cleanupWebTorrent()
+      }
+
       return
     }
 
@@ -214,7 +269,7 @@ export class TorrentService {
 
     await pMap(
       this.downloads,
-      download => this.download(download),
+      (download) => this.download(download),
       {
         concurrency: this.maxConcurrent
       }
@@ -222,6 +277,8 @@ export class TorrentService {
 
     // We are no longer downloading to disable
     this.backgroundDownloading = false
+    // Cleanup WebTorrent if needed
+    this.cleanupWebTorrent()
   }
 
   /**
@@ -229,14 +286,17 @@ export class TorrentService {
    */
   private async checkForIncompleteDownloads() {
     this.downloads = await this.downloadModel.find({
-      status: {
-        $in: [
-          TorrentService.STATUS_QUEUED,
-          TorrentService.STATUS_CONNECTING,
-          TorrentService.STATUS_DOWNLOADING
-        ]
-      }
-    })
+        status: {
+          $in: [
+            TorrentService.STATUS_QUEUED,
+            TorrentService.STATUS_CONNECTING,
+            TorrentService.STATUS_DOWNLOADING
+          ]
+        }
+      },
+      {},
+      { lean: true }
+    ) as Download[]
 
     // TODO:: Do something with streams?
 
@@ -250,65 +310,66 @@ export class TorrentService {
    *
    * @param {Download} download - Item to download
    */
-  private async download(download: Download) {
-    return new Promise((async (resolve) => {
-      this.logger.log(`[${download._id}]: Start download`)
+  private async download(download: Download): Promise<void> {
+    // Make sure WebTorrent is setup
+    this.setupWebTorrent()
 
-      // Check if the download still exists and has not been deleted in the meanwhile
-      const downloadStillExists = this.downloads.find(down => down._id === download._id)
+    this.logger.log(`[${download._id}]: Start download`)
 
-      if (!downloadStillExists) {
-        this.logger.log(`[${download._id}]: Download was removed, skipping`)
+    // Check if the download still exists and has not been deleted in the meanwhile
+    const downloadStillExists = this.downloads.find(down => down._id === download._id)
 
-        return resolve()
-      }
+    if (!downloadStillExists) {
+      this.logger.log(`[${download._id}]: Download was removed, skipping`)
 
-      const downloadIsAlreadyConnecting = !!this.getConnectingTorrentForDownload(download)
-      const downloadIsAlreadyDownloading = !!this.getTorrentForDownload(download)
+      return Promise.resolve()
+    }
 
-      // Prevents the item from being added twice
-      if (downloadIsAlreadyConnecting || downloadIsAlreadyDownloading) {
-        this.logger.log(`[${download._id}]: Download is already going`)
+    const downloadIsAlreadyConnecting = !!this.getConnectingTorrentForDownload(download)
+    const downloadIsAlreadyDownloading = !!this.getTorrentForDownload(download)
 
-        return resolve()
-      }
+    // Prevents the item from being added twice
+    if (downloadIsAlreadyConnecting || downloadIsAlreadyDownloading) {
+      this.logger.log(`[${download._id}]: Download is already going`)
 
-      const item = await this.getItemForDownload(download)
+      return Promise.resolve()
+    }
 
-      const { torrents, searchedTorrents } = item
+    const item = await this.getItemForDownload(download)
 
-      // Find the correct magnet
-      const magnet = (
-        // If it's null or default then use the normal scraped torrents
-        download.torrentType === 'scraped' || download.torrentType === null
-          ? torrents
-          : searchedTorrents
-      ).find(torrent => torrent.quality === download.quality)
+    const { torrents, searchedTorrents } = item
 
-      // Check if we have a magnet to be sure
-      if (!magnet) {
-        await this.updateToStatusFailed(download, item)
+    // Find the correct magnet
+    const magnet = (
+      // If it's null or default then use the normal scraped torrents
+      download.torrentType === 'scraped' || download.torrentType === null
+        ? torrents
+        : searchedTorrents
+    ).find(torrent => torrent.quality === download.quality)
 
-        // Resolve instead of reject as no try catch is around the method
-        return resolve()
-      }
+    // Check if we have a magnet to be sure
+    if (!magnet) {
+      await this.updateToStatusFailed(download, item)
 
-      // Update item that we are connecting
-      await this.updateOne(item, {
-        download: {
-          downloadStatus: TorrentService.STATUS_CONNECTING,
-          downloading: true
-        }
-      })
+      // Resolve instead of reject as no try catch is around the method
+      return Promise.resolve()
+    }
 
-      // Update the status to connecting
-      await this.updateOne(download, {
-        status: TorrentService.STATUS_CONNECTING,
-        timeRemaining: null,
-        speed: null,
-        numPeers: null
-      })
+    // Update item that we are connecting
+    await this.updateItemDownload(item, {
+      downloadStatus: TorrentService.STATUS_CONNECTING,
+      downloading: true
+    })
 
+    // Update the status to connecting
+    await this.updateDownload(download, {
+      status: TorrentService.STATUS_CONNECTING,
+      timeRemaining: null,
+      speed: null,
+      numPeers: null
+    })
+
+    return new Promise((resolve) => {
       const torrent = this.webTorrent.add(
         magnet.url,
         {
@@ -317,7 +378,7 @@ export class TorrentService {
           maxWebConns: 5,
           announce: this.trackers
         },
-        this.handleTorrent(resolve, item, download, magnet)
+        this.handleTorrent(resolve, item, download)
       )
 
       // Add to active torrents array
@@ -326,18 +387,13 @@ export class TorrentService {
         torrent,
         resolve
       })
-    }))
+    })
   }
 
   /**
    * Handles the torrent and resolves when the torrent is done
-   *
-   * @param resolve
-   * @param item
-   * @param download
-   * @param magnet
    */
-  private handleTorrent(resolve, item, download, magnet) {
+  private handleTorrent(resolve, item, download) {
     return (torrent: Torrent) => {
       // Let's make sure all the not needed files are deselected
       const { file } = torrent.files.reduce((previous, current, index) => {
@@ -434,7 +490,7 @@ export class TorrentService {
         const now = Date.now()
         // Only update every 1 second
         if (lastUpdate === null || (lastUpdate + 1000) < now) {
-          this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(1)}% at ${formatKbToString(torrent.downloadSpeed)}`)
+          this.logger.debug(`[${download._id}]: Progress ${newProgress.toFixed(2)}% at ${formatBytes(torrent.downloadSpeed)} (${formatMsToRemaining(torrent.timeRemaining)})`)
 
           lastUpdate = now
 
@@ -443,11 +499,11 @@ export class TorrentService {
             updatingModel = true
 
             // Update the item
-            await this.updateOne(download, {
-              progress: newProgress.toFixed(2),
+            await this.updateDownload(download, {
+              progress: parseFloat(newProgress.toFixed(2)),
               status: TorrentService.STATUS_DOWNLOADING,
-              timeRemaining: torrent.timeRemaining,
-              speed: torrent.downloadSpeed,
+              timeRemaining: torrent.timeRemaining.toString(),
+              speed: torrent.downloadSpeed.toString(),
               numPeers: torrent.numPeers
             })
 
@@ -459,11 +515,9 @@ export class TorrentService {
             updatedItem = true
 
             // Update item that we are downloading
-            await this.updateOne(item, {
-              download: {
-                downloadStatus: TorrentService.STATUS_DOWNLOADING,
-                downloading: true
-              }
+            await this.updateItemDownload(item, {
+              downloadStatus: TorrentService.STATUS_DOWNLOADING,
+              downloading: true
             })
           }
         }
@@ -485,10 +539,13 @@ export class TorrentService {
         // Remove from the queue as the item is downloaded
         this.removeFromDownloads(download)
 
+        // Cleanup WebTorrent if there is nothing left anymore
+        this.cleanupWebTorrent()
+
         // Wait at-least 0,5 second before updating, this is to prevent
         // a double save happening
         setTimeout(async () => {
-          await this.updateOne(download, {
+          await this.updateDownload(download, {
             progress: 100,
             status: TorrentService.STATUS_COMPLETE,
             timeRemaining: null,
@@ -496,13 +553,11 @@ export class TorrentService {
             numPeers: null
           })
 
-          await this.updateOne(item, {
-            download: {
-              downloadStatus: TorrentService.STATUS_COMPLETE,
-              downloading: false,
-              downloadComplete: true,
-              downloadedOn: Number(new Date())
-            }
+          await this.updateItemDownload(item, {
+            downloadStatus: TorrentService.STATUS_COMPLETE,
+            downloading: false,
+            downloadComplete: true,
+            downloadedOn: Number(new Date())
           })
         }, 500)
 
@@ -513,42 +568,9 @@ export class TorrentService {
   }
 
   /**
-   * Updates download item in the database
-   *
-   * @param item
-   * @param update
-   */
-  public async updateOne(item: Model<Download | Movie | Episode>, update): Promise<Download | Movie | Episode> {
-    // Apply the update
-    if (Object.keys(update).length === 1 && update.download) {
-      this.logger.debug(`[${item._id}]: Update download info to "${JSON.stringify(update.download)}"`)
-
-      item.download = {
-        ...item.download,
-        ...update.download
-      }
-
-    } else {
-      Object.keys(update).forEach((key) => item[key] = update[key])
-    }
-
-    item.updatedAt = Number(new Date())
-
-    try {
-      // Save the update
-      return await item.save()
-
-    } catch (e) {
-      this.logger.error(`[${item._id}]: ${e.message || e}`)
-
-      return item
-    }
-  }
-
-  /**
    * Removes a download from torrents
    */
-  private removeFromTorrents(download: Model<Download>, connectingOnly = false) {
+  private removeFromTorrents(download: Download, connectingOnly = false) {
     this.connectingTorrents = this.connectingTorrents.filter(tor => tor._id !== download._id)
 
     if (!connectingOnly) {
@@ -559,22 +581,22 @@ export class TorrentService {
   /**
    * Cleans up a download
    */
-  public cleanUpDownload(download: Model<Download>, deleteDownload = false): Promise<void> {
-    return new Promise(async (resolve) => {
-      if (deleteDownload) {
-        // Delete the download
-        await download.delete()
-      }
+  public async cleanUpDownload(download: Download, deleteDownload = false): Promise<void> {
+    if (deleteDownload) {
+      // Delete the download
+      await this.downloadModel.findByIdAndRemove(download._id)
+    }
 
-      const down = this.downloads.find(findDown => findDown._id === download._id)
+    const down = this.downloads.find(findDown => findDown._id === download._id)
 
-      if (down) {
-        // Remove from array
-        this.removeFromDownloads(download)
+    if (down) {
+      // Remove from array
+      this.removeFromDownloads(download)
 
-        this.logger.log(`[${download._id}]: Removed from queue, new size: ${this.downloads.length}`)
-      }
+      this.logger.log(`[${download._id}]: Removed from queue, new size: ${this.downloads.length}`)
+    }
 
+    return new Promise((resolve) => {
       // Remove the download folder
       rimraf(this.getDownloadLocation(download), (error) => {
         if (error) {
@@ -592,11 +614,11 @@ export class TorrentService {
    * @param download
    */
   public getItemForDownload(download: Download): Promise<Episode | Movie> {
-    return (
-      download.itemType === 'movie'
-        ? this.movieModel
-        : this.episodeModel
-    ).findById(download._id)
+    if (download.itemType === 'movie') {
+      return this.moviesService.findOne(download._id)
+    }
+
+    return this.episodesService.findOne(download._id)
   }
 
   /**
@@ -636,16 +658,40 @@ export class TorrentService {
    */
   private async updateToStatusFailed(download: Download, item) {
     // No magnet found, update status to failed
-    await this.updateOne(download, {
+    await this.updateDownload(download, {
       status: TorrentService.STATUS_FAILED
     })
 
-    await this.updateOne(item, {
-      download: {
-        downloadStatus: TorrentService.STATUS_FAILED,
-        downloading: false
-      }
+    await this.updateItemDownload(item, {
+      downloadStatus: TorrentService.STATUS_FAILED,
+      downloading: false
     })
   }
 
+  public async updateDownload(download: Download, update: Partial<Download>): Promise<void> {
+    await this.downloadModel.findByIdAndUpdate(
+      download._id,
+      update
+    )
+  }
+
+  public async updateItemDownload(item: Movie | Episode, update: Partial<DownloadInfo>): Promise<void> {
+    const newDownloadInfo = {
+      ...item.download,
+      ...update
+    }
+
+    if (item.type === TYPE_MOVIE) {
+      await this.moviesService.updateOne({
+        _id: item._id,
+        download: newDownloadInfo
+      })
+
+    } else {
+      await this.episodesService.updateOne({
+        _id: item._id,
+        download: newDownloadInfo
+      })
+    }
+  }
 }

@@ -1,5 +1,11 @@
-import { model } from 'mongoose'
+import { Model, Document } from 'mongoose'
 
-import { movieSchema } from './movie.schema'
+import { Movie } from './movie.object-type'
 
-export const MovieModel = model('Movie', movieSchema)
+export interface MovieDocument extends Movie, Document {
+
+  _id: string
+
+}
+
+export type MovieModel = Model<MovieDocument>
