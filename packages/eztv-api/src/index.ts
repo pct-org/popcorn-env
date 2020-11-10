@@ -60,7 +60,7 @@ module.exports = class EztvApi {
    * @param {!Object} config={} - The configuration object for the module.
    * @param {!string} baseUrl=https://eztv.ag/ - The base url of eztv.
    */
-  constructor({ baseUrl = 'https://eztv.io/' } = {}) {
+  constructor({ baseUrl = 'https://eztv.re/' } = {}) {
     /**
      * The base url of eztv.
      * @type {string}
