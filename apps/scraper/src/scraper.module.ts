@@ -10,12 +10,15 @@ import { ConfigService } from './shared/config/config.service'
 import { ProvidersModule } from './providers/providers.module'
 import { ProvidersService } from './providers/providers.service'
 
+import { StatusModule } from './routes/status/status.module'
+
 @Module({
   imports: [
     ConfigModule,
     ModelsModule,
 
     ProvidersModule,
+    StatusModule,
 
     // Enable Mongoose
     MongooseModule.forRootAsync({

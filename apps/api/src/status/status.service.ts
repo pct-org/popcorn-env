@@ -2,7 +2,7 @@ import { HttpService, Inject, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { checkSync } from 'diskusage'
 import * as getFolderSize from 'get-folder-size'
-import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
+import { formatBytes } from '@pct-org/torrent/utils'
 import { MovieModel, ShowModel, EpisodeModel } from '@pct-org/mongo-models'
 
 import { Status } from './status.object-type'
@@ -66,7 +66,7 @@ export class StatusService {
         status: response.data.status,
         updated: response.data.updated,
         nextUpdate: response.data.nextUpdate,
-        uptime: formatMsToRemaining(response.data.uptime * 1000)
+        uptime: response.data.uptime,
       }
 
     } catch (e) {
