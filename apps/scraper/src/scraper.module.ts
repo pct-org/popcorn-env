@@ -1,4 +1,4 @@
-import { Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
+import { Inject, Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
 import { CronJob } from 'cron'
@@ -38,15 +38,19 @@ export class ScraperModule implements OnApplicationBootstrap {
 
   private readonly logger = new Logger(ScraperModule.name)
 
-  constructor(
-    private schedulerRegistry: SchedulerRegistry,
-    private configService: ConfigService,
-    private providersService: ProvidersService
-  ) {
-  }
+  @Inject()
+  private schedulerRegistry: SchedulerRegistry
+
+  @Inject()
+  private configService: ConfigService
+
+  @Inject()
+  private providersService: ProvidersService
 
   public onApplicationBootstrap(): void {
-    const job = new CronJob(this.configService.get('CRON_TIME'), this.scrapeConfigs)
+    const job = new CronJob(this.configService.get('CRON_TIME'), () => {
+      this.scrapeConfigs
+    })
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
     job.start()
