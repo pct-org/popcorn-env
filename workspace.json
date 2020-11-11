@@ -423,7 +423,10 @@
               "libs/scraper/providers/yts/tsconfig.lib.json",
               "libs/scraper/providers/yts/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/providers/yts/**/*"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/scraper/providers/yts/**/*"
+            ]
           }
         },
         "test": {
@@ -699,6 +702,70 @@
       "sourceRoot": "libs/constants/item-types",
       "projectType": "library",
       "schematics": {}
+    },
+    "rest-api": {
+      "root": "apps/rest-api",
+      "sourceRoot": "apps/rest-api/src",
+      "projectType": "application",
+      "prefix": "rest-api",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/rest-api",
+            "main": "apps/rest-api/src/main.ts",
+            "tsConfig": "apps/rest-api/tsconfig.app.json"
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "rest-api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/rest-api/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/rest-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "movies": {
+      "root": "libs/movies",
+      "sourceRoot": "libs/movies/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/movies/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/movies/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
