@@ -11,7 +11,9 @@ export interface Movie {
   released: number
   trailer: string
   certification: string
-  torrents: Torrents,
+  torrents: {
+    en: Torrents
+  }
   genres: string[]
 
   images: {

@@ -746,22 +746,148 @@
         }
       }
     },
-    "movies": {
-      "root": "libs/movies",
-      "sourceRoot": "libs/movies/src",
+    "api-movies": {
+      "root": "libs/api/movies",
+      "sourceRoot": "libs/api/movies/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/movies/**/*.ts"]
+            "lintFilePatterns": ["libs/api/movies/**/*.ts"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/movies/jest.config.js",
+            "jestConfig": "libs/api/movies/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-shows": {
+      "root": "libs/api/shows",
+      "sourceRoot": "libs/api/shows/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/shows/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/shows/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-episodes": {
+      "root": "libs/api/episodes",
+      "sourceRoot": "libs/api/episodes/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/episodes/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/episodes/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-seasons": {
+      "root": "libs/api/seasons",
+      "sourceRoot": "libs/api/seasons/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/seasons/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/seasons/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-shared": {
+      "root": "libs/api/shared",
+      "sourceRoot": "libs/api/shared/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/shared/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/shared/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-blacklist": {
+      "root": "libs/api/blacklist",
+      "sourceRoot": "libs/api/blacklist/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/blacklist/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/blacklist/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-download": {
+      "root": "libs/api/download",
+      "sourceRoot": "libs/api/download/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api/download/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/download/jest.config.js",
             "passWithNoTests": true
           }
         }

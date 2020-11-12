@@ -100,7 +100,25 @@
     "rest-api": {
       "tags": []
     },
-    "movies": {
+    "api-movies": {
+      "tags": []
+    },
+    "api-shows": {
+      "tags": []
+    },
+    "api-episodes": {
+      "tags": []
+    },
+    "api-seasons": {
+      "tags": []
+    },
+    "api-shared": {
+      "tags": []
+    },
+    "api-blacklist": {
+      "tags": []
+    },
+    "api-download": {
       "tags": []
     }
   }
