@@ -1,14 +1,14 @@
 import { Controller, Get, Inject, Param, Query } from '@nestjs/common'
-import { MoviesService, MoviesArgs } from '@pct-org/api/movies'
-import { Movie } from '../../shared/movie.interface'
+import { MoviesService, MoviesArgs, Movie } from '@pct-org/api/movies'
+import { Movie as OldMovie } from '../../shared/movie.interface'
 
-@Controller('/movies')
+@Controller()
 export class MoviesController {
 
   @Inject()
   private readonly moviesService: MoviesService
 
-  @Get('')
+  @Get('/movies')
   public async getMovies(): Promise<string[]> {
     const totalMovies = await this.moviesService.count()
 
@@ -17,20 +17,33 @@ export class MoviesController {
     ))
   }
 
-  @Get('/:page')
+  @Get('/movies/:page')
   public async getMoviesPage(
     @Param('page') page: number,
     @Query() args: MoviesArgs
-  ): Promise<Movie[]> {
+  ): Promise<OldMovie[]> {
     args.offset = (page - 1) * args.limit
     args.query = args.keywords
 
     const movies = await this.moviesService.findAll(args)
 
-    return movies.map((movie) => ({
+    return movies.map(this.formatMovie)
+  }
+
+  @Get('/movie/:imdbId')
+  public async getMovie(
+    @Param('imdbId') imdbId: string
+  ): Promise<OldMovie> {
+    const movie = await this.moviesService.findOne(imdbId)
+
+    return this.formatMovie(movie)
+  }
+
+  private formatMovie(movie: Movie): OldMovie {
+    return {
       _id: movie._id,
       imdb_id: movie._id,
-      title: movie.title,
+      title: movie.title + 'test ',
       year: `${(new Date(movie.released)).getFullYear()}`,
       synopsis: movie.synopsis,
       runtime: `${(movie.runtime.hours * 60) + movie.runtime.minutes}`,
@@ -66,7 +79,7 @@ export class MoviesController {
         loved: 100,
         hated: 100
       }
-    }))
+    }
   }
 
 }
