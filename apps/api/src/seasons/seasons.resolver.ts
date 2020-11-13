@@ -3,7 +3,6 @@ import { Inject } from '@nestjs/common'
 import { Season } from '@pct-org/types/season'
 import { Episode, EpisodesService } from '@pct-org/types/episode'
 
-
 @Resolver(of => Season)
 export class SeasonsResolver {
 

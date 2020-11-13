@@ -2,9 +2,8 @@ import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { Inject } from '@nestjs/common'
 import { TraktService } from '@pct-org/services/trakt'
 import { Show, ShowsService, ShowsArgs, ShowArgs } from '@pct-org/types/show'
-import { Season } from '@pct-org/types/season'
+import { Season, SeasonsService } from '@pct-org/types/season'
 
-import { SeasonsService } from '../seasons/seasons.service'
 import { DownloadsService } from '../downloads/downloads.service'
 
 @Resolver(of => Show)

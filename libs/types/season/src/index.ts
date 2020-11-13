@@ -1,7 +1,8 @@
 import { MongooseModule } from '@nestjs/mongoose'
 
-export { Season } from './season.object-type'
-export { SeasonModel } from './season.model'
+export * from './season.object-type'
+export * from './season.model'
+export * from './seasons.service'
 
 import { seasonSchema } from './season.schema'
 
