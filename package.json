@@ -76,7 +76,6 @@
     "p-map": "^4.0.0",
     "p-times": "^3.0.0",
     "pm2": "^4.5.0",
-    "querystring": "^0.2.0",
     "reflect-metadata": "^0.1.12",
     "rimraf": "3.0.2",
     "rxjs": "6.6.3",
