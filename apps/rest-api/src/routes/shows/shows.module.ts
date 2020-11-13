@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common'
 import { ShowsService } from '@pct-org/api/shows'
+import { EpisodesService } from '@pct-org/api/episodes'
 
 import { ShowsController } from './shows.controller'
 
 @Module({
   providers: [
-    ShowsService
+    ShowsService,
+    EpisodesService
   ],
   controllers: [
     ShowsController

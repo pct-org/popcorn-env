@@ -1,5 +1,6 @@
 import { Controller, Get, Inject, Param, Query } from '@nestjs/common'
 import { ShowsArgs, ShowsService } from '@pct-org/api/shows'
+import { EpisodesService } from '@pct-org/api/episodes'
 
 import { Show, ShowClean } from '../../shared/show.interface'
 
@@ -8,6 +9,9 @@ export class ShowsController {
 
   @Inject()
   private readonly showsService: ShowsService
+
+  @Inject()
+  private readonly episodesService: EpisodesService
 
   @Get('/shows')
   public async getShows(): Promise<string[]> {
@@ -56,6 +60,7 @@ export class ShowsController {
     @Param('imdbId') imdbId: string
   ): Promise<Show> {
     const show = await this.showsService.findOne(imdbId)
+    const episodes = await this.episodesService.findAllForShow(imdbId)
 
     return ({
       _id: show._id,
@@ -86,7 +91,30 @@ export class ShowsController {
         hated: 100
       },
       last_updated: show.updatedAt,
-      episodes: []
+      episodes: episodes.map((episode) => ({
+        torrents: episode.torrents.reduce((newTorrents, torrent) => {
+          newTorrents[torrent.quality] = {
+            url: torrent.url,
+            seed: torrent.seeds,
+            peer: torrent.peers,
+            size: torrent.size,
+            fileSize: torrent.sizeString,
+            provider: torrent.provider
+          }
+
+          return newTorrents
+        }, {}),
+        first_aired: episode.firstAired,
+        date_based: false,
+        overview: episode.synopsis,
+        title: episode.title,
+        episode: episode.number,
+        season: episode.season,
+        tvdb_id: null,
+        watched: {
+          watched: false,
+        }
+      }))
     })
   }
 }
