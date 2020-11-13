@@ -24,12 +24,6 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
-      "@pct-org/mongo-models": [
-        "libs/mongo-models/src/index.ts"
-      ],
-      "@pct-org/mongo-models/dist/*": [
-        "libs/mongo-models/src/*"
-      ],
       "@pct-org/eztv-api": [
         "packages/eztv-api/src/index.ts"
       ],
@@ -99,26 +93,26 @@
       "@pct-org/constants/item-types": [
         "libs/constants/item-types/index.ts"
       ],
-      "@pct-org/api/movies": [
-        "libs/api/movies/src/index.ts"
+      "@pct-org/types/movie": [
+        "libs/types/movie/src/index.ts"
       ],
-      "@pct-org/api/shows": [
-        "libs/api/shows/src/index.ts"
+      "@pct-org/types/show": [
+        "libs/types/show/src/index.ts"
       ],
-      "@pct-org/api/episodes": [
-        "libs/api/episodes/src/index.ts"
+      "@pct-org/types/episode": [
+        "libs/types/episode/src/index.ts"
       ],
-      "@pct-org/api/seasons": [
-        "libs/api/seasons/src/index.ts"
+      "@pct-org/types/season": [
+        "libs/types/season/src/index.ts"
       ],
-      "@pct-org/api/shared": [
-        "libs/api/shared/src/index.ts"
+      "@pct-org/types/shared": [
+        "libs/types/shared/src/index.ts"
       ],
-      "@pct-org/api/blacklist": [
-        "libs/api/blacklist/src/index.ts"
+      "@pct-org/types/blacklist": [
+        "libs/types/blacklist/src/index.ts"
       ],
-      "@pct-org/api/download": [
-        "libs/api/download/src/index.ts"
+      "@pct-org/types/download": [
+        "libs/types/download/src/index.ts"
       ]
     }
   },

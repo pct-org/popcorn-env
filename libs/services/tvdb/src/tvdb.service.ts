@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import * as TvDB from 'node-tvdb'
-import { Images, Show } from '@pct-org/mongo-models'
+import { Images } from '@pct-org/types/shared'
+import { Show } from '@pct-org/types/show'
 
 @Injectable()
 export class TvdbService {

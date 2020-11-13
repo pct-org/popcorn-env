@@ -28,9 +28,6 @@
     "api": {
       "tags": []
     },
-    "mongo-models": {
-      "tags": ["scope:internal"]
-    },
     "package-eztv-api": {
       "tags": ["scope:public"]
     },
@@ -100,25 +97,25 @@
     "rest-api": {
       "tags": []
     },
-    "api-movies": {
+    "types-movie": {
       "tags": []
     },
-    "api-shows": {
+    "types-show": {
       "tags": []
     },
-    "api-episodes": {
+    "types-episode": {
       "tags": []
     },
-    "api-seasons": {
+    "types-season": {
       "tags": []
     },
-    "api-shared": {
+    "types-shared": {
       "tags": []
     },
-    "api-blacklist": {
+    "types-blacklist": {
       "tags": []
     },
-    "api-download": {
+    "types-download": {
       "tags": []
     }
   }

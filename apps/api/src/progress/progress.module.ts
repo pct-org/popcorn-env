@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common'
-
-import { MoviesService } from '../movies/movies.service'
-import { EpisodesService } from '../episodes/episodes.service'
+import { MoviesService } from '@pct-org/types/movie'
+import { EpisodesService } from '@pct-org/types/episode'
 
 import { ProgressResolver } from './progress.resolver'
 

@@ -1,10 +1,12 @@
 import { HttpService, Injectable, Logger } from '@nestjs/common'
-import { Episode, Movie, Torrent } from '@pct-org/mongo-models'
+import { Movie } from '@pct-org/types/movie'
+import { Episode } from '@pct-org/types/episode'
+import { Torrent } from '@pct-org/types/shared'
+import { formatTorrents } from '@pct-org/torrent/utils'
 
 import { RarbgSearchAdapter } from './adapters/rarbg.search-adapter'
 import { OneThreeThreeSevenXSearchAdapater } from './adapters/1337x.search-adapter'
 import { SearchAdapter } from './search-base.adapter'
-import { formatTorrents } from '@pct-org/torrent/utils'
 
 @Injectable()
 export class SearchService {

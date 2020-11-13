@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Param, Query } from '@nestjs/common'
-import { ShowsArgs, ShowsService } from '@pct-org/api/shows'
-import { EpisodesService } from '@pct-org/api/episodes'
+import { ShowsArgs, ShowsService } from '@pct-org/types/show'
+import { EpisodesService } from '@pct-org/types/episode'
 
 import { Show, ShowClean } from '../../shared/show.interface'
 

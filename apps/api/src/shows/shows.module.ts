@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { TraktModule } from '@pct-org/services/trakt'
+import { ShowsService } from '@pct-org/types/show'
 
 import { ShowsResolver } from './shows.resolver'
-import { ShowsService } from './shows.service'
 
 import { SeasonsService } from '../seasons/seasons.service'
 import { DownloadsService } from '../downloads/downloads.service'

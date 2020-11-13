@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Season, SeasonModel } from '@pct-org/mongo-models'
+import { Season, SeasonModel } from '@pct-org/types/season'
 
 @Injectable()
 export class SeasonsService {

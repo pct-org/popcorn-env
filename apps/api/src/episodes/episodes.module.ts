@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
+import { ShowsService } from '@pct-org/types/show'
+import { EpisodesService } from '@pct-org/types/episode'
 
 import { EpisodesResolver } from './episodes.resolver'
-import { EpisodesService } from './episodes.service'
 import { BookmarksService } from '../bookmarks/bookmarks.service'
-import { ShowsService } from '../shows/shows.service'
 
 @Module({
   providers: [

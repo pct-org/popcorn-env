@@ -1,7 +1,7 @@
 import { Global, Module } from '@nestjs/common'
-import { MOVIES_MONGOOSE_FEATURE } from '@pct-org/api/movies'
-import { SHOWS_MONGOOSE_FEATURE } from '@pct-org/api/shows'
-import { EPISODES_MONGOOSE_FEATURE } from '@pct-org/api/episodes'
+import { MOVIES_MONGOOSE_FEATURE } from '@pct-org/types/movie'
+import { SHOWS_MONGOOSE_FEATURE } from '@pct-org/types/show'
+import { EPISODES_MONGOOSE_FEATURE } from '@pct-org/types/episode'
 
 @Global()
 @Module({

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { MongooseModule } from '@nestjs/mongoose'
-import { ModelsModule } from '@pct-org/mongo-models'
 
+import { ModelsModule } from './shared/models.module'
 import { ConfigModule } from './shared/config/config.module'
 import { ConfigService } from './shared/config/config.service'
 import { TorrentModule } from './shared/torrent/torrent.module'

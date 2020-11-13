@@ -1,5 +1,5 @@
 import { ScrapedTorrent } from '@pct-org/scraper/providers/base'
-import { Torrent } from '@pct-org/mongo-models'
+import { Torrent } from '@pct-org/types/shared'
 
 import { formatBytes } from './format-bytes'
 import { sortTorrents } from './sort-torrents'

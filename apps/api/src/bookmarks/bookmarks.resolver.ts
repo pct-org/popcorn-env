@@ -1,5 +1,5 @@
 import { Args, Query, Mutation, Resolver, Subscription } from '@nestjs/graphql'
-import { Content } from '@pct-org/mongo-models'
+import { Content } from '@pct-org/types/shared'
 import { Inject } from '@nestjs/common'
 
 import { BookmarksArgs } from './dto/bookmarks.args'

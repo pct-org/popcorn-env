@@ -1,11 +1,10 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql'
-import { Movie, Episode } from '@pct-org/mongo-models'
 import { Inject } from '@nestjs/common'
+import { Movie, MoviesService } from '@pct-org/types/movie'
+import { ShowsService } from '@pct-org/types/show'
+import { Episode, EpisodesService } from '@pct-org/types/episode'
 
-import { EpisodesService } from '../episodes/episodes.service'
-import { MoviesService } from '../movies/movies.service'
 import { SearchService } from '../shared/search/search.service'
-import { ShowsService } from '../shows/shows.service'
 
 @Resolver(of => Episode || Movie)
 export class SearchBetterResolver {

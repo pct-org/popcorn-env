@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common'
+import { EpisodesService } from '@pct-org/types/episode'
 
 import { SeasonsResolver } from './seasons.resolver'
 import { SeasonsService } from './seasons.service'
-
-import { EpisodesService } from '../episodes/episodes.service'
 
 @Module({
   providers: [

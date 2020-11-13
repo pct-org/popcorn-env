@@ -1,5 +1,6 @@
 import { createUnionType } from '@nestjs/graphql'
-import { Movie, Show } from '@pct-org/mongo-models'
+import { Movie } from '@pct-org/types/movie'
+import { Show } from '@pct-org/types/show'
 import { TYPE_MOVIE, TYPE_SHOW } from '@pct-org/constants/item-types'
 
 export const BookmarksUnion = createUnionType({

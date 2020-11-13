@@ -1,6 +1,6 @@
 import { HttpService, Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Download, DownloadModel } from '@pct-org/mongo-models'
+import { Download, DownloadModel } from '@pct-org/types/download'
 import { TorrentFile } from 'webtorrent'
 import * as OpenSubtitles from 'opensubtitles-api'
 import { createWriteStream } from 'fs'

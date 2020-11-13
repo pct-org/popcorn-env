@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { TYPE_MOVIES, TYPE_SHOWS } from '@pct-org/constants/item-types'
-import { MovieModel, ShowModel, Content } from '@pct-org/mongo-models'
+import { MovieModel } from '@pct-org/types/movie'
+import { ShowModel } from '@pct-org/types/show'
+import { Content } from '@pct-org/types/shared'
 
 import { BookmarksArgs } from './dto/bookmarks.args'
 import { NewBookmarkInput } from './dto/new-bookmark.input'

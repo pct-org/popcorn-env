@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common'
 import { TraktModule } from '@pct-org/services/trakt'
+import { MoviesService } from '@pct-org/types/movie'
 
 import { MoviesResolver } from './movies.resolver'
-import { MoviesService } from './movies.service'
 
 @Module({
   imports: [
-    TraktModule,
+    TraktModule
   ],
   providers: [
     MoviesResolver,

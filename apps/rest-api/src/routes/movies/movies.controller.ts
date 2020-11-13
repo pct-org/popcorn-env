@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Param, Query } from '@nestjs/common'
-import { MoviesService, MoviesArgs, Movie } from '@pct-org/api/movies'
+import { MoviesService, MoviesArgs, Movie } from '@pct-org/types/movie'
 import { Movie as OldMovie } from '../../shared/movie.interface'
 
 @Controller()

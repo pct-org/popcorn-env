@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { EpisodeModel, Episode, Show } from '@pct-org/mongo-models'
+import { Show } from '@pct-org/types/show'
+import { EpisodeModel, Episode } from '@pct-org/types/episode'
 import { defaultEpisodeImages } from '@pct-org/constants/default-image-sizes'
 import { TYPE_EPISODE } from '@pct-org/constants/item-types'
 import { TraktEpisode } from '@pct-org/services/trakt'
