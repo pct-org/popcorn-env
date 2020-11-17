@@ -2983,6 +2983,11 @@ bencode@^2.0.0, bencode@^2.0.1:
   dependencies:
     safe-buffer "^5.1.1"
 
+bep53-range@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/bep53-range/-/bep53-range-1.0.0.tgz#c776736b4669d7762d096f2b9cab735b6f8c7dcd"
+  integrity sha512-CNsnREjxe2/wD559wzFXMycUnbmUDA9C2Bs6Z2tm++amSma7JowAAxAnaZJMuDq3cWSx9HSIbV04H06QQ11zTA==
+
 big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
@@ -3094,6 +3099,11 @@ blob-to-buffer@^1.2.6:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/blob-to-buffer/-/blob-to-buffer-1.2.8.tgz#78eeeb332f1280ed0ca6fb2b60693a8c6d36903a"
   integrity sha512-re0AIxakF504MgeMtIyJkVcZ8T5aUxtp/QmTMlmjyb3P44E1BEv5x3LATBGApWAJATyXHtkXRD+gWTmeyYLiQA==
+
+blob-to-buffer@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/blob-to-buffer/-/blob-to-buffer-1.2.9.tgz#a17fd6c1c564011408f8971e451544245daaa84a"
+  integrity sha512-BF033y5fN6OCofD3vgHmNtwZWRcq9NLyyxyILx9hfMy1sXYy4ojFl765hJ2lP0YaN2fuxPaLO2Vzzoxy0FLFFA==
 
 block-stream2@^2.0.0:
   version "2.0.0"
@@ -6006,6 +6016,11 @@ get-stdin@^7.0.0:
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-7.0.0.tgz#8d5de98f15171a125c5e516643c7a6d0ea8a96f6"
   integrity sha512-zRKcywvrXlXsA0v0i9Io4KDRaAw7+a1ZpjRwl9Wox8PFlVCCHra7E9c4kqXCoCM9nR5tBkaTTZRBoCm60bFqTQ==
 
+get-stdin@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-8.0.0.tgz#cbad6a73feb75f6eeb22ba9e01f89aa28aa97a53"
+  integrity sha512-sY22aA6xchAzprjyqmSEQv4UbAAzRN0L2dQB0NlN5acTTK9Don6nhoc3eAbUnpZiCANAMfd/+40kVdKfFygohg==
+
 get-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
@@ -8189,6 +8204,14 @@ magnet-uri@^5.1.3:
   dependencies:
     thirty-two "^1.0.2"
 
+magnet-uri@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/magnet-uri/-/magnet-uri-6.0.0.tgz#da0b9f4ce8240c5650de5fe1690faf6e2770c924"
+  integrity sha512-p9wst4k4u0seE7yPonAPKIUTaiC+fm706o2D8FrNoBalK5CcQdU4hB+RHQTqfIISYkFp0nZzsgyKPacPa6Yg/g==
+  dependencies:
+    bep53-range "^1.0.0"
+    thirty-two "^1.0.2"
+
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -9588,11 +9611,6 @@ parse-json@^5.0.0:
     json-parse-even-better-errors "^2.3.0"
     lines-and-columns "^1.1.6"
 
-parse-numeric-range@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/parse-numeric-range/-/parse-numeric-range-1.2.0.tgz#aa70b00f29624ed13e9f943e9461b306e386b0fa"
-  integrity sha512-1q2tXpAOplPxcl8vrIGPWz1dJxxfmdRkCFcpxxMBerDnGuuHalOWF/xj9L8Nn5XoTUoB/6F0CeQBp2fMgkOYFg==
-
 parse-torrent@^7.1.3:
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/parse-torrent/-/parse-torrent-7.1.3.tgz#5981a0d9381b16297a7af053763068e8da5c9610"
@@ -9604,6 +9622,18 @@ parse-torrent@^7.1.3:
     magnet-uri "^5.1.3"
     simple-get "^3.0.1"
     simple-sha1 "^3.0.0"
+
+parse-torrent@^9.0.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/parse-torrent/-/parse-torrent-9.1.0.tgz#41cc544b0cba3b50f0e1cc6fffc1dcbd8e5ca5c9"
+  integrity sha512-TVht2kv44bTHEd55KgmfEHyDh5djIBZMhaD6uFWnxLhJWUXy8lrIOsjPSs4Tfzs9PTGIgGM0k+UG6CFphHgOZQ==
+  dependencies:
+    bencode "^2.0.1"
+    blob-to-buffer "^1.2.9"
+    get-stdin "^8.0.0"
+    magnet-uri "^6.0.0"
+    simple-get "^4.0.0"
+    simple-sha1 "^3.0.1"
 
 parse5@5.1.1:
   version "5.1.1"
@@ -12933,10 +12963,10 @@ webtorrent-hybrid@^4.0.1:
     webtorrent-cli "^3.0.7"
     wrtc "^0.4.6"
 
-webtorrent@0.109.1, webtorrent@>=0.108.6:
-  version "0.109.1"
-  resolved "https://registry.yarnpkg.com/webtorrent/-/webtorrent-0.109.1.tgz#abc4255e54a0154d7001fd3c2ef389075cfbc1d2"
-  integrity sha512-NSJBJyVAw2jDOqd9ckfcMTDNoFbtWfBPCP4gWF56CvCrZMhW6jGXTIZ4p3h/Xk30x30RpHm2MiKFsPn5X58Gow==
+webtorrent@0.111.0, webtorrent@>=0.108.6:
+  version "0.110.1"
+  resolved "https://registry.yarnpkg.com/webtorrent/-/webtorrent-0.110.1.tgz#b899b592ab5918eedf157425a3ceefb3ab05573d"
+  integrity sha512-KLMkKbf/7G7k6ok45a/O/RGJwIyUI2I992mTp/sezY5n8P7Lh1Q00bSKI/CW4Eqile1XlQoOFMLrJLPChz/SSQ==
   dependencies:
     addr-to-ip-port "^1.5.1"
     bitfield "^3.0.0"
@@ -12956,8 +12986,7 @@ webtorrent@0.109.1, webtorrent@>=0.108.6:
     mime "^2.4.6"
     multistream "^4.0.0"
     package-json-versionify "^1.0.4"
-    parse-numeric-range "^1.2.0"
-    parse-torrent "^7.1.3"
+    parse-torrent "^9.0.0"
     pump "^3.0.0"
     random-iterate "^1.0.1"
     randombytes "^2.1.0"
