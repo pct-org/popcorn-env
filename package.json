@@ -18,7 +18,7 @@
     "affected:test": "nx affected:test",
     "build:api": "nx build --with-deps",
     "build:scraper": "nx build scraper --with-deps",
-    "build:rest-api": "nx run rest-api --with-deps",
+    "build:rest-api": "nx build rest-api --with-deps",
     "delete:prod": "pm2 delete ecosystem.config.js",
     "dep-graph": "nx dep-graph",
     "e2e": "nx e2e",
