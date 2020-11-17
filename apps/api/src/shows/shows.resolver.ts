@@ -1,13 +1,9 @@
 import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
-import { Show, Season } from '@pct-org/mongo-models'
 import { Inject } from '@nestjs/common'
 import { TraktService } from '@pct-org/services/trakt'
+import { Show, ShowsService, ShowsArgs, ShowArgs } from '@pct-org/types/show'
+import { Season, SeasonsService } from '@pct-org/types/season'
 
-import { ShowArgs } from './dto/show.args'
-import { ShowsArgs } from './dto/shows.args'
-import { ShowsService } from './shows.service'
-
-import { SeasonsService } from '../seasons/seasons.service'
 import { DownloadsService } from '../downloads/downloads.service'
 
 @Resolver(of => Show)

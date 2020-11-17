@@ -3,16 +3,17 @@ import { InjectModel } from '@nestjs/mongoose'
 import * as pMap from 'p-map'
 import * as WebTorrent from 'webtorrent-hybrid'
 import { Torrent, Instance as WebTorrentInstance } from 'webtorrent'
-import { Episode, Movie, Download, DownloadModel, DownloadInfo } from '@pct-org/mongo-models'
 import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
 import { TYPE_MOVIE } from '@pct-org/constants/item-types'
 import * as rimraf from 'rimraf'
+import { Movie, MoviesService } from '@pct-org/types/movie'
+import { Episode, EpisodesService } from '@pct-org/types/episode'
+import { Download, DownloadModel } from '@pct-org/types/download'
+import { DownloadInfo } from '@pct-org/types/shared'
 
 import { TorrentInterface, ConnectingTorrentInterface } from './torrent.interface'
 import { ConfigService } from '../config/config.service'
 import { SubtitlesService } from '../subtitles/subtitles.service'
-import { MoviesService } from '../../movies/movies.service'
-import { EpisodesService } from '../../episodes/episodes.service'
 
 @Injectable()
 export class TorrentService implements OnApplicationBootstrap {

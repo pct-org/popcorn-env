@@ -1,15 +1,15 @@
 import { Args, Parent, Query, ResolveField, Resolver, Mutation } from '@nestjs/graphql'
-import { Movie, Episode, Download } from '@pct-org/mongo-models'
+import { Download } from '@pct-org/types/download'
 import { Inject } from '@nestjs/common'
 import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
+import { Movie, MoviesService } from '@pct-org/types/movie'
+import { Episode, EpisodesService } from '@pct-org/types/episode'
 
 import { DownloadsArgs } from './dto/downloads.args'
 import { DownloadArgs } from './dto/download.args'
 import { DownloadsService } from './downloads.service'
 
 import { TorrentService } from '../shared/torrent/torrent.service'
-import { MoviesService } from '../movies/movies.service'
-import { EpisodesService } from '../episodes/episodes.service'
 
 @Resolver(of => Download)
 export class DownloadsResolver {

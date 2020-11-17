@@ -1,5 +1,7 @@
-import { HttpService } from '@nestjs/common'
-import { Episode, Movie, Torrent } from '@pct-org/mongo-models'
+import { HttpService, } from '@nestjs/common'
+import { Movie } from '@pct-org/types/movie'
+import { Episode } from '@pct-org/types/episode'
+import { Torrent } from '@pct-org/types/shared'
 
 export abstract class SearchAdapter {
 

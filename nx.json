@@ -17,12 +17,7 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   },
@@ -33,35 +28,20 @@
     "api": {
       "tags": []
     },
-    "mongo-models": {
-      "tags": [
-        "scope:internal"
-      ]
-    },
     "package-eztv-api": {
-      "tags": [
-        "scope:public"
-      ]
+      "tags": ["scope:public"]
     },
     "package-solidtorrents-api": {
-      "tags": [
-        "scope:public"
-      ]
+      "tags": ["scope:public"]
     },
     "package-zooqle-api": {
-      "tags": [
-        "scope:public"
-      ]
+      "tags": ["scope:public"]
     },
     "package-ettv-api": {
-      "tags": [
-        "scope:public"
-      ]
+      "tags": ["scope:public"]
     },
     "package-kat-api": {
-      "tags": [
-        "scope:public"
-      ]
+      "tags": ["scope:public"]
     },
     "scraper": {
       "tags": []
@@ -112,6 +92,30 @@
       "tags": []
     },
     "constants-item-types": {
+      "tags": []
+    },
+    "rest-api": {
+      "tags": []
+    },
+    "types-movie": {
+      "tags": []
+    },
+    "types-show": {
+      "tags": []
+    },
+    "types-episode": {
+      "tags": []
+    },
+    "types-season": {
+      "tags": []
+    },
+    "types-shared": {
+      "tags": []
+    },
+    "types-blacklist": {
+      "tags": []
+    },
+    "types-download": {
       "tags": []
     }
   }

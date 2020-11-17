@@ -1,14 +1,16 @@
-import { Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
+import { Inject, Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
 import { CronJob } from 'cron'
 import * as pMap from 'p-map'
-import { ModelsModule } from '@pct-org/mongo-models'
 
+import { ModelsModule } from './shared/models.module'
 import { ConfigModule } from './shared/config/config.module'
 import { ConfigService } from './shared/config/config.service'
 import { ProvidersModule } from './providers/providers.module'
 import { ProvidersService } from './providers/providers.service'
+
+import { StatusModule } from './routes/status/status.module'
 
 @Module({
   imports: [
@@ -16,6 +18,7 @@ import { ProvidersService } from './providers/providers.service'
     ModelsModule,
 
     ProvidersModule,
+    StatusModule,
 
     // Enable Mongoose
     MongooseModule.forRootAsync({
@@ -38,15 +41,19 @@ export class ScraperModule implements OnApplicationBootstrap {
 
   private readonly logger = new Logger(ScraperModule.name)
 
-  constructor(
-    private schedulerRegistry: SchedulerRegistry,
-    private configService: ConfigService,
-    private providersService: ProvidersService
-  ) {
-  }
+  @Inject()
+  private schedulerRegistry: SchedulerRegistry
+
+  @Inject()
+  private configService: ConfigService
+
+  @Inject()
+  private providersService: ProvidersService
 
   public onApplicationBootstrap(): void {
-    const job = new CronJob(this.configService.get('CRON_TIME'), this.scrapeConfigs)
+    const job = new CronJob(this.configService.get('CRON_TIME'), () => {
+      this.scrapeConfigs()
+    })
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
     job.start()

@@ -6,7 +6,6 @@ import { TraktShow } from './interfaces/trakt.show.interface'
 import { TraktSeason } from './interfaces/trakt.season.interface'
 import { TraktEpisode } from './interfaces/trakt.episode.interface'
 import { TraktWatching } from './interfaces/trakt.watching.interface'
-import { Movie, Show } from '@pct-org/mongo-models'
 
 @Injectable()
 export class TraktService {

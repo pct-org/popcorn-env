@@ -1,11 +1,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql'
 import { Inject } from '@nestjs/common'
-import { Movie } from '@pct-org/mongo-models'
 import { TraktService } from '@pct-org/services/trakt'
-
-import { MovieArgs } from './dto/movie.args'
-import { MoviesArgs } from './dto/movies.args'
-import { MoviesService } from './movies.service'
+import { Movie, MoviesService, MoviesArgs, MovieArgs } from '@pct-org/types/movie'
 
 @Resolver(of => Movie)
 export class MoviesResolver {

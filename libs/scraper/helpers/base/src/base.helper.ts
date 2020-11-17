@@ -1,6 +1,9 @@
 import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { BlacklistModel, Movie, Show, Runtime } from '@pct-org/mongo-models'
+import { Runtime } from '@pct-org/types/shared'
+import { Movie } from '@pct-org/types/movie'
+import { Show } from '@pct-org/types/show'
+import { BlacklistModel } from '@pct-org/types/blacklist'
 import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { holder } from '@pct-org/constants/default-image-sizes'
 

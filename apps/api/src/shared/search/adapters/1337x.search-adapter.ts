@@ -1,5 +1,7 @@
-import { Episode, Movie, Torrent } from '@pct-org/mongo-models'
 import { Logger } from '@nestjs/common'
+import { Movie } from '@pct-org/types/movie'
+import { Episode } from '@pct-org/types/episode'
+import { Torrent } from '@pct-org/types/shared'
 import { search, info } from 'xtorrent'
 import { parse as parseBytes } from 'bytes'
 

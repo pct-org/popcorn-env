@@ -1,6 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Tmdb, NotFoundError } from 'tmdb'
-import { Images, ImagesSizes, Movie, Season, Show } from '@pct-org/mongo-models'
+import { Images, ImagesSizes } from '@pct-org/types/shared'
+import { Movie } from '@pct-org/types/movie'
+import { Show } from '@pct-org/types/show'
+import { Season } from '@pct-org/types/season'
 
 import { TmdbSeason } from './interfaces/tmdb.season.interface'
 

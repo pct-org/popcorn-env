@@ -1,8 +1,8 @@
 import { Controller, Get, Inject, Res } from '@nestjs/common'
 import * as ical from 'ical-generator'
+import { EpisodesService } from '@pct-org/types/episode'
 
 import { BookmarksService } from '../bookmarks/bookmarks.service'
-import { EpisodesService } from '../episodes/episodes.service'
 
 @Controller()
 export class CalendarController {

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseProvider, ScrapedItem, ScraperProviderConfig, ShowType } from '@pct-org/scraper/providers/base'
-import * as Eztv from '@pct-org/eztv-api'
+import { EztvApi } from '@pct-org/eztv-api'
 import * as pMap from 'p-map'
 import { ShowHelperService } from '@pct-org/scraper/helpers/show'
 
@@ -25,7 +25,7 @@ export class EztvProviderService extends BaseProvider {
   constructor() {
     super()
 
-    this.api = new Eztv()
+    this.api = new EztvApi()
   }
 
   protected async scrapeConfig(config: ScraperProviderConfig): Promise<void> {

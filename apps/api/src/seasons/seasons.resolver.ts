@@ -1,8 +1,7 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql'
-import { Season, Episode } from '@pct-org/mongo-models'
 import { Inject } from '@nestjs/common'
-
-import { EpisodesService } from '../episodes/episodes.service'
+import { Season } from '@pct-org/types/season'
+import { Episode, EpisodesService } from '@pct-org/types/episode'
 
 @Resolver(of => Season)
 export class SeasonsResolver {

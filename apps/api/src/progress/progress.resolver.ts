@@ -1,10 +1,8 @@
 import { Args, Mutation, createUnionType, Resolver } from '@nestjs/graphql'
-import { Movie, Episode } from '@pct-org/mongo-models'
 import { TYPE_MOVIE, TYPE_EPISODE } from '@pct-org/constants/item-types'
 import { Inject } from '@nestjs/common'
-
-import { MoviesService } from '../movies/movies.service'
-import { EpisodesService } from '../episodes/episodes.service'
+import { Movie, MoviesService } from '@pct-org/types/movie'
+import { Episode, EpisodesService } from '@pct-org/types/episode'
 
 export const progressUnion = createUnionType({
   name: 'Progress',

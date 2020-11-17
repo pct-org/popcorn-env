@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common'
 import * as Fanart from 'fanart.tv-api'
-import { Images, ImagesSizes, Movie, Show } from '@pct-org/mongo-models'
+import { Images, ImagesSizes } from '@pct-org/types/shared'
+import { Movie } from '@pct-org/types/movie'
+import { Show } from '@pct-org/types/show'
 
 @Injectable()
 export class FanartService {

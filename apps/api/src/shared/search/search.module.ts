@@ -1,4 +1,4 @@
-import { Global, HttpModule, Module } from '@nestjs/common'
+import { HttpModule, Module } from '@nestjs/common'
 
 import { SearchService } from './search.service'
 

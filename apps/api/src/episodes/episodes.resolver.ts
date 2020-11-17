@@ -1,10 +1,9 @@
 import { Query, Resolver, ResolveField, Parent, Args } from '@nestjs/graphql'
 import { Inject } from '@nestjs/common'
-import { Episode, Show } from '@pct-org/mongo-models'
+import { Show, ShowsService } from '@pct-org/types/show'
+import { Episode, EpisodesService } from '@pct-org/types/episode'
 
-import { EpisodesService } from './episodes.service'
 import { BookmarksService } from '../bookmarks/bookmarks.service'
-import { ShowsService } from '../shows/shows.service'
 
 @Resolver(of => Episode)
 export class EpisodesResolver {
@@ -19,8 +18,14 @@ export class EpisodesResolver {
   private readonly showsService: ShowsService
 
   @Query(returns => [Episode], { description: 'Get episodes from bookmarks that have aired in the past 7 days.' })
-  public myEpisodes(): Promise<Episode[]> {
-    return this.episodesService.findMyEpisodes(this.bookmarksService)
+  public async myEpisodes(): Promise<Episode[]> {
+    const shows = await this.bookmarksService.findAllShows({
+      offset: 0,
+      limit: 1000,
+      query: null
+    })
+
+    return this.episodesService.findMyEpisodes(shows.map((show) => show._id))
   }
 
   @Query(returns => Episode, { description: 'Get one episode.' })
