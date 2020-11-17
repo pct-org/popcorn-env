@@ -18,7 +18,7 @@
     "affected:test": "nx affected:test",
     "build:api": "nx build --with-deps",
     "build:scraper": "nx build scraper --with-deps",
-    "build:mongo-modals": "nx run packages-mongo-models:build",
+    "build:rest-api": "nx run rest-api --with-deps",
     "delete:prod": "pm2 delete ecosystem.config.js",
     "dep-graph": "nx dep-graph",
     "e2e": "nx e2e",
@@ -113,7 +113,7 @@
     "typescript": "~4.0.3"
   },
   "resolutions": {
-    "webtorrent": "0.109.1",
+    "webtorrent": "0.111.0",
     "webtorrent-cli": "3.0.7",
     "wrtc": "0.4.5"
   }
