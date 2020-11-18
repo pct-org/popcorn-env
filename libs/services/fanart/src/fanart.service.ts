@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import * as Fanart from 'fanart.tv-api'
-import { Images, ImagesSizes } from '@pct-org/types/shared'
+import { Images, ImageSizes } from '@pct-org/types/image'
 import { Movie } from '@pct-org/types/movie'
 import { Show } from '@pct-org/types/show'
 
@@ -95,7 +95,7 @@ export class FanartService {
     }
   }
 
-  private formatImage(image: { url: string }): ImagesSizes {
+  private formatImage(image: { url: string }): ImageSizes {
     return {
       full: image.url,
       high: image.url,

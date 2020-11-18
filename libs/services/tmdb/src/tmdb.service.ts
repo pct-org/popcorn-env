@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { Tmdb, NotFoundError } from 'tmdb'
-import { Images, ImagesSizes } from '@pct-org/types/shared'
+import { Images, ImageSizes } from '@pct-org/types/image'
 import { Movie } from '@pct-org/types/movie'
 import { Show } from '@pct-org/types/show'
 import { Season } from '@pct-org/types/season'
@@ -88,7 +88,7 @@ export class TmdbService {
   /**
    * Formats imdb image sizes
    */
-  public formatImage(filePath: string = null): ImagesSizes {
+  public formatImage(filePath: string = null): ImageSizes {
     const baseUrl = 'https://image.tmdb.org/t/p'
 
     return {

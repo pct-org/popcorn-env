@@ -28,7 +28,6 @@ This repo holds everything you need (except the [app]) to run the PCT environmen
 │   ├── solidtorrents-api       # 
 │   └── zooqle-api              # 
 └── libs                        # Internal libs used by the packages/apps
-    ├── constants (depricated)  # Libs in here can be moved to their own libs/types
     ├── scraper                 # Collection of libs related to the scraper
     │   ├── helpers             # Collection of helpers
     │   │   ├── base            # Base helper
@@ -51,6 +50,7 @@ This repo holds everything you need (except the [app]) to run the PCT environmen
         ├── blacklist           #
         ├── download            #
         ├── episode             #
+        ├── image               #
         ├── movie               #
         ├── season              #
         ├── shared              #

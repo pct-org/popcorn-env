@@ -1,9 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Show } from '@pct-org/types/show'
-import { EpisodeModel, Episode } from '@pct-org/types/episode'
-import { defaultEpisodeImages } from '@pct-org/constants/default-image-sizes'
-import { TYPE_EPISODE } from '@pct-org/constants/item-types'
+import { EpisodeModel, Episode, EPISODE_TYPE } from '@pct-org/types/episode'
+import { IMAGES_DEFAULT } from '@pct-org/types/image'
 import { TraktEpisode } from '@pct-org/services/trakt'
 import { formatTorrents } from '@pct-org/torrent/utils'
 import { ScrapedTorrent } from '@pct-org/scraper/providers/base'
@@ -26,10 +25,10 @@ export class EpisodeHelperService {
       title: null,
       tmdbId: null,
       synopsis: null,
-      images: defaultEpisodeImages,
+      images: IMAGES_DEFAULT,
       torrents: [],
       searchedTorrents: [],
-      type: TYPE_EPISODE,
+      type: EPISODE_TYPE,
       watched: {
         complete: false,
         progress: 0

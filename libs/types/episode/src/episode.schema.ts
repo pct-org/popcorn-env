@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose'
 
-import { torrentSchema, watchedSchema, imagesSchema, downloadInfoSchema } from '@pct-org/types/shared'
+import { imagesSchema } from '@pct-org/types/image'
+import { torrentSchema, watchedSchema, downloadInfoSchema } from '@pct-org/types/shared'
 
 export const episodeSchema = (new Schema(
   {

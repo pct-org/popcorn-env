@@ -2,11 +2,10 @@ import { Inject, Injectable, Logger } from '@nestjs/common'
 import { ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
 import { Show } from '@pct-org/types/show'
-import { SeasonModel, Season } from '@pct-org/types/season'
+import { SeasonModel, Season, SEASON_TYPE } from '@pct-org/types/season'
 import { Episode } from '@pct-org/types/episode'
 import { EpisodeHelperService } from '@pct-org/scraper/helpers/episode'
-import { TYPE_SEASON } from '@pct-org/constants/item-types'
-import { defaultSeasonImages } from '@pct-org/constants/default-image-sizes'
+import { IMAGES_DEFAULT } from '@pct-org/types/image'
 import { TmdbService } from '@pct-org/services/tmdb'
 import * as pMap from 'p-map'
 
@@ -64,8 +63,8 @@ export class SeasonHelperService {
         number: traktSeason.number,
         synopsis: null,
         title: traktSeason.title,
-        type: TYPE_SEASON,
-        images: defaultSeasonImages,
+        type: SEASON_TYPE,
+        images: IMAGES_DEFAULT,
         createdAt: Number(new Date()),
         updatedAt: Number(new Date()),
 
@@ -101,8 +100,8 @@ export class SeasonHelperService {
           number: parseInt(seasonNr, 10),
           synopsis: null,
           title: `Season ${seasonNr}`,
-          type: TYPE_SEASON,
-          images: defaultSeasonImages,
+          type: SEASON_TYPE,
+          images: IMAGES_DEFAULT,
           createdAt: Number(new Date()),
           updatedAt: Number(new Date()),
 

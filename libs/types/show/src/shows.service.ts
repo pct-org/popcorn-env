@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Download } from '@pct-org/types/download'
 import { ContentService } from '@pct-org/types/shared'
 
 import { ShowsArgs } from './dto/shows.args'
@@ -53,15 +52,15 @@ export class ShowsService extends ContentService {
    * Formats the id's from downloads so we can get
    * all the shows / seasons / episodes that are downloaded
    *
-   * @param {array<Download>} downloads - Downloads from mongo db
+   * @param {array<string>} downloadIDs - IDs from the downloads
    */
-  public getShowIDsFromDownloads(downloads: Download[]) {
+  public getShowIDsFromDownloadIDs(downloadIDs: string[]) {
     let shows = []
 
     // Flatten the id's of shows to a usable list for graph
-    downloads
-      .forEach((download) => {
-        const ids = download._id.split('-')
+    downloadIDs
+      .forEach((downloadId) => {
+        const ids = downloadId.split('-')
         const showId = ids.shift()
         const seasonNr = ids.shift()
 
@@ -72,11 +71,10 @@ export class ShowsService extends ContentService {
         if (!showExists) {
           shows.push({
             _id: showId,
-            createdAt: download.createdAt,
             seasons: [{
               _id: `${showId}-${seasonNr}`,
               episodes: [{
-                _id: download._id
+                _id: downloadId
               }]
             }]
           })
@@ -98,7 +96,7 @@ export class ShowsService extends ContentService {
                       episodes: [
                         ...season.episodes,
                         {
-                          _id: download._id
+                          _id:downloadId
                         }
                       ]
                     }
@@ -111,7 +109,7 @@ export class ShowsService extends ContentService {
                 seasons.push({
                   _id: seasonId,
                   episodes: [{
-                    _id: download._id
+                    _id: downloadId
                   }]
                 })
               }

@@ -30,13 +30,13 @@ export class ShowsResolver {
   }
 
   /**
-   * Fetch multiple shows
+   * Fetch all shows
    */
   @Query(returns => [Show], { description: 'Get all shows.' })
   public async shows(@Args() showsArgs: ShowsArgs): Promise<Show[]> {
     if (showsArgs.downloadsOnly) {
       const downloads = await this.downloadsService.getAllEpisodes()
-      const shows = this.showsService.getShowIDsFromDownloads(downloads)
+      const shows = this.showsService.getShowIDsFromDownloadIDs(downloads.map((download) => download._id))
 
       return Promise.all(
         shows.map(async (show) => ({

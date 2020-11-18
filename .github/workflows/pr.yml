@@ -22,8 +22,8 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-#      - name: Lint
-#        run: yarn affected:lint --base=master --head=HEAD
-#
+      - name: Lint
+        run: yarn affected:lint --base=master --head=HEAD
+
 #      - name: Test
 #        run: yarn affected:test --base=master --head=HEAD

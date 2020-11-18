@@ -1,8 +1,7 @@
 import { Args, Mutation, createUnionType, Resolver } from '@nestjs/graphql'
-import { TYPE_MOVIE, TYPE_EPISODE } from '@pct-org/constants/item-types'
 import { Inject } from '@nestjs/common'
-import { Movie, MoviesService } from '@pct-org/types/movie'
-import { Episode, EpisodesService } from '@pct-org/types/episode'
+import { Movie, MoviesService, MOVIE_TYPE } from '@pct-org/types/movie'
+import { Episode, EpisodesService, EPISODE_TYPE } from '@pct-org/types/episode'
 
 export const progressUnion = createUnionType({
   name: 'Progress',
@@ -11,7 +10,7 @@ export const progressUnion = createUnionType({
     if (value.type === TYPE_MOVIE) {
       return Movie
 
-    } else if (value.type === TYPE_EPISODE) {
+    } else if (value.type === EPISODE_TYPE) {
       return Episode
     }
 
@@ -36,10 +35,10 @@ export class ProgressResolver {
   ): Promise<Movie | Episode> {
     let item = null
 
-    if (type === TYPE_MOVIE) {
+    if (type === MOVIE_TYPE) {
       item = await this.moviesService.findOne(_id, false)
 
-    } else if (type === TYPE_EPISODE) {
+    } else if (type === EPISODE_TYPE) {
       item = await this.episodesService.findOne(_id, false)
     }
 

@@ -1,15 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
-import { MovieType, ScrapedItem, ScrapedTorrent } from '@pct-org/scraper/providers/base'
+import { ScrapedItem, ScrapedTorrent } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
-import { MovieModel, Movie } from '@pct-org/types/movie'
+import { MovieModel, Movie, MOVIE_TYPE } from '@pct-org/types/movie'
 import { Show } from '@pct-org/types/show'
 import { TraktService } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
 import { FanartService } from '@pct-org/services/fanart'
 import { OmdbService } from '@pct-org/services/omdb'
 import { formatTorrents } from '@pct-org/torrent/utils'
-import { defaultMovieImages } from '@pct-org/constants/default-image-sizes'
+import { IMAGES_DEFAULT } from '@pct-org/types/image'
 
 @Injectable()
 export class MovieHelperService extends BaseHelper {
@@ -112,7 +112,7 @@ export class MovieHelperService extends BaseHelper {
         watching: traktWatchers?.length ?? 0,
         percentage: ratingPercentage
       },
-      images: defaultMovieImages,
+      images: IMAGES_DEFAULT,
       genres: traktMovie.genres
         ? traktMovie.genres
         : ['unknown'],
@@ -123,7 +123,7 @@ export class MovieHelperService extends BaseHelper {
       createdAt: Number(new Date()),
       updatedAt: Number(new Date()),
       lastMetadataUpdate: Number(new Date()),
-      type: MovieType,
+      type: MOVIE_TYPE,
       torrents: [],
       searchedTorrents: [],
       watched: {
