@@ -15,6 +15,7 @@ export class ConfigService {
   public static readonly MONGO_PORT: string = 'MONGO_PORT'
   public static readonly MONGO_DATABASE: string = 'MONGO_DATABASE'
   public static readonly CRON_TIME: string = 'CRON_TIME'
+  public static readonly SCRAPE_ON_START: string = 'SCRAPE_ON_START'
   public static readonly TRAKT_KEY: string = 'TRAKT_KEY'
   public static readonly TMDB_KEY: string = 'TMDB_KEY'
   public static readonly TVDB_KEY: string = 'TVDB_KEY'
@@ -109,6 +110,8 @@ export class ConfigService {
 
       [ConfigService.FANART_KEY]: Joi.string()
         .required(),
+
+      [ConfigService.SCRAPE_ON_START]: Joi.boolean()
     })
 
     const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig, { stripUnknown: true })

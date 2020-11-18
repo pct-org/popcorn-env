@@ -1,6 +1,6 @@
 // Import the necessary modules.
 /* eslint-disable no-console */
-const EztvApi = require('..')
+const { EztvApi } = require('./src')
 
 // Create a new instance of the module.
 const eztv = new EztvApi()
@@ -21,6 +21,6 @@ const eztv = new EztvApi()
 // Use the API of EZTV.
 eztv.getShowData({
   id: 1047,
-  slug: 'power-2014'
+  slug: 'power-2014',
 }).then(res => console.log(JSON.stringify(res)))
   .catch(err => console.error(err))

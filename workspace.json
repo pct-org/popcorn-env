@@ -82,7 +82,7 @@
             "main": "packages/eztv-api/src/index.ts",
             "assets": [
               "packages/eztv-api/*.md",
-              "packages/eztv-api/examples/**",
+              "packages/eztv-api/example.js",
               "packages/eztv-api/LICENSE"
             ]
           }
@@ -125,7 +125,7 @@
             "main": "packages/solidtorrents-api/src/index.ts",
             "assets": [
               "packages/solidtorrents-api/*.md",
-              "packages/solidtorrents-api/examples/**",
+              "packages/solidtorrents-api/example.js",
               "packages/solidtorrents-api/LICENSE"
             ]
           }
@@ -204,7 +204,7 @@
             "main": "packages/ettv-api/src/index.ts",
             "assets": [
               "packages/ettv-api/*.md",
-              "packages/ettv-api/examples/**",
+              "packages/ettv-api/example.js",
               "packages/ettv-api/LICENSE"
             ]
           }
@@ -244,7 +244,7 @@
             "main": "packages/kat-api/src/index.ts",
             "assets": [
               "packages/kat-api/*.md",
-              "packages/kat-api/examples/**",
+              "packages/kat-api/example.js",
               "packages/kat-api/LICENSE"
             ]
           }

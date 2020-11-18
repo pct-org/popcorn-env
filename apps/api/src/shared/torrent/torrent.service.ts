@@ -196,7 +196,7 @@ export class TorrentService implements OnApplicationBootstrap {
         this.logger.log(`[${download._id}]: Stop connecting`)
 
         // Remove the magnet from the client
-        connectingTorrent.torrent.destroy((err) => {
+        connectingTorrent.torrent.destroy({}, (err) => {
           if (err) {
             this.logger.error(`[${download._id}]: Error destroying connecting torrent`, err.toString())
           }
@@ -216,7 +216,7 @@ export class TorrentService implements OnApplicationBootstrap {
       this.logger.log(`[${download._id}]: Stop downloading`)
 
       // Destroy the torrent
-      downloadingTorrent.torrent.destroy((err) => {
+      downloadingTorrent.torrent.destroy({}, (err) => {
         if (err) {
           this.logger.error(`[${download._id}]: Error destroying downloading torrent`, err.toString())
         }
@@ -467,7 +467,7 @@ export class TorrentService implements OnApplicationBootstrap {
         await this.cleanUpDownload(download)
 
         // Remove the torrent
-        torrent.destroy((err) => {
+        torrent.destroy({}, (err) => {
           if (err) {
             this.logger.error(`[${download._id}]: Error destroying torrent in on('noPeers')`, err.toString())
           }
@@ -528,7 +528,7 @@ export class TorrentService implements OnApplicationBootstrap {
         this.logger.log(`[${download._id}]: Download complete`)
 
         // Remove the magnet from the client
-        torrent.destroy((err) => {
+        torrent.destroy({}, (err) => {
           if (err) {
             this.logger.error(`[${download._id}]: Error destroying torrent in on('done')`, err.toString())
           }
