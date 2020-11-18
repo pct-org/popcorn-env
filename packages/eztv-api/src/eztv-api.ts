@@ -76,7 +76,7 @@ export class EztvApi {
     }
 
     const table = 'tr.forum_header_border[name="hover"]'
-    $(table).each(() => {
+    $(table).each(function () {
       const entry = $(this)
       const magnet = entry.children('td').eq(2)
         .children('a.magnet')
@@ -191,16 +191,6 @@ export class EztvApi {
    */
   public getShowData(data: Show) {
     return this.get(`shows/${data.id}/${data.slug}/`)
-      .then(($) => this.getEpisodeData(data, $))
-  }
-
-  /**
-   * Search for episodes of a show.
-   * @param {Show} data - The show to get episodes for.
-   * @returns {Promise<Show, Error>} - The show with additional data.
-   */
-  public getShowEpisodes(data: Show) {
-    return this.get('search/')
       .then(($) => this.getEpisodeData(data, $))
   }
 
