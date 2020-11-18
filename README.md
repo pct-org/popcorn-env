@@ -17,7 +17,44 @@ This repo holds everything you need (except the [app]) to run the PCT environmen
 ## In this repo
 
 ```
-// TODO:: All apps / internal libs / packages
+.
+├── apps                        # All the main apps
+│   ├── api                     # GraphQL API to run on your own server
+│   ├── rest-api                # Rest API to be backwords compatible with official PCT clients
+│   └── scraper                 # Scraper to collect and store all the data
+├── packages                    # Packages that are published to NPM
+│   ├── ettv-api                # 
+│   ├── eztv-api                # 
+│   ├── solidtorrents-api       # 
+│   └── zooqle-api              # 
+└── libs                        # Internal libs used by the packages/apps
+    ├── constants (depricated)  # Libs in here can be moved to their own libs/types
+    ├── scraper                 # Collection of libs related to the scraper
+    │   ├── helpers             # Collection of helpers
+    │   │   ├── base            # Base helper
+    │   │   ├── episode         # Helper in formating and storing episodes
+    │   │   ├── movie           # Helper in formating and storing movies
+    │   │   ├── season          # Helper in formating and storing seasons
+    │   │   └── show            # Helper in formating and storing shows
+    │   └── providers           # Collection of providers
+    │       ├── base            # Base provider for the scraper
+    │       ├── eztv            # EZTV provider, scraping eztv
+    │       └── yts             # YTS provider, scraping yts
+    ├── services                # Collection services
+    │   ├── fanart              # Service for helping to get/collect data from fanart
+    │   ├── omdb                # Service for helping to get/collect data from omdb
+    │   ├── tmdb                # Service for helping to get/collect data from tmdb
+    │   ├── trakt               # Service for helping to get/collect data from trakt
+    │   └── tvdb                # Service for helping to get/collect data from tvdb
+    ├── torrent/utils           # Small utils related to torrents
+    └── types                   # Collection of types, contains mongo schema / model / graphql object type
+        ├── blacklist           #
+        ├── download            #
+        ├── episode             #
+        ├── movie               #
+        ├── season              #
+        ├── shared              #
+        └── show                #
 ```
 
 ## Installation
