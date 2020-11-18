@@ -51,14 +51,18 @@ export class ScraperModule implements OnApplicationBootstrap {
   private providersService: ProvidersService
 
   public onApplicationBootstrap(): void {
-    const job = new CronJob(this.configService.get('CRON_TIME'), () => {
+    const job = new CronJob(this.configService.get(ConfigService.CRON_TIME), () => {
       this.scrapeConfigs()
     })
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
     job.start()
 
-    this.logger.log(`Enabled cron on '${this.configService.get('CRON_TIME')}'`)
+    this.logger.log(`Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`)
+
+    if (this.configService.get(ConfigService.SCRAPE_ON_START)) {
+      this.scrapeConfigs()
+    }
   }
 
   private async scrapeConfigs(): Promise<void> {
