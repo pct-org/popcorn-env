@@ -56,10 +56,6 @@
       "@pct-org/scraper/helpers/episode": [
         "libs/scraper/helpers/episode/src/index.ts"
       ],
-      "@pct-org/constants/default-image-sizes": [
-        "libs/constants/default-image-sizes/index.ts"
-      ],
-      "@pct-org/constants/item-types": ["libs/constants/item-types/index.ts"],
       "@pct-org/types/movie": ["libs/types/movie/src/index.ts"],
       "@pct-org/types/show": ["libs/types/show/src/index.ts"],
       "@pct-org/types/episode": ["libs/types/episode/src/index.ts"],

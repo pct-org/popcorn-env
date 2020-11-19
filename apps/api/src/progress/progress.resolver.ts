@@ -7,7 +7,7 @@ export const progressUnion = createUnionType({
   name: 'Progress',
   types: () => [Movie, Episode],
   resolveType(value) {
-    if (value.type === TYPE_MOVIE) {
+    if (value.type === MOVIE_TYPE) {
       return Movie
 
     } else if (value.type === EPISODE_TYPE) {

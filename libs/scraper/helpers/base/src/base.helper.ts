@@ -3,9 +3,9 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Runtime } from '@pct-org/types/shared'
 import { Movie } from '@pct-org/types/movie'
 import { Show } from '@pct-org/types/show'
+import { IMAGE_HOLDER } from '@pct-org/types/image'
 import { BlacklistModel } from '@pct-org/types/blacklist'
 import { ScrapedItem, ScrapedTorrent, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
-import { holder } from '@pct-org/constants/default-image-sizes'
 
 /**
  * Base class for scraping content from various sources.
@@ -96,13 +96,13 @@ export abstract class BaseHelper {
    */
   protected checkImages(item: Show | Movie): Promise<Show | Movie> {
     for (const i in item.images.backdrop) {
-      if (item.images.backdrop[i] === holder) {
+      if (item.images.backdrop[i] === IMAGE_HOLDER) {
         return Promise.reject(item)
       }
     }
 
     for (const i in item.images.poster) {
-      if (item.images.poster[i] === holder) {
+      if (item.images.poster[i] === IMAGE_HOLDER) {
         return Promise.reject(item)
       }
     }

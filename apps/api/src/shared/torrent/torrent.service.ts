@@ -4,9 +4,8 @@ import * as pMap from 'p-map'
 import * as WebTorrent from 'webtorrent-hybrid'
 import { Torrent, Instance as WebTorrentInstance } from 'webtorrent'
 import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
-import { TYPE_MOVIE } from '@pct-org/constants/item-types'
 import * as rimraf from 'rimraf'
-import { Movie, MoviesService } from '@pct-org/types/movie'
+import { Movie, MoviesService, MOVIE_TYPE } from '@pct-org/types/movie'
 import { Episode, EpisodesService } from '@pct-org/types/episode'
 import { Download, DownloadModel } from '@pct-org/types/download'
 import { DownloadInfo } from '@pct-org/types/shared'
@@ -682,7 +681,7 @@ export class TorrentService implements OnApplicationBootstrap {
       ...update
     }
 
-    if (item.type === TYPE_MOVIE) {
+    if (item.type === MOVIE_TYPE) {
       await this.moviesService.updateOne({
         _id: item._id,
         download: newDownloadInfo
