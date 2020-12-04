@@ -23,7 +23,7 @@ jobs:
         run: yarn
 
       - name: Lint
-        run: yarn affected:lint --base=remotes/origin/master
+        run: yarn affected:lint --base=origin/master
 
 #      - name: Test
 #        run: yarn affected:test --base=master --head=HEAD
