@@ -2,17 +2,16 @@ import { Module } from '@nestjs/common'
 import { MoviesService } from '@pct-org/types/movie'
 import { EpisodesService } from '@pct-org/types/episode'
 
-import { DownloadsResolver } from './downloads.resolver'
-import { DownloadsService } from './downloads.service'
+import { WatchedResolver } from './watched.resolver'
+import { WatchedService } from './watched.service'
 
 @Module({
   providers: [
-    DownloadsResolver,
-    DownloadsService,
-
+    WatchedResolver,
+    WatchedService,
     MoviesService,
     EpisodesService
   ]
 })
-export class DownloadsModule {
+export class WatchedModule {
 }

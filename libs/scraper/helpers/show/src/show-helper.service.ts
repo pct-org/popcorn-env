@@ -269,7 +269,7 @@ export class ShowHelperService extends BaseHelper {
     if (['ended', 'canceled'].includes(show.status)) {
       await this.addToBlacklist(
         item,
-        ShowType,
+        SHOW_TYPE,
         show.status,
         4
       )
@@ -294,7 +294,7 @@ export class ShowHelperService extends BaseHelper {
       )) {
         await this.addToBlacklist(
           item,
-          ShowType,
+          SHOW_TYPE,
           'nextEpisode',
           null,
           nextEpisodeAirs

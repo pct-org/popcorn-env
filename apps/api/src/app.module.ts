@@ -20,6 +20,7 @@ import { EpisodesModule } from './episodes/episodes.module'
 import { ProgressModule } from './progress/progress.module'
 import { WatchOnTvModule } from './watch-on-tv/watch-on-tv.module'
 import { SearchBetterModule } from './search-better/search-better.module'
+import { WatchedModule } from './watched/watched.module'
 
 import { WatchModule } from './watch/watch.module'
 
@@ -41,6 +42,7 @@ import { WatchModule } from './watch/watch.module'
     ProgressModule,
     WatchOnTvModule,
     SearchBetterModule,
+    WatchedModule,
 
     // Rest
     WatchModule,
