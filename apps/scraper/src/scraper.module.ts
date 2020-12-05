@@ -11,7 +11,6 @@ import { ProvidersModule } from './providers/providers.module'
 import { ProvidersService } from './providers/providers.service'
 
 import { StatusModule } from './routes/status/status.module'
-import { ScrapeModule } from './routes/scrape/scrape.module'
 
 @Module({
   imports: [
@@ -20,7 +19,6 @@ import { ScrapeModule } from './routes/scrape/scrape.module'
 
     ProvidersModule,
     StatusModule,
-    ScrapeModule,
 
     // Enable Mongoose
     MongooseModule.forRootAsync({
