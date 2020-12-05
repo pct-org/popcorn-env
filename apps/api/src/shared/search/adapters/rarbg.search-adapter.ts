@@ -89,7 +89,7 @@ export class RarbgSearchAdapter extends SearchAdapter {
 
           // Format all the torrents and remove the ones that returned false
           return foundTorrents
-            .map(this.formatTorrent)
+            .map((torrent) => this.formatTorrent(torrent))
             .filter(Boolean) as Torrent[]
         }
       }
@@ -112,11 +112,11 @@ export class RarbgSearchAdapter extends SearchAdapter {
       const token = await this.getToken()
 
       if (token) {
-        const { torrent_results } = await this.get(this.getRequestParams(movie))
+        const result = await this.get(this.getRequestParams(movie))
 
         // Return the best torrents
-        return torrent_results
-          .map(this.formatTorrent)
+        return (result.torrent_results || [])
+          .map((torrent) => this.formatTorrent(torrent))
           .filter(Boolean) as Torrent[]
       }
 
