@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 import { Episode } from '@pct-org/types/episode'
-import { Images } from '@pct-org/types/shared'
+import { Images } from '@pct-org/types/image'
 
 @ObjectType()
 export class Season {

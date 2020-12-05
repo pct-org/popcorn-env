@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
 import { Show } from '@pct-org/types/show'
-import { Torrent, Images, Watched, DownloadInfo } from '@pct-org/types/shared'
+import { Images } from '@pct-org/types/image'
+import { Torrent, Watched, DownloadInfo } from '@pct-org/types/shared'
 
 @ObjectType()
 export class Episode {
@@ -57,7 +58,7 @@ export class Episode {
   @Field({ description: 'The time at which the content was last updated.' })
   updatedAt: number
 
-  @Field(tye => Show, { description: 'The show this episode belongs to.' })
+  @Field(type => Show, { description: 'The show this episode belongs to.' })
   show?: Show
 
 }

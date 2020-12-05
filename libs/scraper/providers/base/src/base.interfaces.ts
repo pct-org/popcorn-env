@@ -1,7 +1,3 @@
-export const MovieType = 'movie'
-
-export const ShowType = 'show'
-
 export type ScraperContentType = 'movie' | 'show'
 
 export interface ScraperProvider {

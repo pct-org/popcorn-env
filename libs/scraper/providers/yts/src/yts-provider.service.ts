@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { BaseProvider, ScraperProviderConfig, MovieType, ScrapedItem } from '@pct-org/scraper/providers/base'
+import { BaseProvider, ScraperProviderConfig, ScrapedItem } from '@pct-org/scraper/providers/base'
+import { MOVIE_TYPE } from '@pct-org/types/movie'
 import * as Yts from 'yts-api-pt'
 
 import { YtsTorrent } from './yts-provider.interfaces'
@@ -18,7 +19,7 @@ export class YtsProviderService extends BaseProvider {
   logger = new Logger(this.name)
 
   configs: ScraperProviderConfig[] = [{
-    contentType: MovieType,
+    contentType: MOVIE_TYPE,
     query: {
       page: 1,
       limit: 50

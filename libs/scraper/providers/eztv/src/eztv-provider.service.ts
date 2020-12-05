@@ -1,8 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { BaseProvider, ScrapedItem, ScraperProviderConfig, ShowType } from '@pct-org/scraper/providers/base'
+import { BaseProvider, ScrapedItem, ScraperProviderConfig } from '@pct-org/scraper/providers/base'
 import { EztvApi } from '@pct-org/eztv-api'
 import * as pMap from 'p-map'
 import { ShowHelperService } from '@pct-org/scraper/helpers/show'
+import { SHOW_TYPE } from '@pct-org/types/show'
 
 @Injectable()
 export class EztvProviderService extends BaseProvider {
@@ -17,7 +18,7 @@ export class EztvProviderService extends BaseProvider {
   logger = new Logger(this.name)
 
   configs: ScraperProviderConfig[] = [{
-    contentType: ShowType
+    contentType: SHOW_TYPE
   }]
 
   api

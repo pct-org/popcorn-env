@@ -1,15 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
-import { ShowType, ScrapedItem, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
+import { ScrapedItem, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
-import { ShowModel, Show } from '@pct-org/types/show'
+import { ShowModel, Show, SHOW_TYPE } from '@pct-org/types/show'
 import { Movie } from '@pct-org/types/movie'
 import { TraktEpisode, TraktService, TraktShow } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
 import { FanartService } from '@pct-org/services/fanart'
 import { TvdbService } from '@pct-org/services/tvdb'
 import { SeasonHelperService } from '@pct-org/scraper/helpers/season'
-import { defaultShowImages } from '@pct-org/constants/default-image-sizes'
+import { IMAGES_DEFAULT } from '@pct-org/types/image'
 
 @Injectable()
 export class ShowHelperService extends BaseHelper {
@@ -142,8 +142,8 @@ export class ShowHelperService extends BaseHelper {
         watching: traktWatchers?.length ?? 0,
         percentage: ratingPercentage
       },
-      images: defaultShowImages,
-      type: ShowType,
+      images: IMAGES_DEFAULT,
+      type: SHOW_TYPE,
       genres: traktShow.genres
         ? traktShow.genres
         : ['unknown'],
@@ -269,7 +269,7 @@ export class ShowHelperService extends BaseHelper {
     if (['ended', 'canceled'].includes(show.status)) {
       await this.addToBlacklist(
         item,
-        ShowType,
+        SHOW_TYPE,
         show.status,
         4
       )
@@ -294,7 +294,7 @@ export class ShowHelperService extends BaseHelper {
       )) {
         await this.addToBlacklist(
           item,
-          ShowType,
+          SHOW_TYPE,
           'nextEpisode',
           null,
           nextEpisodeAirs

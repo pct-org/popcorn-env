@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common'
 import * as TvDB from 'node-tvdb'
-import { Images } from '@pct-org/types/shared'
+import { Images } from '@pct-org/types/image'
 import { Show } from '@pct-org/types/show'
 
 @Injectable()

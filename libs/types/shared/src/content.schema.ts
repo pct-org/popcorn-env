@@ -1,4 +1,4 @@
-import { imagesSchema } from './images.schema'
+import { imagesSchema } from '@pct-org/types/image'
 
 export const contentSchema = {
   _id: {

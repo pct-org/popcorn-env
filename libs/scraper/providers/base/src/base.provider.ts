@@ -4,13 +4,11 @@ import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel } from '@pct-org/types/blacklist'
 import { formatTorrents } from '@pct-org/torrent/utils'
-import { MovieHelperService } from '@pct-org/scraper/helpers/movie'
-import { ShowHelperService } from '@pct-org/scraper/helpers/show'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
+import { MOVIE_TYPE } from '@pct-org/types/movie'
+import { SHOW_TYPE } from '@pct-org/types/show'
 
 import {
-  MovieType,
-  ShowType,
   ScrapedItem,
   ScraperContentType,
   ScraperProviderConfig,
@@ -25,9 +23,9 @@ export abstract class BaseProvider {
   @InjectModel('Blacklist')
   private readonly blackListModel: typeof BlacklistModel
 
-  protected readonly movieHelper: MovieHelperService | undefined
+  protected readonly movieHelper: BaseHelper | undefined
 
-  protected readonly showHelper: ShowHelperService | undefined
+  protected readonly showHelper: BaseHelper | undefined
 
   abstract readonly logger: Logger
 
@@ -182,10 +180,10 @@ export abstract class BaseProvider {
    */
   protected async enhanceAndImport(item: ScrapedItem): Promise<void> {
     let helper: BaseHelper = null
-    if (this.contentType === MovieType && this.movieHelper) {
+    if (this.contentType === MOVIE_TYPE && this.movieHelper) {
       helper = this.movieHelper
 
-    } else if (this.contentType === ShowType && this.showHelper) {
+    } else if (this.contentType === SHOW_TYPE && this.showHelper) {
       helper = this.showHelper
     }
 

@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose'
-import { imagesSchema } from '@pct-org/types/shared'
+import { imagesSchema } from '@pct-org/types/image'
 
 export const seasonSchema = (new Schema(
   {

@@ -1,4 +1,4 @@
-export const imagesSizesSchema: object = {
+export const imageSizesSchema = {
   type: {
     full: {
       type: String,

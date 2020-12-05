@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql'
+import { Images } from '@pct-org/types/image'
 
 import { Runtime } from './runtime.object-type'
 import { Rating } from './rating.object-type'
-import { Images } from './images.object-type'
 
 @ObjectType()
 export class Content {

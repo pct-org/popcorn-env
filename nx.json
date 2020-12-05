@@ -88,12 +88,6 @@
     "scraper-helpers-episode": {
       "tags": []
     },
-    "constants-default-image-sizes": {
-      "tags": []
-    },
-    "constants-item-types": {
-      "tags": []
-    },
     "rest-api": {
       "tags": []
     },
@@ -116,6 +110,9 @@
       "tags": []
     },
     "types-download": {
+      "tags": []
+    },
+    "types-image": {
       "tags": []
     }
   }

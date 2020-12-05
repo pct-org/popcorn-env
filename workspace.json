@@ -665,18 +665,6 @@
         }
       }
     },
-    "constants-default-image-sizes": {
-      "root": "libs/constants/default-image-sizes",
-      "sourceRoot": "libs/constants/default-image-sizes",
-      "projectType": "library",
-      "schematics": {}
-    },
-    "constants-item-types": {
-      "root": "libs/constants/item-types",
-      "sourceRoot": "libs/constants/item-types",
-      "projectType": "library",
-      "schematics": {}
-    },
     "rest-api": {
       "root": "apps/rest-api",
       "sourceRoot": "apps/rest-api/src",
@@ -862,6 +850,27 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/types/download/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "types-image": {
+      "root": "libs/types/image",
+      "sourceRoot": "libs/types/image/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/types/image/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/image/jest.config.js",
             "passWithNoTests": true
           }
         }

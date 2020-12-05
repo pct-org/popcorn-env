@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql'
 
 @ObjectType()
-export class ImagesSizes {
+export class ImageSizes {
 
   @Field({ description: 'Original image', nullable: true })
   full?: string
