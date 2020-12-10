@@ -1,7 +1,8 @@
 import * as path from 'path'
 import * as fs from 'fs'
-import { Controller, Get, Res, Req, Param, Logger, Inject } from '@nestjs/common'
+import { Controller, Get, Res, Req, Param, Logger, Inject, Query } from '@nestjs/common'
 import * as srtToVtt from 'srt-to-vtt'
+import * as subsrt from 'subsrt'
 
 import { ConfigService } from '../shared/config/config.service'
 
@@ -17,7 +18,8 @@ export class SubtitleController {
   public subtitle(
     @Param() params,
     @Res() res,
-    @Req() req
+    @Req() req,
+    @Query('output') output = 'vtt'
   ) {
     this.logger.debug(`[${params._id}]: Get subtitle with code "${params.code}"`)
 
@@ -27,6 +29,27 @@ export class SubtitleController {
       `${params.code}.srt`
     )
 
+    if (!fs.existsSync(subtitleFile)) {
+      res.status(404)
+
+      return res.send('File not found!')
+    }
+
+    if (output === 'json') {
+      res.status(200)
+      res.headers({
+        'access-control-allow-origin': '*',
+        'Content-Type': 'application/json; charset=utf-8'
+      })
+
+      return res.send(
+        subsrt.convert(
+          fs.readFileSync(subtitleFile, 'utf8'),
+          { format: 'json' }
+        )
+      )
+    }
+
     const { size } = fs.statSync(subtitleFile)
 
     let streamOptions = null
@@ -34,7 +57,7 @@ export class SubtitleController {
     res.status(200)
     res.headers({
       'access-control-allow-origin': '*',
-      'Content-Type': 'text/vtt; charset=utf-8',
+      'Content-Type': 'text/vtt; charset=utf-8'
     })
 
     // If we have range then we need to start somewhere else
@@ -66,22 +89,18 @@ export class SubtitleController {
       }
     }
 
-    res.send(
-      fs.createReadStream(
-        subtitleFile,
-        streamOptions
-      ).pipe(srtToVtt())
+    const readStream = fs.createReadStream(
+      subtitleFile,
+      streamOptions
     )
 
-    // res.send(
-    //   createReadStream(
-    //     path.resolve(
-    //       this.configService.get(ConfigService.DOWNLOAD_LOCATION),
-    //       params._id,
-    //       `${params.code}.vtt`
-    //     )
-    //   )
-    // )
+    if (output === 'vtt') {
+      return res.send(
+        readStream.pipe(srtToVtt())
+      )
+    }
+
+    res.send(readStream)
   }
 
 }

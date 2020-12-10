@@ -11858,6 +11858,11 @@ subscriptions-transport-ws@^0.9.11:
     symbol-observable "^1.0.4"
     ws "^5.2.0"
 
+subsrt@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/subsrt/-/subsrt-1.1.1.tgz#079bc83921feb46e05319a3ff9a13bef08a8d388"
+  integrity sha512-F15pSRRrPYnLjDKohcwkUUGhgHH+0IqpCoznMHMibZI9a2qN3ya/p3Xp/7zFOPvwez9b/qFjwtOnyS7f7d/MNw==
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
