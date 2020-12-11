@@ -4,14 +4,6 @@
   Popcorn env
 </h1>
 
-<div align="center">
-  <a target="_blank" href="https://gitter.im/pct-org/Lobby">
-    <img src="https://badges.gitter.im/popcorn-time-desktop.svg" alt="Gitter" />
-  </a>
-</div>
-
----
-
 This repo holds everything you need (except the [app]) to run the PCT environment.
 
 ## In this repo
@@ -57,33 +49,9 @@ This repo holds everything you need (except the [app]) to run the PCT environmen
         └── show                #
 ```
 
-## Installation
+## How to run this
 
-### Platforms
-
-There is a installation scripts available to help install everything you need to run on a certain platform, scripts that are available:
-- [raspberry-pi](./docs/run-on.raspberry-pi.md)
-
-Click on the links to ge more info on how to run on those platforms.
-
-### Manual installation
-
-> TODO
-
-Last step is to copy the `ecosystem.config.example.js` to `ecosystem.config.js` file and fill it in.
-
-## Starting the project (PM2)
-
-```shell script
-# To start the APIs (Scraper will immediately start scraping)
-$ yarn start:prod
-
-# To stop the APIs
-$ yarn stop:prod
-
-# To delete the PM2 apps
-$ yarn delete:prod
-```
+See the [docs](#) for more information on how to run this project.
 
 ## Contributing:
 
