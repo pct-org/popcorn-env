@@ -1,9 +1,8 @@
-import { Global, HttpModule, Module } from '@nestjs/common'
+import { HttpModule, Module } from '@nestjs/common'
 
 import { SubtitlesService } from './subtitles.service'
 import { ConfigModule } from '../config/config.module'
 
-@Global()
 @Module({
   imports: [
     ConfigModule,

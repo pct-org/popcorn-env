@@ -478,9 +478,10 @@ export class TorrentService implements OnApplicationBootstrap {
 
       torrent.on('download', async () => {
         const newProgress = torrent.progress * 100
+        const newFileProgress = file.progress * 100
 
         // If the last progress is bigger then 0.08 then we have have a file and can search for subs
-        if (!searchedSubs && newProgress > 0.08) {
+        if (!searchedSubs && newFileProgress > 0.08) {
           searchedSubs = true
 
           // Search and download subs
