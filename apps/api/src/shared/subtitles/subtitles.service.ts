@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Download, DownloadModel } from '@pct-org/types/download'
 import { TorrentFile } from 'webtorrent'
 import * as OpenSubtitles from 'opensubtitles-api'
-import { createWriteStream } from 'fs'
+import { createWriteStream, existsSync } from 'fs'
 import { resolve } from 'path'
 
 import { ConfigService } from '../config/config.service'
@@ -77,11 +77,26 @@ export class SubtitlesService {
       episode = episodeNr
     }
 
+    let filePath = resolve(location, torrent.path)
+
+    // If we are in retry and the file still does not exist then don't use it
+    if (!existsSync(filePath)) {
+      if (retry) {
+        setTimeout(() => {
+          return this.searchForSubtitles(download, torrent, false)
+        }, 400)
+
+        return
+      }
+
+      filePath = null
+    }
+
     try {
       const subtitles = await this.client.search({
         sublanguageid: 'all',
         filesize: torrent.length,
-        path: resolve(location, torrent.path),
+        path: filePath,
         filename: torrent.name,
         imdbid,
         season,
@@ -91,7 +106,7 @@ export class SubtitlesService {
         limit: 'best'
       })
 
-      const subtitleLanguages = Object.keys(subtitles).filter(lang => this.supportedLanguages.includes(lang))
+      const subtitleLanguages = Object.keys(subtitles).filter((lang) => this.supportedLanguages.includes(lang))
 
       if (subtitleLanguages.length > 0) {
         const formattedSubs = []
@@ -118,7 +133,7 @@ export class SubtitlesService {
         )
 
         // Add the subtitles to the download
-        this.downloadModel.findByIdAndUpdate(
+        await this.downloadModel.findByIdAndUpdate(
           download._id,
           {
             subtitles: formattedSubs
