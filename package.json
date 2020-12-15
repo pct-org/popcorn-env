@@ -72,7 +72,7 @@
     "graphql": "15.4.0",
     "graphql-subscriptions": "^1.1.0",
     "ical-generator": "^1.15.3",
-    "mongoose": "5.11.8",
+    "mongoose": "5.10.15",
     "node-tvdb": "^4.1.0",
     "omdb-api-pt": "^2.0.1",
     "opensubtitles-api": "^5.1.2",
