@@ -16,6 +16,7 @@
     "affected:libs": "nx affected:libs",
     "affected:lint": "nx affected:lint",
     "affected:test": "nx affected:test",
+    "build": "yarn build:api && yarn build:scraper",
     "build:api": "nx build --with-deps",
     "build:rest-api": "nx build rest-api --with-deps",
     "build:scraper": "nx build scraper --with-deps",

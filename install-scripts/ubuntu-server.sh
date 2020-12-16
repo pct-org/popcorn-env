@@ -6,17 +6,17 @@ sudo apt-get install -y \
   git \
   curl
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+sudo apt install build-essential
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 
-# Install mongo db version 4.2
-sudo apt-get purge mongodb mongodb-server mongodb-server-core mongodb-clients
-sudo apt-get purge mongodb-org
-sudo apt-get autoremove
-sudo apt-get update
+CODENAME=$(lsb_release -c -s)
 
-wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+# Install mongo db version 4.2
+wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $CODENAME/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+
 sudo apt-get update
 sudo apt-get install mongodb-org
 sudo systemctl daemon-reload
