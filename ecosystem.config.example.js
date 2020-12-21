@@ -60,12 +60,12 @@ module.exports = {
       error_file: `${logsDir}/api/error.log`,
       out_file: `${logsDir}/api/out.log`,
       log_file: null,
-      env: sharedEnv
+      env: sharedEnv,
     },
     {
       name: 'Scraper',
       script: 'dist/apps/scraper/main.js',
-      args: '-m pretty',
+      node_args: '--max-old-space-size=3072',
       instances: 1,
       max_restarts: 5,
       autorestart: true,
@@ -83,22 +83,5 @@ module.exports = {
         TEMP_DIR: `${logsDir}/`,
       },
     },
-    // Enable this if you want auto updates
-    // {
-    //   name: 'Updater',
-    //   cwd: 'updater',
-    //   script: 'dist/updater.js',
-    //   instances: 1,
-    //   max_restarts: 5,
-    //   autorestart: true,
-    //   watch: false,
-    //   error_file: `${logsDir}/updater.log`,
-    //   out_file: `${logsDir}/updater.log`,
-    //   log_file: null,
-    //   env: {
-    //     // The time between cronjobs.
-    //     CRON_TIME: '0 0 * * *',
-    //   },
-    // },
   ],
 }

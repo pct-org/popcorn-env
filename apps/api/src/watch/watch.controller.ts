@@ -135,9 +135,7 @@ export class WatchController {
       torrent.file.createReadStream(streamOptions)
     }
 
-    const readStream = fs.createReadStream(mediaFile, streamOptions)
-
-    res.send(readStream)
+    res.send(fs.createReadStream(mediaFile, streamOptions))
   }
 
 }
