@@ -41,7 +41,7 @@ export class StatusService {
     const sizePercentage = parseFloat((((disk.total - disk.available - folderSize) / disk.total) * 100).toFixed(2))
 
     return {
-      version: 'unknown', // TODO:: Get git tag
+      version: this.configService.version,
       totalMovies: await this.movieModel.countDocuments(),
       totalShows: await this.showModel.countDocuments(),
       totalEpisodes: await this.episodesModel.countDocuments(),
