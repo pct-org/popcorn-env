@@ -102,8 +102,7 @@ export class ConfigService {
       [ConfigService.TMDB_KEY]: Joi.string()
         .required(),
 
-      [ConfigService.TVDB_KEY]: Joi.string()
-        .required(),
+      [ConfigService.TVDB_KEY]: Joi.string(),
 
       [ConfigService.OMDB_KEY]: Joi.string()
         .required(),
