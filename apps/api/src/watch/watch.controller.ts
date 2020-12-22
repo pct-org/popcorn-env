@@ -5,6 +5,8 @@ import { Controller, Get, Res, Req, Param, Logger, Inject } from '@nestjs/common
 import { ConfigService } from '../shared/config/config.service'
 import { TorrentService } from '../shared/torrent/torrent.service'
 
+export type Files = [{ stats: fs.Stats, fileName: string }]
+
 @Controller()
 export class WatchController {
 
@@ -24,14 +26,17 @@ export class WatchController {
     const filesInDirectory = fs.readdirSync(dir, { withFileTypes: true })
 
     const files = filesInDirectory.map((file) => {
-      const res = path.resolve(dir, file.name)
+      const fileName = path.resolve(dir, file.name)
 
       return file.isDirectory()
-        ? this.getFiles(res)
-        : res
+        ? this.getFiles(fileName)
+        : {
+          stats: fs.statSync(fileName),
+          fileName
+        }
     })
 
-    return Array.prototype.concat(...files)
+    return Array.prototype.concat(...files) as Files
   }
 
   @Get('watch/:_id')
@@ -57,13 +62,13 @@ export class WatchController {
     }
 
     // Get the correct media file
-    const mediaFile = files.reduce((previous, current, index) => {
-      const formatIsSupported = !!this.torrentService.supportedFormats.find(format => (
-        current.includes(format) && !current.includes('transcoding')
+    const mediaFile = files.reduce((previous, current) => {
+      const formatIsSupported = !!this.torrentService.supportedFormats.find((format) => (
+        current.fileName.includes(format)
       ))
 
       if (formatIsSupported) {
-        if (!previous || current.length > previous.length) {
+        if (!previous || current.stats.size > previous.stats.size) {
           return current
         }
       }
@@ -84,7 +89,7 @@ export class WatchController {
     const isChromeCast = req?.query?.device === 'chromecast' ?? false
 
     // Get the size of the media file
-    let { size: mediaSize } = fs.statSync(mediaFile)
+    let mediaSize = mediaFile.stats.size
 
     // If it its Chromecast and we have a torrent then use the file size from that
     if (isChromeCast && torrent) {
@@ -135,7 +140,7 @@ export class WatchController {
       torrent.file.createReadStream(streamOptions)
     }
 
-    res.send(fs.createReadStream(mediaFile, streamOptions))
+    res.send(fs.createReadStream(mediaFile.fileName, streamOptions))
   }
 
 }
