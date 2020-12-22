@@ -1,5 +1,6 @@
 import { LogLevel } from '@nestjs/common'
 import * as Joi from '@hapi/joi'
+import { version } from '@pct-org/version'
 
 export interface EnvConfig {
   [key: string]: string;
@@ -35,6 +36,10 @@ export class ConfigService {
    */
   get(key: string): string {
     return this.envConfig[key] || ''
+  }
+
+  get version(): string {
+    return version
   }
 
   /**
@@ -102,8 +107,7 @@ export class ConfigService {
       [ConfigService.TMDB_KEY]: Joi.string()
         .required(),
 
-      [ConfigService.TVDB_KEY]: Joi.string()
-        .required(),
+      [ConfigService.TVDB_KEY]: Joi.string(),
 
       [ConfigService.OMDB_KEY]: Joi.string()
         .required(),
@@ -114,7 +118,10 @@ export class ConfigService {
       [ConfigService.SCRAPE_ON_START]: Joi.boolean()
     })
 
-    const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig, { stripUnknown: true })
+    const {
+      error,
+      value: validatedEnvConfig
+    } = envVarsSchema.validate(envConfig, { stripUnknown: true })
 
     if (error) {
       throw new Error(`Config validation error: ${error.message}`)

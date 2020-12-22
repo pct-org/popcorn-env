@@ -4,9 +4,8 @@ set -e
 echo "Installing essential tools..."
 sudo apt-get install -y \
   git \
-  curl
-
-sudo apt install build-essential
+  curl \
+  build-essential
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
@@ -32,7 +31,7 @@ sudo systemctl status mongod
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 
-sudo apt-get update && sudo apt-get install yarn
+sudo apt-get update && sudo apt-get install yarn -y
 
 echo "Create directory..."
 sudo mkdir -p /pct-org

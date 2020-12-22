@@ -1,5 +1,6 @@
 import { LogLevel } from '@nestjs/common'
 import * as Joi from '@hapi/joi'
+import { version } from '@pct-org/version'
 
 export interface EnvConfig {
   [key: string]: string;
@@ -36,6 +37,10 @@ export class ConfigService {
    */
   get(key: string): string {
     return this.envConfig[key] || ''
+  }
+
+  get version(): string {
+    return version
   }
 
   /**
@@ -114,10 +119,13 @@ export class ConfigService {
         .default(1),
 
       [ConfigService.MAX_CONNS]: Joi.number()
-        .default(35),
+        .default(35)
     })
 
-    const { error, value: validatedEnvConfig } = envVarsSchema.validate(envConfig, { stripUnknown: true })
+    const {
+      error,
+      value: validatedEnvConfig
+    } = envVarsSchema.validate(envConfig, { stripUnknown: true })
 
     if (error) {
       throw new Error(`Config validation error: ${error.message}`)

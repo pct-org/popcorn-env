@@ -63,7 +63,8 @@
       "@pct-org/types/shared": ["libs/types/shared/src/index.ts"],
       "@pct-org/types/blacklist": ["libs/types/blacklist/src/index.ts"],
       "@pct-org/types/download": ["libs/types/download/src/index.ts"],
-      "@pct-org/types/image": ["libs/types/image/src/index.ts"]
+      "@pct-org/types/image": ["libs/types/image/src/index.ts"],
+      "@pct-org/version": ["./package.json"]
     }
   },
   "exclude": ["node_modules", "tmp"]
