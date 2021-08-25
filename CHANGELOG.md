@@ -1,4 +1,13 @@
-# 1.0.0 (2020-12-22)
+## [1.0.1](https://github.com/pct-org/popcorn-env/compare/v1.0.0...v1.0.1) (2021-08-25)
+
+
+### Bug Fixes
+
+* **api:** Fixed incorrect file being used in stream ([f764a5a](https://github.com/pct-org/popcorn-env/commit/f764a5a3e5ca6947f1555f844203ec2cf197824b))
+
+
+
+# [1.0.0](https://github.com/pct-org/popcorn-env/compare/ff82210999ddfb00296b1c9c98fd577d551295b0...v1.0.0) (2020-12-22)
 
 
 ### Bug Fixes
