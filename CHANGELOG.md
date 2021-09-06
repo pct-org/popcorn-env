@@ -1,3 +1,12 @@
+## [1.0.3](https://github.com/pct-org/popcorn-env/compare/v1.0.2...v1.0.3) (2021-09-06)
+
+
+### Bug Fixes
+
+* Always scraping on boot ([9319f9e](https://github.com/pct-org/popcorn-env/commit/9319f9ee7d699c2b60be2e6b19d00abc4a4e8f38))
+
+
+
 ## [1.0.2](https://github.com/pct-org/popcorn-env/compare/v1.0.1...v1.0.2) (2021-09-06)
 
 
