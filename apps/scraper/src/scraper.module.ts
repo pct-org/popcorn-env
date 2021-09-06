@@ -2,7 +2,7 @@ import { Inject, Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
 import { CronJob } from 'cron'
-import * as pLimit from 'p-limit';
+import * as pLimit from 'p-limit'
 
 import { ModelsModule } from './shared/models.module'
 import { ConfigModule } from './shared/config/config.module'
