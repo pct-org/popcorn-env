@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/pct-org/popcorn-env/compare/v1.0.1...v1.0.2) (2021-09-06)
+
+
+### Bug Fixes
+
+* Possible fix for memory usage ([5f22e31](https://github.com/pct-org/popcorn-env/commit/5f22e31e5d7a720580e17d94fffe1e58bdf14cc1))
+
+
+
 ## [1.0.1](https://github.com/pct-org/popcorn-env/compare/v1.0.0...v1.0.1) (2021-08-25)
 
 
