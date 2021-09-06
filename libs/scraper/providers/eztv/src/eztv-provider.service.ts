@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseProvider, ScrapedItem, ScraperProviderConfig } from '@pct-org/scraper/providers/base'
 import { EztvApi } from '@pct-org/eztv-api'
-import * as pMap from 'p-map'
+import * as pLimit from 'p-limit'
 import { ShowHelperService } from '@pct-org/scraper/helpers/show'
 import { SHOW_TYPE } from '@pct-org/types/show'
 
@@ -36,36 +36,32 @@ export class EztvProviderService extends BaseProvider {
 
     this.logger.log(`${this.name}: Found ${contents.length} ${this.contentType}s.`)
 
-    await pMap(
-      contents,
-      async (content) => {
-        const isInBlacklist = await this.isItemBlackListed(content)
+    const limit = pLimit(this.maxWebRequests)
 
-        // Only get data for this item if it's not in the blacklist
-        if (!isInBlacklist) {
-          try {
-            // Get full show data
-            const show: ScrapedItem = await this.api.getShowData(content)
+    await Promise.all(contents.map((content) => limit(async() => {
+      const isInBlacklist = await this.isItemBlackListed(content)
 
-            // Enhance and import the show
-            await this.enhanceAndImport(show)
+      // Only get data for this item if it's not in the blacklist
+      if (!isInBlacklist) {
+        try {
+          // Get full show data
+          const show: ScrapedItem = await this.api.getShowData(content)
 
-          } catch (err) {
-            const errorMessage = err.message || err
+          // Enhance and import the show
+          await this.enhanceAndImport(show)
 
-            this.logger.error(`EztvProviderService.scrapeConfig: ${errorMessage}`, err.stack)
+        } catch (err) {
+          const errorMessage = err.message || err
 
-            // Log the content so it can be better debugged from logs
-            if (errorMessage.includes('Could not find any data with slug')) {
-              this.logger.error(JSON.stringify(content))
-            }
+          this.logger.error(`EztvProviderService.scrapeConfig: ${errorMessage}`, err.stack)
+
+          // Log the content so it can be better debugged from logs
+          if (errorMessage.includes('Could not find any data with slug')) {
+            this.logger.error(JSON.stringify(content))
           }
         }
-      },
-      {
-        concurrency: this.maxWebRequests
       }
-    )
+    })))
   }
 
   extractContent({ torrent, regex, lang }: { torrent: any; regex: any; lang: any }): undefined {

@@ -7,6 +7,7 @@ import { formatTorrents } from '@pct-org/torrent/utils'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
 import { MOVIE_TYPE } from '@pct-org/types/movie'
 import { SHOW_TYPE } from '@pct-org/types/show'
+import * as pLimit from 'p-limit'
 
 import {
   ScrapedItem,
@@ -62,16 +63,14 @@ export abstract class BaseProvider {
   /**
    * Starts scraping the provided configs
    */
-  async scrapeConfigs(): Promise<void> {
+  public async scrapeConfigs(): Promise<void> {
     this.logger.log(`Started scraping...`)
 
-    await pMap(
-      this.configs,
-      (config) => this.scrapeConfig(config),
-      {
-        concurrency: 1
-      }
-    )
+    const limit = pLimit(1)
+
+    await Promise.all(this.configs.map((config) => (
+      limit(() => this.scrapeConfig(config))
+    )))
 
     this.logger.log(`Done scraping`)
   }
@@ -79,7 +78,12 @@ export abstract class BaseProvider {
   /**
    * Set the configuration to scrape with.
    */
-  protected setConfig({ query, contentType, regexps = [], language = 'en' }: ScraperProviderConfig): void {
+  protected setConfig({
+    query,
+    contentType,
+    regexps = [],
+    language = 'en'
+  }: ScraperProviderConfig): void {
     this.contentType = contentType
     this.query = query
     this.language = language
@@ -105,36 +109,32 @@ export abstract class BaseProvider {
       this.logger.log(`Total pages ${totalPages}`)
 
       const torrents = await this.getAllTorrents(totalPages)
-      const allContent = await this.getAllContent(torrents)
+      const contents = await this.getAllContent(torrents)
 
-      this.logger.log(`Total content ${allContent.length}`)
+      this.logger.log(`Total content ${contents.length}`)
 
-      await pMap(
-        allContent,
-        async (content) => {
-          const isInBlacklist = await this.isItemBlackListed(content)
+      const limit = pLimit(this.maxWebRequests)
 
-          // Only get data for this item if it's not in the blacklist
-          if (!isInBlacklist) {
-            try {
-              await this.enhanceAndImport(content)
+      await Promise.all(contents.map((content) => limit(async() => {
+        const isInBlacklist = await this.isItemBlackListed(content)
 
-            } catch (err) {
-              const errorMessage = err.message || err
+        // Only get data for this item if it's not in the blacklist
+        if (!isInBlacklist) {
+          try {
+            await this.enhanceAndImport(content)
 
-              this.logger.error(`BaseProvider.scrapeConfig: ${errorMessage}`, err.stack)
+          } catch (err) {
+            const errorMessage = err.message || err
 
-              // Log the content so it can be better debugged from logs
-              if (errorMessage.includes('Could not find any data with slug')) {
-                this.logger.error(JSON.stringify(content))
-              }
+            this.logger.error(`BaseProvider.scrapeConfig: ${errorMessage}`, err.stack)
+
+            // Log the content so it can be better debugged from logs
+            if (errorMessage.includes('Could not find any data with slug')) {
+              this.logger.error(JSON.stringify(content))
             }
           }
-        },
-        {
-          concurrency: this.maxWebRequests
         }
-      )
+      })))
     } catch (err) {
       this.logger.error(`Catch BaseProvider.scrapeConfig: ${err.message || err}`, err.stack)
     }
@@ -146,7 +146,10 @@ export abstract class BaseProvider {
    * @returns {Promise<Boolean|Error>}
    */
   protected async isItemBlackListed(content: ScrapedItem): Promise<boolean | Error> {
-    const { slug, imdb } = content
+    const {
+      slug,
+      imdb
+    } = content
 
     const blacklistedItem = await this.blackListModel.findOne({
       $or: [
@@ -253,7 +256,11 @@ export abstract class BaseProvider {
   /**
    * Extract content information based on a regex.
    */
-  abstract extractContent({ torrent, regex, lang }): ScrapedItem | undefined
+  abstract extractContent({
+    torrent,
+    regex,
+    lang
+  }): ScrapedItem | undefined
 
   /**
    * Get content info from a given torrent.
@@ -307,7 +314,8 @@ export abstract class BaseProvider {
       return items.set(slug, item)
     }, {
       concurrency: 1
-    }).then(() => Array.from(items.values()))
+    })
+      .then(() => Array.from(items.values()))
   }
 
   /**
@@ -352,7 +360,7 @@ export abstract class BaseProvider {
   getAllTorrents(totalPages: number): Promise<Array<any>> {
     let torrents = []
 
-    return pTimes(totalPages, async (page) => {
+    return pTimes(totalPages, async(page) => {
       this.logger.debug(`Started searching ${this.name} on page ${page + 1} out of ${totalPages}`)
 
       // Get the page
@@ -364,17 +372,19 @@ export abstract class BaseProvider {
     }, {
       concurrency: 1,
       stopOnError: false
-    }).then(() => {
-      this.logger.log(`Found ${torrents.length} torrents.`)
-
-      return Promise.resolve(torrents)
-    }).catch((err) => {
-      // Only log the errors
-      this.logger.error(`Catch BaseProvider.getAllTorrents: ${err.message || err}`)
-
-      // We still want to resolve all the pages that did go well
-      return Promise.resolve(torrents)
     })
+      .then(() => {
+        this.logger.log(`Found ${torrents.length} torrents.`)
+
+        return Promise.resolve(torrents)
+      })
+      .catch((err) => {
+        // Only log the errors
+        this.logger.error(`Catch BaseProvider.getAllTorrents: ${err.message || err}`)
+
+        // We still want to resolve all the pages that did go well
+        return Promise.resolve(torrents)
+      })
   }
 
   /**

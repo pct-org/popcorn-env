@@ -2,7 +2,7 @@ import { Inject, Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
 import { CronJob } from 'cron'
-import * as pMap from 'p-map'
+import * as pLimit from 'p-limit';
 
 import { ModelsModule } from './shared/models.module'
 import { ConfigModule } from './shared/config/config.module'
@@ -60,7 +60,7 @@ export class ScraperModule implements OnApplicationBootstrap {
 
     this.logger.log(`Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`)
 
-    if (this.configService.get(ConfigService.SCRAPE_ON_START)) {
+    if (this.configService.get(ConfigService.SCRAPE_ON_START) || true) {
       this.scrapeConfigs()
     }
   }
@@ -68,13 +68,11 @@ export class ScraperModule implements OnApplicationBootstrap {
   private async scrapeConfigs(): Promise<void> {
     this.logger.log('Start scraping')
 
-    await pMap(
-      this.providersService.getProviders(),
-      (provider) => provider.scrapeConfigs(),
-      {
-        concurrency: 1
-      }
-    )
+    const limit = pLimit(1)
+
+    await Promise.all(this.providersService.getProviders().map((provider) => (
+      limit(() => provider.scrapeConfigs())
+    )))
   }
 
 }
