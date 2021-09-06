@@ -60,7 +60,7 @@ export class ScraperModule implements OnApplicationBootstrap {
 
     this.logger.log(`Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`)
 
-    if (this.configService.get(ConfigService.SCRAPE_ON_START) || true) {
+    if (this.configService.get(ConfigService.SCRAPE_ON_START)) {
       this.scrapeConfigs()
     }
   }
