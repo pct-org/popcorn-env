@@ -53,7 +53,7 @@ export class ShowHelperService extends BaseHelper {
     )
   }
 
-  public shouldUpdateExistingItem(item: Show): boolean {
+  public shouldUpdateExistingItem(): boolean {
     // Shows depends more heavily on the blacklist so
     // if we have a existing item we need to update it.
     return true
@@ -259,7 +259,7 @@ export class ShowHelperService extends BaseHelper {
   }
 
   /**
-   * Add's the show to the blacklist when:
+   * Adds the show to the blacklist when:
    * - The show is ended
    * - The show is canceled
    * - The show has a airing episode in the future

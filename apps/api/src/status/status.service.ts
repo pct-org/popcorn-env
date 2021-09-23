@@ -1,4 +1,5 @@
-import { HttpService, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
 import { checkSync } from 'diskusage'
 import * as getFolderSize from 'get-folder-size'

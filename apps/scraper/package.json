@@ -1,6 +1,6 @@
 {
   "name": "@pct-org/scraper",
-  "version": "4.0.0-alpha.1",
+  "version": "5.0.0",
   "description": "Scraper part of PCT environment",
   "repository": {
     "type": "git",

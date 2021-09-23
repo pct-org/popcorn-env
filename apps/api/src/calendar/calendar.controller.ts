@@ -1,5 +1,5 @@
 import { Controller, Get, Inject, Res } from '@nestjs/common'
-import * as ical from 'ical-generator'
+import ical from 'ical-generator'
 import { EpisodesService } from '@pct-org/types/episode'
 
 import { BookmarksService } from '../bookmarks/bookmarks.service'
@@ -14,9 +14,7 @@ export class CalendarController {
   private readonly bookmarksService: BookmarksService
 
   @Get('calendar.ics')
-  public async calendar(
-    @Res() res
-  ) {
+  public async calendar(@Res() res) {
     const cal = ical()
 
     cal.prodId({
@@ -24,7 +22,6 @@ export class CalendarController {
       product: 'Calendar'
     })
 
-    cal.domain('pct')
     cal.name('Airing Episodes')
 
     // Set the correct ical headers

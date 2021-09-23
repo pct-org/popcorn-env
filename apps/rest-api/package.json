@@ -1,7 +1,7 @@
 {
-  "name": "@pct-org/graphql-api",
+  "name": "@pct-org/rest-api",
   "version": "5.0.0",
-  "description": "GraphQL API for the PCT environment",
+  "description": "Rest API for the PCT environment",
   "repository": {
     "type": "git",
     "url": "https://github.com/pct-org/popcorn-env.git"

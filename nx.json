@@ -28,7 +28,13 @@
     "api": {
       "tags": []
     },
+    "package-ettv-api": {
+      "tags": ["scope:public"]
+    },
     "package-eztv-api": {
+      "tags": ["scope:public"]
+    },
+    "package-kat-api": {
       "tags": ["scope:public"]
     },
     "package-solidtorrents-api": {
@@ -37,34 +43,34 @@
     "package-zooqle-api": {
       "tags": ["scope:public"]
     },
-    "package-ettv-api": {
-      "tags": ["scope:public"]
-    },
-    "package-kat-api": {
-      "tags": ["scope:public"]
+    "rest-api": {
+      "tags": []
     },
     "scraper": {
-      "tags": []
-    },
-    "scraper-providers-base": {
-      "tags": []
-    },
-    "scraper-helpers-show": {
-      "tags": []
-    },
-    "scraper-helpers-movie": {
-      "tags": []
-    },
-    "scraper-providers-yts": {
-      "tags": []
-    },
-    "torrent-utils": {
       "tags": []
     },
     "scraper-helpers-base": {
       "tags": []
     },
-    "services-trakt": {
+    "scraper-helpers-episode": {
+      "tags": []
+    },
+    "scraper-helpers-movie": {
+      "tags": []
+    },
+    "scraper-helpers-season": {
+      "tags": []
+    },
+    "scraper-helpers-show": {
+      "tags": []
+    },
+    "scraper-providers-base": {
+      "tags": []
+    },
+    "scraper-providers-eztv": {
+      "tags": []
+    },
+    "scraper-providers-yts": {
       "tags": []
     },
     "services-fanart": {
@@ -76,34 +82,13 @@
     "services-tmdb": {
       "tags": []
     },
+    "services-trakt": {
+      "tags": []
+    },
     "services-tvdb": {
       "tags": []
     },
-    "scraper-providers-eztv": {
-      "tags": []
-    },
-    "scraper-helpers-season": {
-      "tags": []
-    },
-    "scraper-helpers-episode": {
-      "tags": []
-    },
-    "rest-api": {
-      "tags": []
-    },
-    "types-movie": {
-      "tags": []
-    },
-    "types-show": {
-      "tags": []
-    },
-    "types-episode": {
-      "tags": []
-    },
-    "types-season": {
-      "tags": []
-    },
-    "types-shared": {
+    "torrent-utils": {
       "tags": []
     },
     "types-blacklist": {
@@ -112,8 +97,31 @@
     "types-download": {
       "tags": []
     },
+    "types-episode": {
+      "tags": []
+    },
     "types-image": {
       "tags": []
+    },
+    "types-movie": {
+      "tags": []
+    },
+    "types-season": {
+      "tags": []
+    },
+    "types-shared": {
+      "tags": []
+    },
+    "types-show": {
+      "tags": []
     }
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
   }
 }

@@ -6,15 +6,15 @@ export class ContentsArgs {
 
   @Field()
   @Min(0)
-  offset: number = 0
+  offset = 0
 
   @Field()
   @Min(1)
   @Max(50)
-  limit: number = 25
+  limit = 25
 
   @Field()
-  sort: string = 'trending'
+  sort = 'trending'
 
   @Field({ nullable: true })
   query: string = null

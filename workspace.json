@@ -49,6 +49,46 @@
         }
       }
     },
+    "package-ettv-api": {
+      "root": "packages/ettv-api",
+      "sourceRoot": "packages/ettv-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/ettv-api/tsconfig.lib.json",
+              "packages/ettv-api/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!packages/ettv-api/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/ettv-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/ettv-api",
+            "tsConfig": "packages/ettv-api/tsconfig.lib.json",
+            "packageJson": "packages/ettv-api/package.json",
+            "main": "packages/ettv-api/src/index.ts",
+            "assets": [
+              "packages/ettv-api/*.md",
+              "packages/ettv-api/example.js",
+              "packages/ettv-api/LICENSE"
+            ]
+          }
+        }
+      }
+    },
     "package-eztv-api": {
       "root": "packages/eztv-api",
       "sourceRoot": "packages/eztv-api/src",
@@ -84,6 +124,46 @@
               "packages/eztv-api/*.md",
               "packages/eztv-api/example.js",
               "packages/eztv-api/LICENSE"
+            ]
+          }
+        }
+      }
+    },
+    "package-kat-api": {
+      "root": "packages/kat-api",
+      "sourceRoot": "packages/kat-api/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "packages/kat-api/tsconfig.lib.json",
+              "packages/kat-api/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!packages/kat-api/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "packages/kat-api/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "build": {
+          "builder": "@nrwl/node:package",
+          "options": {
+            "outputPath": "dist/packages/kat-api",
+            "tsConfig": "packages/kat-api/tsconfig.lib.json",
+            "packageJson": "packages/kat-api/package.json",
+            "main": "packages/kat-api/src/index.ts",
+            "assets": [
+              "packages/kat-api/*.md",
+              "packages/kat-api/example.js",
+              "packages/kat-api/LICENSE"
             ]
           }
         }
@@ -171,82 +251,46 @@
         }
       }
     },
-    "package-ettv-api": {
-      "root": "packages/ettv-api",
-      "sourceRoot": "packages/ettv-api/src",
-      "projectType": "library",
+    "rest-api": {
+      "root": "apps/rest-api",
+      "sourceRoot": "apps/rest-api/src",
+      "projectType": "application",
+      "prefix": "rest-api",
       "schematics": {},
       "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
+        "build": {
+          "builder": "@nrwl/node:build",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/ettv-api/tsconfig.lib.json",
-              "packages/ettv-api/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/ettv-api/**/*"]
+            "outputPath": "dist/apps/rest-api",
+            "main": "apps/rest-api/src/main.ts",
+            "tsConfig": "apps/rest-api/tsconfig.app.json"
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false
+            }
           }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "rest-api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/rest-api/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "packages/ettv-api/jest.config.js",
+            "jestConfig": "apps/rest-api/jest.config.js",
             "passWithNoTests": true
-          }
-        },
-        "build": {
-          "builder": "@nrwl/node:package",
-          "options": {
-            "outputPath": "dist/packages/ettv-api",
-            "tsConfig": "packages/ettv-api/tsconfig.lib.json",
-            "packageJson": "packages/ettv-api/package.json",
-            "main": "packages/ettv-api/src/index.ts",
-            "assets": [
-              "packages/ettv-api/*.md",
-              "packages/ettv-api/example.js",
-              "packages/ettv-api/LICENSE"
-            ]
-          }
-        }
-      }
-    },
-    "package-kat-api": {
-      "root": "packages/kat-api",
-      "sourceRoot": "packages/kat-api/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "packages/kat-api/tsconfig.lib.json",
-              "packages/kat-api/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!packages/kat-api/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "packages/kat-api/jest.config.js",
-            "passWithNoTests": true
-          }
-        },
-        "build": {
-          "builder": "@nrwl/node:package",
-          "options": {
-            "outputPath": "dist/packages/kat-api",
-            "tsConfig": "packages/kat-api/tsconfig.lib.json",
-            "packageJson": "packages/kat-api/package.json",
-            "main": "packages/kat-api/src/index.ts",
-            "assets": [
-              "packages/kat-api/*.md",
-              "packages/kat-api/example.js",
-              "packages/kat-api/LICENSE"
-            ]
           }
         }
       }
@@ -299,9 +343,9 @@
         }
       }
     },
-    "scraper-providers-base": {
-      "root": "libs/scraper/providers/base",
-      "sourceRoot": "libs/scraper/providers/base/src",
+    "scraper-helpers-base": {
+      "root": "libs/scraper/helpers/base",
+      "sourceRoot": "libs/scraper/helpers/base/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -310,45 +354,38 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/providers/base/tsconfig.lib.json",
-              "libs/scraper/providers/base/tsconfig.spec.json"
+              "libs/scraper/helpers/base/tsconfig.lib.json",
+              "libs/scraper/helpers/base/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/scraper/providers/base/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/scraper/helpers/base/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/providers/base/jest.config.js",
+            "jestConfig": "libs/scraper/helpers/base/jest.config.js",
             "passWithNoTests": true
           }
         }
       }
     },
-    "scraper-helpers-show": {
-      "root": "libs/scraper/helpers/show",
-      "sourceRoot": "libs/scraper/helpers/show/src",
+    "scraper-helpers-episode": {
+      "root": "libs/scraper/helpers/episode",
+      "sourceRoot": "libs/scraper/helpers/episode/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/scraper/helpers/show/tsconfig.lib.json",
-              "libs/scraper/helpers/show/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/helpers/show/**/*"]
-          }
+            "lintFilePatterns": ["libs/scraper/helpers/episode/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/helpers/show/jest.config.js",
+            "jestConfig": "libs/scraper/helpers/episode/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -383,6 +420,112 @@
         }
       }
     },
+    "scraper-helpers-season": {
+      "root": "libs/scraper/helpers/season",
+      "sourceRoot": "libs/scraper/helpers/season/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/scraper/helpers/season/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scraper/helpers/season/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "scraper-helpers-show": {
+      "root": "libs/scraper/helpers/show",
+      "sourceRoot": "libs/scraper/helpers/show/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/scraper/helpers/show/tsconfig.lib.json",
+              "libs/scraper/helpers/show/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/scraper/helpers/show/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scraper/helpers/show/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "scraper-providers-base": {
+      "root": "libs/scraper/providers/base",
+      "sourceRoot": "libs/scraper/providers/base/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/scraper/providers/base/tsconfig.lib.json",
+              "libs/scraper/providers/base/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/scraper/providers/base/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scraper/providers/base/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "scraper-providers-eztv": {
+      "root": "libs/scraper/providers/eztv",
+      "sourceRoot": "libs/scraper/providers/eztv/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/scraper/providers/eztv/tsconfig.lib.json",
+              "libs/scraper/providers/eztv/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/scraper/providers/eztv/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scraper/providers/eztv/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "scraper-providers-yts": {
       "root": "libs/scraper/providers/yts",
       "sourceRoot": "libs/scraper/providers/yts/src",
@@ -407,84 +550,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/scraper/providers/yts/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "torrent-utils": {
-      "root": "libs/torrent/utils",
-      "sourceRoot": "libs/torrent/utils/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/torrent/utils/tsconfig.lib.json",
-              "libs/torrent/utils/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/torrent/utils/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/torrent/utils/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "scraper-helpers-base": {
-      "root": "libs/scraper/helpers/base",
-      "sourceRoot": "libs/scraper/helpers/base/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/scraper/helpers/base/tsconfig.lib.json",
-              "libs/scraper/helpers/base/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/scraper/helpers/base/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/scraper/helpers/base/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "services-trakt": {
-      "root": "libs/services/trakt",
-      "sourceRoot": "libs/services/trakt/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/services/trakt/tsconfig.lib.json",
-              "libs/services/trakt/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/services/trakt/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/services/trakt/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -568,6 +633,32 @@
         }
       }
     },
+    "services-trakt": {
+      "root": "libs/services/trakt",
+      "sourceRoot": "libs/services/trakt/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/services/trakt/tsconfig.lib.json",
+              "libs/services/trakt/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/services/trakt/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/services/trakt/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "services-tvdb": {
       "root": "libs/services/tvdb",
       "sourceRoot": "libs/services/tvdb/src",
@@ -594,9 +685,9 @@
         }
       }
     },
-    "scraper-providers-eztv": {
-      "root": "libs/scraper/providers/eztv",
-      "sourceRoot": "libs/scraper/providers/eztv/src",
+    "torrent-utils": {
+      "root": "libs/torrent/utils",
+      "sourceRoot": "libs/torrent/utils/src",
       "projectType": "library",
       "schematics": {},
       "architect": {
@@ -605,209 +696,16 @@
           "options": {
             "linter": "eslint",
             "tsConfig": [
-              "libs/scraper/providers/eztv/tsconfig.lib.json",
-              "libs/scraper/providers/eztv/tsconfig.spec.json"
+              "libs/torrent/utils/tsconfig.lib.json",
+              "libs/torrent/utils/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/scraper/providers/eztv/**/*"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/torrent/utils/**/*"]
           }
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "libs/scraper/providers/eztv/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "scraper-helpers-season": {
-      "root": "libs/scraper/helpers/season",
-      "sourceRoot": "libs/scraper/helpers/season/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/scraper/helpers/season/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/scraper/helpers/season/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "scraper-helpers-episode": {
-      "root": "libs/scraper/helpers/episode",
-      "sourceRoot": "libs/scraper/helpers/episode/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/scraper/helpers/episode/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/scraper/helpers/episode/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "rest-api": {
-      "root": "apps/rest-api",
-      "sourceRoot": "apps/rest-api/src",
-      "projectType": "application",
-      "prefix": "rest-api",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/rest-api",
-            "main": "apps/rest-api/src/main.ts",
-            "tsConfig": "apps/rest-api/tsconfig.app.json"
-          },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "rest-api:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["apps/rest-api/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/rest-api/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "types-movie": {
-      "root": "libs/types/movie",
-      "sourceRoot": "libs/types/movie/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/types/movie/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/types/movie/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "types-show": {
-      "root": "libs/types/show",
-      "sourceRoot": "libs/types/show/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/types/show/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/types/show/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "types-episode": {
-      "root": "libs/types/episode",
-      "sourceRoot": "libs/types/episode/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/types/episode/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/types/episode/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "types-season": {
-      "root": "libs/types/season",
-      "sourceRoot": "libs/types/season/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/types/season/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/types/season/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "types-shared": {
-      "root": "libs/types/shared",
-      "sourceRoot": "libs/types/shared/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/types/shared/**/*.ts"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/types/shared/jest.config.js",
+            "jestConfig": "libs/torrent/utils/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -823,7 +721,8 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/types/blacklist/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
@@ -844,12 +743,35 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/types/download/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/types/download/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "types-episode": {
+      "root": "libs/types/episode",
+      "sourceRoot": "libs/types/episode/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/types/episode/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/episode/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -865,12 +787,101 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["libs/types/image/**/*.ts"]
-          }
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/types/image/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "types-movie": {
+      "root": "libs/types/movie",
+      "sourceRoot": "libs/types/movie/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/types/movie/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/movie/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "types-season": {
+      "root": "libs/types/season",
+      "sourceRoot": "libs/types/season/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/types/season/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/season/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "types-shared": {
+      "root": "libs/types/shared",
+      "sourceRoot": "libs/types/shared/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/types/shared/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/shared/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "types-show": {
+      "root": "libs/types/show",
+      "sourceRoot": "libs/types/show/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/types/show/**/*.ts"]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/show/jest.config.js",
             "passWithNoTests": true
           }
         }

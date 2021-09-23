@@ -8,20 +8,20 @@ import { SHOW_TYPE } from '@pct-org/types/show'
 @Injectable()
 export class EztvProviderService extends BaseProvider {
 
-  @Inject('ShowHelperService')
+  @Inject()
   protected readonly showHelper: ShowHelperService
 
-  name = 'EZTV'
+  protected readonly  name = 'EZTV'
 
-  maxWebRequests = 2
+  protected readonly maxWebRequests = 2
 
-  logger = new Logger(this.name)
+  protected logger = new Logger(this.name)
 
-  configs: ScraperProviderConfig[] = [{
+  protected readonly configs: ScraperProviderConfig[] = [{
     contentType: SHOW_TYPE
   }]
 
-  api
+  protected api
 
   constructor() {
     super()

@@ -1,4 +1,4 @@
-import { HttpService, } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { Movie } from '@pct-org/types/movie'
 import { Episode } from '@pct-org/types/episode'
 import { Torrent } from '@pct-org/types/shared'

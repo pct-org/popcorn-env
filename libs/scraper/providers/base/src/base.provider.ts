@@ -1,5 +1,6 @@
-import * as pMap from 'p-map'
-import * as pTimes from 'p-times'
+import pMap from 'p-map'
+import pTimes from 'p-times'
+import pLimit from 'p-limit'
 import { Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { BlacklistModel } from '@pct-org/types/blacklist'
@@ -7,7 +8,6 @@ import { formatTorrents } from '@pct-org/torrent/utils'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
 import { MOVIE_TYPE } from '@pct-org/types/movie'
 import { SHOW_TYPE } from '@pct-org/types/show'
-import * as pLimit from 'p-limit'
 
 import {
   ScrapedItem,
@@ -28,37 +28,37 @@ export abstract class BaseProvider {
 
   protected readonly showHelper: BaseHelper | undefined
 
-  abstract readonly logger: Logger
+  protected abstract readonly logger: Logger
 
   /**
    * The name of the abstract provider.
    */
-  abstract name: string
+  protected abstract readonly name: string
 
   /**
    * The max allowed concurrent web requests.
    */
-  abstract maxWebRequests: number
+  protected abstract readonly maxWebRequests: number
 
   /**
    * The configs for the abstract provider.
    */
-  abstract configs: ScraperProviderConfig[]
+  protected abstract readonly configs: ScraperProviderConfig[]
 
-  abstract api: {
+  protected abstract api: {
     search: (options: any) => any
   }
 
   /**
    * The type of content for the abstract provider.
    */
-  contentType: ScraperContentType
+  protected contentType: ScraperContentType
 
-  query: any
+  protected query: any
 
-  language: string
+  protected language: string
 
-  regexps?: ScraperProviderConfigRegex[]
+  protected regexps?: ScraperProviderConfigRegex[]
 
   /**
    * Starts scraping the provided configs
@@ -330,11 +330,14 @@ export abstract class BaseProvider {
     try {
       const res = await this.api.search(this.query)
 
-      return res.results
-        ? res.results // Kat & ET
-        : res.data
-          ? res.data.movies // YTS
-          : []
+      // Kat & ET
+      if (res.results) {
+        return res.results
+      }
+
+      return res.data
+        ? res.data.movies // YTS
+        : []
 
     } catch (err) {
       // If we are allowed to retry then do else throw the error

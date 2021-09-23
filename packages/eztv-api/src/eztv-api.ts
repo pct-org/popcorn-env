@@ -1,11 +1,12 @@
 import * as cheerio from 'cheerio'
+import type { CheerioAPI } from 'cheerio'
 import debug from 'debug'
 import got from 'got'
 import bytes from 'bytes'
 
+import { name } from '../package.json'
 import slugMap from './slug-map'
 import imdbMap from './imdb-map'
-import { name } from '../package.json'
 import { Show, ShowWithEpisodes } from './interfaces'
 
 /**
@@ -18,7 +19,7 @@ export class EztvApi {
    * The base url of eztv.
    * @type {string}
    */
-  private baseUrl: string
+  private readonly baseUrl: string
 
   private debug = debug(name)
 
@@ -50,7 +51,7 @@ export class EztvApi {
    * @returns {Promise<Function, Error>} - The response body wrapped in
    * cheerio.
    */
-  private get(endpoint: string): Promise<cheerio.Root | string> {
+  private get(endpoint: string): Promise<CheerioAPI> {
     const uri = `${this.baseUrl}${endpoint}`
 
     this.debug(`Making request to: '${uri}'`)
@@ -165,8 +166,8 @@ export class EztvApi {
     return this.get('showlist/').then(($) => {
       const regex = /\/shows\/(.*)\/(.*)\//
 
-      return ($ as cheerio.Root)('.thread_link').map(function () {
-        const entry = ($ as cheerio.Root)(this)
+      return $('.thread_link').map(function () {
+        const entry = $(this)
         const href = entry.attr('href')
 
         const title = entry.text()

@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import * as pMap from 'p-map'
+import pMap from 'p-map'
 import * as WebTorrent from 'webtorrent-hybrid'
 import { Torrent, Instance as WebTorrentInstance } from 'webtorrent'
 import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'

@@ -1,4 +1,5 @@
-import { HttpService, Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
 import { Download, DownloadModel } from '@pct-org/types/download'
 import { TorrentFile } from 'webtorrent'

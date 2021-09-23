@@ -1,4 +1,5 @@
-import { HttpService, Injectable, Logger } from '@nestjs/common'
+import { Injectable, Logger } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { Movie } from '@pct-org/types/movie'
 import { Episode } from '@pct-org/types/episode'
 import { Torrent } from '@pct-org/types/shared'
@@ -22,7 +23,7 @@ export class SearchService {
     this.adapters.push(new OneThreeThreeSevenXSearchAdapater(httpService))
   }
 
-  public searchEpisode = async (episode: Episode): Promise<Torrent[]> => {
+  public searchEpisode = async(episode: Episode): Promise<Torrent[]> => {
     const results = await Promise.all(this.adapters.map(
       adapter => adapter.searchEpisode(episode))
     )
@@ -35,7 +36,7 @@ export class SearchService {
     )
   }
 
-  public searchMovie = async (movie: Movie): Promise<Torrent[]> => {
+  public searchMovie = async(movie: Movie): Promise<Torrent[]> => {
     const results = await Promise.all(this.adapters.map(
       adapter => adapter.searchMovie(movie))
     )
