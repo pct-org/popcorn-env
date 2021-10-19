@@ -1,3 +1,7 @@
+/**
+ * Maps the EZTV slugs to trakt.tv slugs.
+ * @type {Object}
+ */
 export default {
   tt0093036: 'tt3074694',
   tt0102517: 'tt1657505',

@@ -8,21 +8,23 @@ export interface Show {
 
 }
 
+export interface Torrent {
+  title: string
+  url: string
+  seeds: number
+  peers: 0,
+  provider: string
+  size: number
+  quality: string
+}
+
 export interface ShowWithEpisodes extends Show {
 
   imdb: string
 
-  episodes: {
+  torrents: {
     [season: number]: {
-      [episode: number]: [{
-        title: string
-        url: string
-        seeds: number
-        peers: 0,
-        provider: string
-        size: number
-        quality: string
-      }]
+      [episode: number]: Torrent[]
     }
   }
 

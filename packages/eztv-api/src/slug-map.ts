@@ -1,3 +1,7 @@
+/**
+ * Maps the EZTV imdb codes to trakt.tv imdb codes.
+ * @type {Object}
+ */
 export default {
   '10-oclock-live': '10-o-clock-live',
   '24-hours-in-aande': '24-hours-in-a-e',
