@@ -1,0 +1,27 @@
+{
+  "root": "libs/services/tvdb",
+  "sourceRoot": "libs/services/tvdb/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/services/tvdb/tsconfig.lib.json",
+          "libs/services/tvdb/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/services/tvdb/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/services/tvdb/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

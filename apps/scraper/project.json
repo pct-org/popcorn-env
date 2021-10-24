@@ -1,0 +1,49 @@
+{
+  "root": "apps/scraper",
+  "sourceRoot": "apps/scraper/src",
+  "projectType": "application",
+  "prefix": "scraper",
+  "generators": {},
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:build",
+      "options": {
+        "outputPath": "dist/apps/scraper",
+        "main": "apps/scraper/src/main.ts",
+        "tsConfig": "apps/scraper/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "scraper:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "apps/scraper/tsconfig.app.json",
+          "apps/scraper/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!apps/scraper/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/scraper/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

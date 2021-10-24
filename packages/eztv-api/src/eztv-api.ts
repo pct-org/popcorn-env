@@ -15,7 +15,6 @@ import { Show, ShowWithEpisodes } from './interfaces'
  * @type {EztvApi}
  */
 export class EztvApi {
-
   /**
    * The base url of eztv.
    * @type {string}
@@ -45,10 +44,9 @@ export class EztvApi {
 
     this.debug(`Making request to: '${uri}'`)
 
-    return got.get(uri)
-      .then(({ body }) => {
-        return cheerio.load(body)
-      })
+    return got.get(uri).then(({ body }) => {
+      return cheerio.load(body)
+    })
   }
 
   /**
@@ -67,91 +65,81 @@ export class EztvApi {
     }
 
     const table = 'tr.forum_header_border[name="hover"]'
-    $(table)
-      .each(function() {
-        const entry = $(this)
-        const magnet = entry.children('td')
-          .eq(2)
-          .children('a.magnet')
-          .first()
-          .attr('href')
+    $(table).each(function () {
+      const entry = $(this)
+      const magnet = entry
+        .children('td')
+        .eq(2)
+        .children('a.magnet')
+        .first()
+        .attr('href')
 
-        if (!magnet) {
+      if (!magnet) {
+        return
+      }
+
+      const seasonBased = /S?0*(\d+)[xE]0*(\d+)/i
+      const dateBased = /(\d{4}).(\d{2}.\d{2})/i
+      const title = entry.children('td').eq(1).text().replace('x264', '')
+      let season
+      let episode
+
+      if (title.match(seasonBased)) {
+        season = parseInt(title.match(seasonBased)[1], 10)
+        episode = parseInt(title.match(seasonBased)[2], 10)
+        data.dateBased = false
+      } else if (title.match(dateBased)) {
+        // If a item becomes data based check if the name of the show is in the
+        // item this prevents wrongly mapped items to be added
+        if (
+          !data.dateBased &&
+          !title.toLowerCase().includes(data.title.toLowerCase())
+        ) {
           return
         }
 
-        const seasonBased = /S?0*(\d+)[xE]0*(\d+)/i
-        const dateBased = /(\d{4}).(\d{2}.\d{2})/i
-        const title = entry.children('td')
-          .eq(1)
-          .text()
-          .replace('x264', '')
-        let season
-        let episode
+        season = title.match(dateBased)[1]
+        episode = title.match(dateBased)[2].replace(/\s/g, '-')
+        data.dateBased = true
+      } else {
+        season = null
+        episode = null
+      }
 
-        if (title.match(seasonBased)) {
-          season = parseInt(title.match(seasonBased)[1], 10)
-          episode = parseInt(title.match(seasonBased)[2], 10)
-          data.dateBased = false
-
-        } else if (title.match(dateBased)) {
-          // If a item becomes data based check if the name of the show is in the
-          // item this prevents wrongly mapped items to be added
-          if (!data.dateBased && !title.toLowerCase()
-            .includes(data.title.toLowerCase())) {
-            return
-          }
-
-          season = title.match(dateBased)[1]
-          episode = title.match(dateBased)[2].replace(/\s/g, '-')
-          data.dateBased = true
-        } else {
-          season = null
-          episode = null
+      if (season !== null && episode !== null) {
+        if (!data.torrents) {
+          data.torrents = {}
         }
 
-        if (season !== null && episode !== null) {
-          if (!data.torrents) {
-            data.torrents = {}
-          }
-
-          if (!data.torrents[season]) {
-            data.torrents[season] = {}
-          }
-
-          if (!data.torrents[season][episode]) {
-            data.torrents[season][episode] = []
-          }
-
-          const quality = title.match(/(\d{3,4})p/)
-            ? title.match(/(\d{3,4})p/)[0]
-            : '480p'
-
-          const seeds = parseInt(
-            entry.children('td')
-              .last()
-              .text(),
-            10
-          )
-
-          const sizeText = entry.children('td')
-            .eq(3)
-            .text()
-            .toUpperCase()
-
-          const size = bytes(sizeText.trim())
-
-          data.torrents[season][episode].push({
-            title,
-            url: magnet,
-            seeds: isNaN(seeds) ? 0 : seeds,
-            peers: 0,
-            provider: 'EZTV',
-            size: isNaN(size) ? 0 : size,
-            quality
-          })
+        if (!data.torrents[season]) {
+          data.torrents[season] = {}
         }
-      })
+
+        if (!data.torrents[season][episode]) {
+          data.torrents[season][episode] = []
+        }
+
+        const quality = title.match(/(\d{3,4})p/)
+          ? title.match(/(\d{3,4})p/)[0]
+          : '480p'
+
+        const seeds = parseInt(entry.children('td').last().text(), 10)
+
+        const sizeText = entry.children('td').eq(3).text().toUpperCase()
+
+        const size = bytes(sizeText.trim())
+
+        data.torrents[season][episode].push({
+          title,
+          url: magnet,
+          seeds: isNaN(seeds) ? 0 : seeds,
+          peers: 0,
+          provider: 'EZTV',
+          size: isNaN(size) ? 0 : size,
+          quality
+        })
+      }
+    })
 
     return data
   }
@@ -160,29 +148,28 @@ export class EztvApi {
    * Get all the available shows from eztv.
    */
   public async getAllShows(): Promise<Show[]> {
-    const shows = await this.get('showlist/')
-      .then(($) => {
-        const regex = /\/shows\/(.*)\/(.*)\//
+    const shows = await this.get('showlist/').then(($) => {
+      const regex = /\/shows\/(.*)\/(.*)\//
 
-        return $('.thread_link')
-          .map(function() {
-            const entry = $(this)
-            const href = entry.attr('href')
+      return $('.thread_link')
+        .map(function () {
+          const entry = $(this)
+          const href = entry.attr('href')
 
-            const title = entry.text()
-            const id = parseInt(href.match(regex)[1], 10)
+          const title = entry.text()
+          const id = parseInt(href.match(regex)[1], 10)
 
-            let slug = href.match(regex)[2]
-            slug = slug in slugMap ? slugMap[slug] : slug
+          let slug = href.match(regex)[2]
+          slug = slug in slugMap ? slugMap[slug] : slug
 
-            return {
-              title,
-              id,
-              slug
-            }
-          })
-          .get()
-      })
+          return {
+            title,
+            id,
+            slug
+          }
+        })
+        .get()
+    })
 
     // Loop through all shows to see if they have a additional show in it
     shows.forEach((show) => {
@@ -209,8 +196,9 @@ export class EztvApi {
       showSlug = formatMap[showSlug].slug
     }
 
-    const showData = await this.get(`shows/${showId}/${showSlug}/`)
-      .then(($) => this.getEpisodeData(data, $))
+    const showData = await this.get(`shows/${showId}/${showSlug}/`).then(($) =>
+      this.getEpisodeData(data, $)
+    )
 
     // If the slug is inside the format map and has formatShow then return the formatted show
     if (data.slug in formatMap && formatMap[data.slug].formatShow) {
@@ -219,5 +207,4 @@ export class EztvApi {
 
     return showData
   }
-
 }

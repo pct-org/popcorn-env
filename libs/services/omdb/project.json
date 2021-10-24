@@ -1,0 +1,27 @@
+{
+  "root": "libs/services/omdb",
+  "sourceRoot": "libs/services/omdb/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/services/omdb/tsconfig.lib.json",
+          "libs/services/omdb/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/services/omdb/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/services/omdb/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

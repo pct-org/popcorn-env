@@ -20,7 +20,6 @@ import {
  * Base class for scraping content from various sources.
  */
 export abstract class BaseProvider {
-
   @InjectModel('Blacklist')
   private readonly blackListModel: typeof BlacklistModel
 
@@ -68,9 +67,9 @@ export abstract class BaseProvider {
 
     const limit = pLimit(1)
 
-    await Promise.all(this.configs.map((config) => (
-      limit(() => this.scrapeConfig(config))
-    )))
+    await Promise.all(
+      this.configs.map((config) => limit(() => this.scrapeConfig(config)))
+    )
 
     this.logger.log(`Done scraping`)
   }
@@ -101,9 +100,7 @@ export abstract class BaseProvider {
       const totalPages = await this.getTotalPages()
 
       if (!totalPages) {
-        return this.logger.error(
-          `getTotalPages returned: '${totalPages}'`
-        )
+        return this.logger.error(`getTotalPages returned: '${totalPages}'`)
       }
 
       this.logger.log(`Total pages ${totalPages}`)
@@ -115,28 +112,39 @@ export abstract class BaseProvider {
 
       const limit = pLimit(this.maxWebRequests)
 
-      await Promise.all(contents.map((content) => limit(async() => {
-        const isInBlacklist = await this.isItemBlackListed(content)
+      await Promise.all(
+        contents.map((content) =>
+          limit(async () => {
+            const isInBlacklist = await this.isItemBlackListed(content)
 
-        // Only get data for this item if it's not in the blacklist
-        if (!isInBlacklist) {
-          try {
-            await this.enhanceAndImport(content)
+            // Only get data for this item if it's not in the blacklist
+            if (!isInBlacklist) {
+              try {
+                await this.enhanceAndImport(content)
+              } catch (err) {
+                const errorMessage = err.message || err
 
-          } catch (err) {
-            const errorMessage = err.message || err
+                this.logger.error(
+                  `BaseProvider.scrapeConfig: ${errorMessage}`,
+                  err.stack
+                )
 
-            this.logger.error(`BaseProvider.scrapeConfig: ${errorMessage}`, err.stack)
-
-            // Log the content so it can be better debugged from logs
-            if (errorMessage.includes('Could not find any data with slug')) {
-              this.logger.error(JSON.stringify(content))
+                // Log the content so it can be better debugged from logs
+                if (
+                  errorMessage.includes('Could not find any data with slug')
+                ) {
+                  this.logger.error(JSON.stringify(content))
+                }
+              }
             }
-          }
-        }
-      })))
+          })
+        )
+      )
     } catch (err) {
-      this.logger.error(`Catch BaseProvider.scrapeConfig: ${err.message || err}`, err.stack)
+      this.logger.error(
+        `Catch BaseProvider.scrapeConfig: ${err.message || err}`,
+        err.stack
+      )
     }
   }
 
@@ -145,17 +153,13 @@ export abstract class BaseProvider {
    * @param content - The content information.
    * @returns {Promise<Boolean|Error>}
    */
-  protected async isItemBlackListed(content: ScrapedItem): Promise<boolean | Error> {
-    const {
-      slug,
-      imdb
-    } = content
+  protected async isItemBlackListed(
+    content: ScrapedItem
+  ): Promise<boolean | Error> {
+    const { slug, imdb } = content
 
     const blacklistedItem = await this.blackListModel.findOne({
-      $or: [
-        { _id: imdb },
-        { _id: slug }
-      ]
+      $or: [{ _id: imdb }, { _id: slug }]
     })
 
     if (blacklistedItem) {
@@ -163,11 +167,14 @@ export abstract class BaseProvider {
         const expires = new Date(blacklistedItem.get('expires'))
 
         this.logger.debug(
-          `'${imdb || slug}' is in the blacklist until '${expires}' because of reason '${blacklistedItem.get('reason')}', skipping...`
+          `'${
+            imdb || slug
+          }' is in the blacklist until '${expires}' because of reason '${blacklistedItem.get(
+            'reason'
+          )}', skipping...`
         )
 
         return true
-
       } else {
         // Item is expired delete it
         blacklistedItem.deleteOne()
@@ -185,13 +192,16 @@ export abstract class BaseProvider {
     let helper: BaseHelper = null
     if (this.contentType === MOVIE_TYPE && this.movieHelper) {
       helper = this.movieHelper
-
     } else if (this.contentType === SHOW_TYPE && this.showHelper) {
       helper = this.showHelper
     }
 
     if (!helper) {
-      return Promise.reject(new Error(`'${this.contentType}' is not a valid value for ContentTypes!`))
+      return Promise.reject(
+        new Error(
+          `'${this.contentType}' is not a valid value for ContentTypes!`
+        )
+      )
     }
 
     // Double check if the item has torrents
@@ -202,7 +212,8 @@ export abstract class BaseProvider {
     }
 
     const existingItem = await helper.getItem(item.imdb, item.slug)
-    const updateExistingItem = existingItem && helper.shouldUpdateExistingItem(existingItem)
+    const updateExistingItem =
+      existingItem && helper.shouldUpdateExistingItem(existingItem)
 
     let newItem
     // Check if we have a existing item
@@ -210,12 +221,10 @@ export abstract class BaseProvider {
       // Only update the item if we need to
       if (updateExistingItem) {
         newItem = await helper.updateTraktInfo(existingItem)
-
       } else {
         // Use existing item
         newItem = existingItem
       }
-
     } else {
       // Add trakt info to the item, will return null if trakt could not find it
       newItem = await helper.addTraktInfo(item)
@@ -224,12 +233,7 @@ export abstract class BaseProvider {
     // If Trakt could not find the item then add it to the blacklist
     if (!newItem) {
       // Try again in 1 week
-      await helper.addToBlacklist(
-        item,
-        this.contentType,
-        '404',
-        1
-      )
+      await helper.addToBlacklist(item, this.contentType, '404', 1)
 
       return Promise.resolve()
     }
@@ -245,7 +249,6 @@ export abstract class BaseProvider {
 
     if (!existingItem) {
       await helper.addItemToDatabase(newItem)
-
     } else {
       await helper.updateItemInDatabase(newItem, updateExistingItem)
     }
@@ -256,20 +259,17 @@ export abstract class BaseProvider {
   /**
    * Extract content information based on a regex.
    */
-  abstract extractContent({
-    torrent,
-    regex,
-    lang
-  }): ScrapedItem | undefined
+  abstract extractContent({ torrent, regex, lang }): ScrapedItem | undefined
 
   /**
    * Get content info from a given torrent.
    */
   protected getContentData(torrent: any): ScrapedItem | undefined {
     const regex = this.regexps.find(
-      r => r.regex.test(torrent.title)
-        || r.regex.test(torrent.name)
-        || r.regex.test(torrent.filename)
+      (r) =>
+        r.regex.test(torrent.title) ||
+        r.regex.test(torrent.name) ||
+        r.regex.test(torrent.filename)
     )
 
     if (regex) {
@@ -289,33 +289,36 @@ export abstract class BaseProvider {
   protected getAllContent(torrents: any): Promise<Array<ScrapedItem>> {
     const items = new Map()
 
-    return pMap(torrents, (torrent) => {
-      if (!torrent) {
-        return
+    return pMap(
+      torrents,
+      (torrent) => {
+        if (!torrent) {
+          return
+        }
+
+        const item = this.getContentData(torrent)
+
+        if (!item) {
+          return
+        }
+
+        const { slug } = item
+
+        // If we already have the movie merge the torrents together
+        if (items.has(slug)) {
+          // Reset the movies torrents
+          item.torrents = formatTorrents(
+            items.get(slug).torrents,
+            item.torrents
+          )
+        }
+
+        return items.set(slug, item)
+      },
+      {
+        concurrency: 1
       }
-
-      const item = this.getContentData(torrent)
-
-      if (!item) {
-        return
-      }
-
-      const { slug } = item
-
-      // If we already have the movie merge the torrents together
-      if (items.has(slug)) {
-        // Reset the movies torrents
-        item.torrents = formatTorrents(
-          items.get(slug).torrents,
-          item.torrents
-        )
-      }
-
-      return items.set(slug, item)
-    }, {
-      concurrency: 1
-    })
-      .then(() => Array.from(items.values()))
+    ).then(() => Array.from(items.values()))
   }
 
   /**
@@ -338,14 +341,12 @@ export abstract class BaseProvider {
       return res.data
         ? res.data.movies // YTS
         : []
-
     } catch (err) {
       // If we are allowed to retry then do else throw the error
       if (retry) {
         this.logger.warn(`On page ${page} "${err}", going to retry.`)
 
         return this.getOnePage(page, false)
-
       } else {
         this.logger.error(`On page ${page} "${err}"`)
 
@@ -363,19 +364,26 @@ export abstract class BaseProvider {
   getAllTorrents(totalPages: number): Promise<Array<any>> {
     let torrents = []
 
-    return pTimes(totalPages, async(page) => {
-      this.logger.debug(`Started searching ${this.name} on page ${page + 1} out of ${totalPages}`)
+    return pTimes(
+      totalPages,
+      async (page) => {
+        this.logger.debug(
+          `Started searching ${this.name} on page ${
+            page + 1
+          } out of ${totalPages}`
+        )
 
-      // Get the page
-      const data = await this.getOnePage(page + 1)
+        // Get the page
+        const data = await this.getOnePage(page + 1)
 
-      // Add it to the torrent collection
-      torrents = torrents.concat(data)
-
-    }, {
-      concurrency: 1,
-      stopOnError: false
-    })
+        // Add it to the torrent collection
+        torrents = torrents.concat(data)
+      },
+      {
+        concurrency: 1,
+        stopOnError: false
+      }
+    )
       .then(() => {
         this.logger.log(`Found ${torrents.length} torrents.`)
 
@@ -383,7 +391,9 @@ export abstract class BaseProvider {
       })
       .catch((err) => {
         // Only log the errors
-        this.logger.error(`Catch BaseProvider.getAllTorrents: ${err.message || err}`)
+        this.logger.error(
+          `Catch BaseProvider.getAllTorrents: ${err.message || err}`
+        )
 
         // We still want to resolve all the pages that did go well
         return Promise.resolve(torrents)
@@ -400,14 +410,14 @@ export abstract class BaseProvider {
 
     const result = await this.api.search(this.query)
 
-    if (result.data) { // Yts
+    if (result.data) {
+      // Yts
       return Math.ceil(result.data.movie_count / (this.query?.limit ?? 50))
-
-    } else if (result.total_pages) { // eztv
+    } else if (result.total_pages) {
+      // eztv
       return result.total_pages
     }
 
     return result.totalPages
   }
-
 }

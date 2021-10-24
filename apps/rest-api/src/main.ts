@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { Logger, ValidationPipe } from '@nestjs/common'
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+import {
+  FastifyAdapter,
+  NestFastifyApplication
+} from '@nestjs/platform-fastify'
 
 import { AppModule } from './app.module'
 import { ConfigService } from './shared/config/config.service'
@@ -19,12 +22,14 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService)
   const port = configService.get(ConfigService.PORT)
 
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    transformOptions: {
-      enableImplicitConversion: true
-    }
-  }))
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true
+      }
+    })
+  )
 
   await app.listen(port, '0.0.0.0').then(() => {
     Logger.log(`Server running on http://localhost:${port}`)

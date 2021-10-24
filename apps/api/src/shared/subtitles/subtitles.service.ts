@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
 import { Download, DownloadModel } from '@pct-org/types/download'
 import { TorrentFile } from 'webtorrent'
-import * as OpenSubtitles from 'opensubtitles-api'
+import OpenSubtitles from 'opensubtitles-api'
 import { createWriteStream, existsSync } from 'fs'
 import { resolve } from 'path'
 
@@ -12,7 +12,6 @@ import { SubtitleInterface } from './subtitle.interface'
 
 @Injectable()
 export class SubtitlesService {
-
   private readonly logger = new Logger(SubtitlesService.name)
 
   private readonly client: OpenSubtitles
@@ -28,9 +27,14 @@ export class SubtitlesService {
     private readonly httpService: HttpService,
     private readonly configService: ConfigService
   ) {
-    const username = this.configService.get(ConfigService.OPENSUBTITLES_USERNAME)
-    const password = this.configService.get(ConfigService.OPENSUBTITLES_PASSWORD)
-    this.supportedLanguages = this.configService.get(ConfigService.SUBTITLES_LANGUAGES)
+    const username = this.configService.get(
+      ConfigService.OPENSUBTITLES_USERNAME
+    )
+    const password = this.configService.get(
+      ConfigService.OPENSUBTITLES_PASSWORD
+    )
+    this.supportedLanguages = this.configService
+      .get(ConfigService.SUBTITLES_LANGUAGES)
       .split(',')
 
     if (username && password) {
@@ -40,7 +44,9 @@ export class SubtitlesService {
         password
       })
 
-      this.logger.log(`Subtitles service enabled for [${this.supportedLanguages.join(', ')}]`)
+      this.logger.log(
+        `Subtitles service enabled for [${this.supportedLanguages.join(', ')}]`
+      )
     } else {
       this.enabled = false
     }
@@ -53,7 +59,11 @@ export class SubtitlesService {
    * @param {TorrentFile} torrent - The torrent to search subtitles for.
    * @param {boolean} retry - Are we allowed to retry or not.
    */
-  public async searchForSubtitles(download: Download, torrent: TorrentFile, retry = true): Promise<void> {
+  public async searchForSubtitles(
+    download: Download,
+    torrent: TorrentFile,
+    retry = true
+  ): Promise<void> {
     // Only search for subtitles when it's enabled
     if (!this.enabled) {
       return
@@ -107,19 +117,27 @@ export class SubtitlesService {
         limit: 'best'
       })
 
-      const subtitleLanguages = Object.keys(subtitles).filter((lang) => this.supportedLanguages.includes(lang))
+      const subtitleLanguages = Object.keys(subtitles).filter((lang) =>
+        this.supportedLanguages.includes(lang)
+      )
 
       if (subtitleLanguages.length > 0) {
         const formattedSubs = []
 
-        this.logger.log(`[${download._id}]: Found subs for ${subtitleLanguages.join(',')}`)
+        this.logger.log(
+          `[${download._id}]: Found subs for ${subtitleLanguages.join(',')}`
+        )
 
         await Promise.all(
           subtitleLanguages.map(async (language) => {
             const subtitle: SubtitleInterface = subtitles[language]
 
             try {
-              const subLocation = await this.downloadSubtitle(download, subtitle, location)
+              const subLocation = await this.downloadSubtitle(
+                download,
+                subtitle,
+                location
+              )
 
               formattedSubs.push({
                 location: subLocation,
@@ -128,25 +146,27 @@ export class SubtitlesService {
                 score: subtitle.score
               })
             } catch (err) {
-              this.logger.error(`[${download._id}]: Could not download subtitle "${language}" (${subtitle.url})`, err.stack)
+              this.logger.error(
+                `[${download._id}]: Could not download subtitle "${language}" (${subtitle.url})`,
+                err.stack
+              )
             }
           })
         )
 
         // Add the subtitles to the download
-        await this.downloadModel.findByIdAndUpdate(
-          download._id,
-          {
-            subtitles: formattedSubs
-          }
-        )
+        await this.downloadModel.findByIdAndUpdate(download._id, {
+          subtitles: formattedSubs
+        })
       }
     } catch (e) {
       if (e.message.includes('no such file or directory') && retry) {
         return this.searchForSubtitles(download, torrent, false)
-
       } else {
-        this.logger.error(`[${download._id}]: Could not search for subtitles`, e)
+        this.logger.error(
+          `[${download._id}]: Could not search for subtitles`,
+          e
+        )
       }
     }
   }
@@ -158,22 +178,27 @@ export class SubtitlesService {
    * @param {SubtitleInterface} subtitle - The subtitle to download.
    * @param {string} downloadLocation - Base location where to download to
    */
-  private async downloadSubtitle(download: Download, subtitle: SubtitleInterface, downloadLocation: string) {
+  private async downloadSubtitle(
+    download: Download,
+    subtitle: SubtitleInterface,
+    downloadLocation: string
+  ) {
     const subLocation = `${subtitle.langcode}.srt`
     const writer = createWriteStream(`${downloadLocation}/${subLocation}`)
 
-    const response = await this.httpService.get(
-      subtitle.url,
-      {
+    const response = await this.httpService
+      .get(subtitle.url, {
         responseType: 'stream'
-      }
-    ).toPromise()
+      })
+      .toPromise()
 
     response.data.pipe(writer)
 
     return new Promise((resolve, reject) => {
       writer.on('finish', () => {
-        this.logger.debug(`[${download._id}]: Downloaded subtitle "${subtitle.langcode}" to "${subLocation}"`)
+        this.logger.debug(
+          `[${download._id}]: Downloaded subtitle "${subtitle.langcode}" to "${subLocation}"`
+        )
 
         resolve(subLocation)
       })
@@ -181,5 +206,4 @@ export class SubtitlesService {
       writer.on('error', reject)
     })
   }
-
 }

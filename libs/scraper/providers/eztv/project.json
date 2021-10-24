@@ -1,0 +1,27 @@
+{
+  "root": "libs/scraper/providers/eztv",
+  "sourceRoot": "libs/scraper/providers/eztv/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/scraper/providers/eztv/tsconfig.lib.json",
+          "libs/scraper/providers/eztv/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/scraper/providers/eztv/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/scraper/providers/eztv/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

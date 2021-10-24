@@ -24,98 +24,6 @@
   "workspaceLayout": {
     "libsDir": "libs"
   },
-  "projects": {
-    "api": {
-      "tags": []
-    },
-    "package-ettv-api": {
-      "tags": ["scope:public"]
-    },
-    "package-eztv-api": {
-      "tags": ["scope:public"]
-    },
-    "package-kat-api": {
-      "tags": ["scope:public"]
-    },
-    "package-solidtorrents-api": {
-      "tags": ["scope:public"]
-    },
-    "package-zooqle-api": {
-      "tags": ["scope:public"]
-    },
-    "rest-api": {
-      "tags": []
-    },
-    "scraper": {
-      "tags": []
-    },
-    "scraper-helpers-base": {
-      "tags": []
-    },
-    "scraper-helpers-episode": {
-      "tags": []
-    },
-    "scraper-helpers-movie": {
-      "tags": []
-    },
-    "scraper-helpers-season": {
-      "tags": []
-    },
-    "scraper-helpers-show": {
-      "tags": []
-    },
-    "scraper-providers-base": {
-      "tags": []
-    },
-    "scraper-providers-eztv": {
-      "tags": []
-    },
-    "scraper-providers-yts": {
-      "tags": []
-    },
-    "services-fanart": {
-      "tags": []
-    },
-    "services-omdb": {
-      "tags": []
-    },
-    "services-tmdb": {
-      "tags": []
-    },
-    "services-trakt": {
-      "tags": []
-    },
-    "services-tvdb": {
-      "tags": []
-    },
-    "torrent-utils": {
-      "tags": []
-    },
-    "types-blacklist": {
-      "tags": []
-    },
-    "types-download": {
-      "tags": []
-    },
-    "types-episode": {
-      "tags": []
-    },
-    "types-image": {
-      "tags": []
-    },
-    "types-movie": {
-      "tags": []
-    },
-    "types-season": {
-      "tags": []
-    },
-    "types-shared": {
-      "tags": []
-    },
-    "types-show": {
-      "tags": []
-    }
-  },
   "targetDependencies": {
     "build": [
       {
@@ -123,5 +31,9 @@
         "projects": "dependencies"
       }
     ]
-  }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
+  "defaultProject": "api"
 }

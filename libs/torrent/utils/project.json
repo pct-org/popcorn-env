@@ -1,0 +1,27 @@
+{
+  "root": "libs/torrent/utils",
+  "sourceRoot": "libs/torrent/utils/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/torrent/utils/tsconfig.lib.json",
+          "libs/torrent/utils/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/torrent/utils/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/torrent/utils/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

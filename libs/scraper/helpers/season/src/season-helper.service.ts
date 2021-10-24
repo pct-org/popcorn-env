@@ -7,7 +7,7 @@ import { Episode } from '@pct-org/types/episode'
 import { EpisodeHelperService } from '@pct-org/scraper/helpers/episode'
 import { IMAGES_DEFAULT } from '@pct-org/types/image'
 import { TmdbService } from '@pct-org/services/tmdb'
-import * as pMap from 'p-map'
+import pMap from 'p-map'
 
 @Injectable()
 export class SeasonHelperService {

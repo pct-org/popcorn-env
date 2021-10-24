@@ -1,0 +1,41 @@
+{
+  "root": "packages/ettv-api",
+  "sourceRoot": "packages/ettv-api/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "packages/ettv-api/tsconfig.lib.json",
+          "packages/ettv-api/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!packages/ettv-api/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/ettv-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "options": {
+        "outputPath": "dist/packages/ettv-api",
+        "tsConfig": "packages/ettv-api/tsconfig.lib.json",
+        "packageJson": "packages/ettv-api/package.json",
+        "main": "packages/ettv-api/src/index.ts",
+        "assets": [
+          "packages/ettv-api/*.md",
+          "packages/ettv-api/example.js",
+          "packages/ettv-api/LICENSE"
+        ]
+      }
+    }
+  },
+  "tags": ["scope:public"]
+}

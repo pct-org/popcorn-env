@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import * as Omdb from 'omdb-api-pt'
+import Omdb from 'omdb-api-pt'
 import { Images } from '@pct-org/types/image'
 import { Movie } from '@pct-org/types/movie'
 

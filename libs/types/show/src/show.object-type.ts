@@ -7,14 +7,15 @@ import { AirInformation } from './air-information/air-information.object-type'
 
 @ObjectType()
 export class Show extends Content {
-
   @Field({ description: 'The tvdb id for the show.' })
   tvdbId: number
 
-  @Field(type => AirInformation, { description: 'Information about when the show airs.' })
+  @Field(() => AirInformation, {
+    description: 'Information about when the show airs.'
+  })
   airInfo: AirInformation
 
-  @Field(type => [Season], { description: 'The seasons in the show.' })
+  @Field(() => [Season], { description: 'The seasons in the show.' })
   seasons: Season[]
 
   @Field({ description: 'The total amount of seasons.' })
@@ -31,5 +32,4 @@ export class Show extends Content {
    * For the scraper
    */
   _traktSeasons?: TraktSeason[]
-
 }

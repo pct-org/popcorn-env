@@ -1,0 +1,27 @@
+{
+  "root": "libs/scraper/helpers/movie",
+  "sourceRoot": "libs/scraper/helpers/movie/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/scraper/helpers/movie/tsconfig.lib.json",
+          "libs/scraper/helpers/movie/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/scraper/helpers/movie/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/scraper/helpers/movie/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

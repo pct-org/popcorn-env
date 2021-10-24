@@ -11,42 +11,38 @@ import { SearchAdapter } from './search-base.adapter'
 
 @Injectable()
 export class SearchService {
-
   private readonly logger = new Logger(SearchService.name)
 
   adapters: SearchAdapter[] = []
 
-  constructor(
-    private readonly httpService: HttpService
-  ) {
+  constructor(private readonly httpService: HttpService) {
     this.adapters.push(new RarbgSearchAdapter(httpService))
     this.adapters.push(new OneThreeThreeSevenXSearchAdapater(httpService))
   }
 
-  public searchEpisode = async(episode: Episode): Promise<Torrent[]> => {
-    const results = await Promise.all(this.adapters.map(
-      adapter => adapter.searchEpisode(episode))
+  public searchEpisode = async (episode: Episode): Promise<Torrent[]> => {
+    const results = await Promise.all(
+      this.adapters.map((adapter) => adapter.searchEpisode(episode))
     )
 
     return formatTorrents(
-      results.reduce((foundTorrents, results) => ([
-        ...foundTorrents,
-        ...results
-      ]), [])
+      results.reduce(
+        (foundTorrents, results) => [...foundTorrents, ...results],
+        []
+      )
     )
   }
 
-  public searchMovie = async(movie: Movie): Promise<Torrent[]> => {
-    const results = await Promise.all(this.adapters.map(
-      adapter => adapter.searchMovie(movie))
+  public searchMovie = async (movie: Movie): Promise<Torrent[]> => {
+    const results = await Promise.all(
+      this.adapters.map((adapter) => adapter.searchMovie(movie))
     )
 
     return formatTorrents(
-      results.reduce((foundTorrents, results) => ([
-        ...foundTorrents,
-        ...results
-      ]), [])
+      results.reduce(
+        (foundTorrents, results) => [...foundTorrents, ...results],
+        []
+      )
     )
   }
-
 }

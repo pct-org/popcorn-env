@@ -1,6 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
-import { ScrapedItem, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
+import {
+  ScrapedItem,
+  ScrapedShowTorrents
+} from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
 import { ShowModel, Show, SHOW_TYPE } from '@pct-org/types/show'
 import { Movie } from '@pct-org/types/movie'
@@ -13,7 +16,6 @@ import { IMAGES_DEFAULT } from '@pct-org/types/image'
 
 @Injectable()
 export class ShowHelperService extends BaseHelper {
-
   @InjectModel('Shows')
   private readonly showModel: ShowModel
 
@@ -34,7 +36,10 @@ export class ShowHelperService extends BaseHelper {
 
   protected readonly logger = new Logger('ShowHelper')
 
-  public async getItem(imdb?: string, slug?: string): Promise<Show | undefined> {
+  public async getItem(
+    imdb?: string,
+    slug?: string
+  ): Promise<Show | undefined> {
     const or = []
 
     if (imdb) {
@@ -45,7 +50,8 @@ export class ShowHelperService extends BaseHelper {
       or.push({ slug })
     }
 
-    return this.showModel.findOne({
+    return this.showModel.findOne(
+      {
         $or: or
       },
       {},
@@ -79,7 +85,9 @@ export class ShowHelperService extends BaseHelper {
     return traktItem
   }
 
-  public async addTraktInfo(item: Pick<ScrapedItem, 'imdb' | 'slug' | 'title'>): Promise<Show | undefined> {
+  public async addTraktInfo(
+    item: Pick<ScrapedItem, 'imdb' | 'slug' | 'title'>
+  ): Promise<Show | undefined> {
     // We prefer the imdb id above a slug
     let idType = 'imdb'
     let idUsed = item.imdb
@@ -108,20 +116,33 @@ export class ShowHelperService extends BaseHelper {
     }
 
     if (traktSeasons.length === 0) {
-      this.logger.warn(`No seasons found for slug: '${item.slug}' or imdb id: '${item.imdb}'`)
+      this.logger.warn(
+        `No seasons found for slug: '${item.slug}' or imdb id: '${item.imdb}'`
+      )
     }
 
     const ratingPercentage = Math.round(traktShow.rating * 10)
-    const traktWatchers = await this.traktService.getShowWatching(traktShow.ids.slug)
+    const traktWatchers = await this.traktService.getShowWatching(
+      traktShow.ids.slug
+    )
     let traktNextEpisode = null
     let traktLastEpisode = null
 
     if (!['ended', 'canceled'].includes(traktShow.status)) {
-      traktNextEpisode = await this.traktService.getNextEpisodeForShow(traktShow.ids.slug)
-      traktLastEpisode = await this.traktService.getLastEpisodeForShow(traktShow.ids.slug)
+      traktNextEpisode = await this.traktService.getNextEpisodeForShow(
+        traktShow.ids.slug
+      )
+      traktLastEpisode = await this.traktService.getLastEpisodeForShow(
+        traktShow.ids.slug
+      )
     }
 
-    await this.addShowToBlackListIfNeeded(item, traktShow, traktNextEpisode, traktLastEpisode)
+    await this.addShowToBlackListIfNeeded(
+      item,
+      traktShow,
+      traktNextEpisode,
+      traktLastEpisode
+    )
 
     return {
       _id: traktShow.ids.imdb || item.imdb,
@@ -144,9 +165,7 @@ export class ShowHelperService extends BaseHelper {
       },
       images: IMAGES_DEFAULT,
       type: SHOW_TYPE,
-      genres: traktShow.genres
-        ? traktShow.genres
-        : ['unknown'],
+      genres: traktShow.genres ? traktShow.genres : ['unknown'],
       airInfo: {
         network: traktShow.network,
         country: traktShow.country,
@@ -177,11 +196,11 @@ export class ShowHelperService extends BaseHelper {
       .catch((item) => item)
   }
 
-  public async addTorrents(item: Show, torrents: ScrapedShowTorrents): Promise<Show> {
-    item.seasons = this.seasonHelperService.formatTraktSeasons(
-      item,
-      torrents
-    )
+  public async addTorrents(
+    item: Show,
+    torrents: ScrapedShowTorrents
+  ): Promise<Show> {
+    item.seasons = this.seasonHelperService.formatTraktSeasons(item, torrents)
     item.numSeasons = item.seasons.length + 1
 
     item.seasons = await this.seasonHelperService.enhanceSeasons(
@@ -204,7 +223,10 @@ export class ShowHelperService extends BaseHelper {
     await this.seasonHelperService.addSeasonsToDatabase(seasons)
   }
 
-  public async updateItemInDatabase(item: Show, hadMetadataUpdate?: boolean): Promise<void> {
+  public async updateItemInDatabase(
+    item: Show,
+    hadMetadataUpdate?: boolean
+  ): Promise<void> {
     this.logger.log(`'${item.title}' is a existing show!`)
     item.latestEpisodeAired = this.getLastEpisodeAired(item)
     item.updatedAt = Number(new Date())
@@ -249,7 +271,10 @@ export class ShowHelperService extends BaseHelper {
       // Loop true all episodes
       episodes.forEach((episode) => {
         // If the firstAired is higher then that is a newer episode, it should also have been aired
-        if (episode.firstAired > latestEpisodeAired && episode.firstAired < today) {
+        if (
+          episode.firstAired > latestEpisodeAired &&
+          episode.firstAired < today
+        ) {
           latestEpisodeAired = episode.firstAired
         }
       })
@@ -264,16 +289,15 @@ export class ShowHelperService extends BaseHelper {
    * - The show is canceled
    * - The show has a airing episode in the future
    */
-  private async addShowToBlackListIfNeeded(item: Pick<ScrapedItem, 'imdb' | 'slug' | 'title'>, show: TraktShow, nextEpisode?: TraktEpisode, lastEpisode?: TraktEpisode) {
+  private async addShowToBlackListIfNeeded(
+    item: Pick<ScrapedItem, 'imdb' | 'slug' | 'title'>,
+    show: TraktShow,
+    nextEpisode?: TraktEpisode,
+    lastEpisode?: TraktEpisode
+  ) {
     // Show is ended or canceled
     if (['ended', 'canceled'].includes(show.status)) {
-      await this.addToBlacklist(
-        item,
-        SHOW_TYPE,
-        show.status,
-        4
-      )
-
+      await this.addToBlacklist(item, SHOW_TYPE, show.status, 4)
     } else if (nextEpisode) {
       // If we have traktNextEpisode then add it to the blacklist until that item is aired
       const nextEpisodeAirs = new Date(nextEpisode.first_aired)
@@ -289,9 +313,10 @@ export class ShowHelperService extends BaseHelper {
 
       // Double check if the item is still being aired later then now
       // And if the previous item has not aired within the last 24 hours
-      if (nextEpisodeAirs.getTime() > Date.now() && (
-        !lastEpisodeAired || lastEpisodeAired.getTime() < Date.now()
-      )) {
+      if (
+        nextEpisodeAirs.getTime() > Date.now() &&
+        (!lastEpisodeAired || lastEpisodeAired.getTime() < Date.now())
+      ) {
         await this.addToBlacklist(
           item,
           SHOW_TYPE,
@@ -302,5 +327,4 @@ export class ShowHelperService extends BaseHelper {
       }
     }
   }
-
 }

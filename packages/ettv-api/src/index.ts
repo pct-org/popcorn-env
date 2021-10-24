@@ -6,7 +6,6 @@ import { URL, URLSearchParams } from 'url'
 import { name } from '../package.json'
 
 export interface Torrent {
-
   hash: string
 
   magnet: string
@@ -16,11 +15,9 @@ export interface Torrent {
   category: string
 
   link: string
-
 }
 
 export class EttvApi {
-
   /**
    * The base url of ettv.
    */
@@ -63,10 +60,7 @@ export class EttvApi {
    * @param {!Array<string>} [options.trackers=exprts.defaultTrackers] - A list
    * of trackers to add to the hahs of the torrents.
    */
-  constructor({
-    baseUrl = 'https://www.ettv.to/',
-    trackers = null
-  } = {}) {
+  constructor({ baseUrl = 'https://www.ettv.to/', trackers = null } = {}) {
     this.baseUrl = baseUrl
 
     if (trackers) {
@@ -81,20 +75,26 @@ export class EttvApi {
     return new Promise((resolve, reject) => {
       this.debug(`Making GET request to: '${endpoint}'`)
 
-      return https.get(endpoint, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Linux) AppleWebkit/534.30 (KHTML, like Gecko) PT/3.8.0'
-        }
-      }, (res) => {
-        let data = ''
+      return https.get(
+        endpoint,
+        {
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Linux) AppleWebkit/534.30 (KHTML, like Gecko) PT/3.8.0'
+          }
+        },
+        (res) => {
+          let data = ''
 
-        res.pipe(createGunzip())
-          .on('error', reject)
-          .on('data', chunk => {
-            data += chunk
-          })
-          .on('end', () => resolve(data))
-      })
+          res
+            .pipe(createGunzip())
+            .on('error', reject)
+            .on('data', (chunk) => {
+              data += chunk
+            })
+            .on('end', () => resolve(data))
+        }
+      )
     })
   }
 
@@ -126,21 +126,27 @@ export class EttvApi {
    * Convert the database dump from ettv.tv to an array with Torrent objects.
    */
   protected convertToTorrents(res: string): Torrent[] {
-    return res.split('\n')
-      .filter(line => line !== '')
+    return res
+      .split('\n')
+      .filter((line) => line !== '')
       .map(this.convertChunk)
   }
 
   /**
    * Filters the torrents to only return the allowed categories
    */
-  protected filterCategories(torrents: Torrent[], categories: string[]): Torrent[] {
+  protected filterCategories(
+    torrents: Torrent[],
+    categories: string[]
+  ): Torrent[] {
     // If no categories provided return everything
     if (categories.length === 0) {
       return torrents
     }
 
-    return torrents.filter(torrent => categories.indexOf(torrent.category) > -1)
+    return torrents.filter(
+      (torrent) => categories.indexOf(torrent.category) > -1
+    )
   }
 
   /**
@@ -172,5 +178,4 @@ export class EttvApi {
   getFull(categories = []) {
     return this.getFile('full', categories)
   }
-
 }
