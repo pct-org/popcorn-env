@@ -11,7 +11,7 @@ export class EztvProviderService extends BaseProvider {
   @Inject()
   protected readonly showHelper: ShowHelperService
 
-  protected readonly  name = 'EZTV'
+  protected readonly name = 'EZTV'
 
   protected readonly maxWebRequests = 2
 
