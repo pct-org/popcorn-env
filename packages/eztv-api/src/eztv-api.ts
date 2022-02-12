@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
 import type { CheerioAPI } from 'cheerio'
 import debug from 'debug'
-import got from 'got'
+import axios from 'axios'
 import bytes from 'bytes'
 
 import { name } from '../package.json'
@@ -44,8 +44,8 @@ export class EztvApi {
 
     this.debug(`Making request to: '${uri}'`)
 
-    return got.get(uri).then(({ body }) => {
-      return cheerio.load(body)
+    return axios.get(uri).then(({ data }) => {
+      return cheerio.load(data)
     })
   }
 

@@ -2,7 +2,7 @@
 const bytes = require('bytes')
 const cheerio = require('cheerio')
 const debug = require('debug')
-const got = require('got')
+const got = require('got') // TODO:: Change to axios
 const { stringify } = require('querystring')
 
 const { name } = require('./package')

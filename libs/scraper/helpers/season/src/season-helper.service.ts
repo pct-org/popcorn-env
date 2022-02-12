@@ -2,18 +2,20 @@ import { Inject, Injectable, Logger } from '@nestjs/common'
 import { ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
 import { Show } from '@pct-org/types/show'
-import { SeasonModel, Season, SEASON_TYPE } from '@pct-org/types/season'
+import { Season, SEASON_TYPE, SeasonDocument } from '@pct-org/types/season'
 import { Episode } from '@pct-org/types/episode'
 import { EpisodeHelperService } from '@pct-org/scraper/helpers/episode'
 import { IMAGES_DEFAULT } from '@pct-org/types/image'
 import { TmdbService } from '@pct-org/services/tmdb'
 import pMap from 'p-map'
 
+import type { Model } from 'mongoose'
+
 @Injectable()
 export class SeasonHelperService {
 
   @InjectModel('Seasons')
-  private readonly seasonModel: SeasonModel
+  private readonly seasonModel: Model<SeasonDocument>
 
   @Inject()
   private readonly episodeHelperService: EpisodeHelperService

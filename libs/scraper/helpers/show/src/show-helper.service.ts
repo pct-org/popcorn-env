@@ -1,11 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
-import {
-  ScrapedItem,
-  ScrapedShowTorrents
-} from '@pct-org/scraper/providers/base'
+import { ScrapedItem, ScrapedShowTorrents } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
-import { ShowModel, Show, SHOW_TYPE } from '@pct-org/types/show'
+import { ShowDocument, Show, SHOW_TYPE } from '@pct-org/types/show'
 import { Movie } from '@pct-org/types/movie'
 import { TraktEpisode, TraktService, TraktShow } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
@@ -14,10 +11,13 @@ import { TvdbService } from '@pct-org/services/tvdb'
 import { SeasonHelperService } from '@pct-org/scraper/helpers/season'
 import { IMAGES_DEFAULT } from '@pct-org/types/image'
 
+import type { Model } from 'mongoose'
+
 @Injectable()
 export class ShowHelperService extends BaseHelper {
+
   @InjectModel('Shows')
-  private readonly showModel: ShowModel
+  private readonly showModel: Model<ShowDocument>
 
   @Inject()
   private readonly traktService: TraktService
