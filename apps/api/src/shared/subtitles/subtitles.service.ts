@@ -1,17 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
-import { Download, DownloadModel } from '@pct-org/types/download'
+import { Download, DownloadDocument } from '@pct-org/types/download'
 import { TorrentFile } from 'webtorrent'
 import OpenSubtitles from 'opensubtitles-api'
 import { createWriteStream, existsSync } from 'fs'
 import { resolve } from 'path'
+
+import type { Model } from 'mongoose'
 
 import { ConfigService } from '../config/config.service'
 import { SubtitleInterface } from './subtitle.interface'
 
 @Injectable()
 export class SubtitlesService {
+
   private readonly logger = new Logger(SubtitlesService.name)
 
   private readonly client: OpenSubtitles
@@ -21,7 +24,7 @@ export class SubtitlesService {
   private readonly supportedLanguages: string[]
 
   @InjectModel('Downloads')
-  private readonly downloadModel: DownloadModel
+  private readonly downloadModel: Model<DownloadDocument>
 
   constructor(
     private readonly httpService: HttpService,

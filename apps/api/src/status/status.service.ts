@@ -3,10 +3,12 @@ import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
 import { checkSync } from 'diskusage'
 import { formatBytes } from '@pct-org/torrent/utils'
-import { MovieModel } from '@pct-org/types/movie'
-import { ShowModel } from '@pct-org/types/show'
-import { EpisodeModel } from '@pct-org/types/episode'
+import { MovieDocument } from '@pct-org/types/movie'
+import { ShowDocument } from '@pct-org/types/show'
+import { EpisodeDocument } from '@pct-org/types/episode'
 import fastFolderSizeSync from 'fast-folder-size/sync'
+
+import type { Model } from 'mongoose'
 
 import { Status } from './status.object-type'
 import { StatusScraper } from './status-scraper.object-type'
@@ -16,13 +18,13 @@ import { ConfigService } from '../shared/config/config.service'
 export class StatusService {
 
   @InjectModel('Movies')
-  private readonly movieModel: MovieModel
+  private readonly movieModel: Model<MovieDocument>
 
   @InjectModel('Shows')
-  private readonly showModel: ShowModel
+  private readonly showModel: Model<ShowDocument>
 
   @InjectModel('Episodes')
-  private readonly episodesModel: EpisodeModel
+  private readonly episodesModel: Model<EpisodeDocument>
 
   @Inject()
   private readonly configService: ConfigService

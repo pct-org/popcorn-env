@@ -7,6 +7,7 @@ import { AirInformation } from './air-information/air-information.object-type'
 
 @ObjectType()
 export class Show extends Content {
+
   @Field({ description: 'The tvdb id for the show.' })
   tvdbId: number
 
@@ -32,4 +33,5 @@ export class Show extends Content {
    * For the scraper
    */
   _traktSeasons?: TraktSeason[]
+
 }

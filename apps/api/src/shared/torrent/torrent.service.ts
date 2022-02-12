@@ -7,13 +7,12 @@ import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
 import * as rimraf from 'rimraf'
 import { Movie, MoviesService, MOVIE_TYPE } from '@pct-org/types/movie'
 import { Episode, EpisodesService } from '@pct-org/types/episode'
-import { Download, DownloadModel } from '@pct-org/types/download'
+import { Download, DownloadDocument } from '@pct-org/types/download'
 import { DownloadInfo } from '@pct-org/types/shared'
 
-import {
-  TorrentInterface,
-  ConnectingTorrentInterface
-} from './torrent.interface'
+import type { Model } from 'mongoose'
+
+import { TorrentInterface, ConnectingTorrentInterface } from './torrent.interface'
 import { ConfigService } from '../config/config.service'
 import { SubtitlesService } from '../subtitles/subtitles.service'
 
@@ -100,7 +99,7 @@ export class TorrentService implements OnApplicationBootstrap {
   private webTorrent: WebTorrentInstance = null
 
   @InjectModel('Downloads')
-  private readonly downloadModel: DownloadModel
+  private readonly downloadModel: Model<DownloadDocument>
 
   constructor(
     private readonly configService: ConfigService,
@@ -353,7 +352,10 @@ export class TorrentService implements OnApplicationBootstrap {
 
     const item = await this.getItemForDownload(download)
 
-    const { torrents, searchedTorrents } = item
+    const {
+      torrents,
+      searchedTorrents
+    } = item
 
     // Find the correct magnet
     const magnet =
@@ -435,7 +437,10 @@ export class TorrentService implements OnApplicationBootstrap {
 
           return previous
         },
-        { file: torrent.files[0], torrentIndex: 0 }
+        {
+          file: torrent.files[0],
+          torrentIndex: 0
+        }
       )
 
       // Select this file to be the main
@@ -460,7 +465,7 @@ export class TorrentService implements OnApplicationBootstrap {
       // Keep track if we are currently updating the model, prevents updating same item twice at the same time
       let updatingModel = false
 
-      torrent.on('error', async (err) => {
+      torrent.on('error', async(err) => {
         const error = err instanceof Error ? err.message : err
         this.logger.error(`[${download._id}]: Torrent error`, error)
 
@@ -476,7 +481,7 @@ export class TorrentService implements OnApplicationBootstrap {
         resolve()
       })
 
-      torrent.on('noPeers', async (announceType) => {
+      torrent.on('noPeers', async(announceType) => {
         this.logger.warn(
           `[${download._id}]: No peers found, announce type: ${announceType}`
         )
@@ -502,7 +507,7 @@ export class TorrentService implements OnApplicationBootstrap {
         resolve()
       })
 
-      torrent.on('download', async () => {
+      torrent.on('download', async() => {
         const newProgress = torrent.progress * 100
         const newFileProgress = file.progress * 100
 
@@ -556,7 +561,7 @@ export class TorrentService implements OnApplicationBootstrap {
         }
       })
 
-      torrent.on('done', async () => {
+      torrent.on('done', async() => {
         this.logger.log(`[${download._id}]: Download complete`)
 
         // Remove the magnet from the client
@@ -580,7 +585,7 @@ export class TorrentService implements OnApplicationBootstrap {
 
         // Wait at-least 0,5 second before updating, this is to prevent
         // a double save happening
-        setTimeout(async () => {
+        setTimeout(async() => {
           await this.updateDownload(download, {
             progress: 100,
             status: TorrentService.STATUS_COMPLETE,

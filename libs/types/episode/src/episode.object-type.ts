@@ -25,31 +25,34 @@ export class Episode {
   @Field({ description: 'The title of the episode.' })
   title: string
 
-  @Field({ description: 'A brief summary of the episode.', nullable: true })
+  @Field({
+    description: 'A brief summary of the episode.',
+    nullable: true
+  })
   synopsis: string
 
   @Field({ description: 'The date on which the episode was first aired.' })
   firstAired: number
 
-  @Field(type => Watched, { description: 'Did the user watched this episode already.' })
+  @Field(() => Watched, { description: 'Did the user watched this episode already.' })
   watched: Watched
 
   @Field({ description: 'The type of the content.' })
   type: string
 
-  @Field(type => Images, { description: 'The still for the current episode.' })
+  @Field(() => Images, { description: 'The still for the current episode.' })
   images: Images
 
-  @Field(type => [Torrent], { description: 'The episode\'s torrents.' })
+  @Field(() => [Torrent], { description: 'The episode\'s torrents.' })
   torrents: Torrent[]
 
-  @Field(type => [Torrent], {
+  @Field(() => [Torrent], {
     description: 'The episode\'s torrents that where found by search.',
     defaultValue: []
   })
   searchedTorrents: Torrent[]
 
-  @Field(type => DownloadInfo, { description: 'Download info' })
+  @Field(() => DownloadInfo, { description: 'Download info' })
   download: DownloadInfo
 
   @Field({ description: 'The time at which the content was created.' })
@@ -58,7 +61,7 @@ export class Episode {
   @Field({ description: 'The time at which the content was last updated.' })
   updatedAt: number
 
-  @Field(type => Show, { description: 'The show this episode belongs to.' })
+  @Field(() => Show, { description: 'The show this episode belongs to.' })
   show?: Show
 
 }

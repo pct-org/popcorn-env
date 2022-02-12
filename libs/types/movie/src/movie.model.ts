@@ -7,5 +7,3 @@ export interface MovieDocument extends Movie, Document {
   _id: string
 
 }
-
-export type MovieModel = Model<MovieDocument>

@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
+import type { Model } from 'mongoose'
+
 import { Season } from './season.object-type'
-import { SeasonModel } from './season.model'
+import { SeasonDocument } from './season.model'
 
 @Injectable()
 export class SeasonsService {
 
   @InjectModel('Seasons')
-  private readonly seasonModel: SeasonModel
+  private readonly seasonModel: Model<SeasonDocument>
 
   public async findAllForShow(id: string, lean = true): Promise<Season[]> {
     return this.seasonModel.find(

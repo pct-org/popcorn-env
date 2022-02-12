@@ -25,10 +25,7 @@ import { StatusModule } from './routes/status/status.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.databaseUri,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
+        uri: configService.databaseUri
       })
     }),
 

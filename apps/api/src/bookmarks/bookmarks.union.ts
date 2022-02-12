@@ -7,11 +7,11 @@ export const BookmarksUnion = createUnionType({
   types: () => [Movie, Show],
   resolveType(value) {
     if (value.type === MOVIE_TYPE) {
-      return Movie
+      return 'Movie'
     }
 
     if (value.type === SHOW_TYPE) {
-      return Show
+      return 'Show'
     }
 
     return null
