@@ -1,14 +1,14 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import pMap from 'p-map'
-import * as WebTorrent from 'webtorrent-hybrid'
 import { Torrent, Instance as WebTorrentInstance } from 'webtorrent'
 import { formatBytes, formatMsToRemaining } from '@pct-org/torrent/utils'
-import * as rimraf from 'rimraf'
 import { Movie, MoviesService, MOVIE_TYPE } from '@pct-org/types/movie'
 import { Episode, EpisodesService } from '@pct-org/types/episode'
 import { Download, DownloadDocument } from '@pct-org/types/download'
 import { DownloadInfo } from '@pct-org/types/shared'
+import pMap from 'p-map'
+import WebTorrent from 'webtorrent-hybrid'
+import rimraf from 'rimraf'
 
 import type { Model } from 'mongoose'
 

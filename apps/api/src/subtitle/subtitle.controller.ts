@@ -1,8 +1,8 @@
+import { Controller, Get, Res, Req, Param, Logger, Inject, Query } from '@nestjs/common'
+import srtToVtt from 'srt-to-vtt'
+import subsrt from 'subsrt'
 import * as path from 'path'
 import * as fs from 'fs'
-import { Controller, Get, Res, Req, Param, Logger, Inject, Query } from '@nestjs/common'
-import * as srtToVtt from 'srt-to-vtt'
-import * as subsrt from 'subsrt'
 
 import { ConfigService } from '../shared/config/config.service'
 
