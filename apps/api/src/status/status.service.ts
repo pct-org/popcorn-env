@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
 import { checkSync } from 'diskusage'
-import * as getFolderSize from 'get-folder-size'
 import { formatBytes } from '@pct-org/torrent/utils'
 import { MovieModel } from '@pct-org/types/movie'
 import { ShowModel } from '@pct-org/types/show'
 import { EpisodeModel } from '@pct-org/types/episode'
+import fastFolderSizeSync from 'fast-folder-size/sync'
 
 import { Status } from './status.object-type'
 import { StatusScraper } from './status-scraper.object-type'
@@ -14,6 +14,7 @@ import { ConfigService } from '../shared/config/config.service'
 
 @Injectable()
 export class StatusService {
+
   @InjectModel('Movies')
   private readonly movieModel: MovieModel
 
@@ -34,7 +35,7 @@ export class StatusService {
       this.configService.get(ConfigService.DOWNLOAD_LOCATION)
     )
 
-    const folderSize = await this.getFolderSize()
+    const folderSize = fastFolderSizeSync(this.configService.get(ConfigService.DOWNLOAD_LOCATION))
 
     const freePercentage = parseFloat(
       ((disk.available / disk.total) * 100).toFixed(2)
@@ -68,11 +69,7 @@ export class StatusService {
   public async getScraperStatus(): Promise<StatusScraper> {
     try {
       const response = await this.httpService
-        .get(
-          `http://localhost:${this.configService.get(
-            ConfigService.SCRAPER_PORT
-          )}/status`
-        )
+        .get(`http://localhost:${this.configService.get(ConfigService.SCRAPER_PORT)}/status`)
         .toPromise()
 
       return {
@@ -91,16 +88,5 @@ export class StatusService {
         uptime: 'unknown'
       }
     }
-  }
-
-  private getFolderSize(): Promise<number> {
-    return new Promise((resolve) => {
-      getFolderSize(
-        this.configService.get(ConfigService.DOWNLOAD_LOCATION),
-        (err, size) => {
-          resolve(err ? 0 : size)
-        }
-      )
-    })
   }
 }
