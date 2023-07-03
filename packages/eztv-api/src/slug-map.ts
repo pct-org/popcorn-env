@@ -228,5 +228,6 @@ export default {
   'young-and-hungry': 'young-hungry',
   'young-herriot': 'young-james-herriot',
   'youre-the-worst': 'you-re-the-worst',
-  'zero-hour-us': 'zero-hour-2013'
+  'zero-hour-us': 'zero-hour-2013',
+  'the-witcher': 'the-witcher-2019'
 }
