@@ -26,10 +26,10 @@ export class OneThreeThreeSevenXSearchAdapater extends SearchAdapter {
     'Cristie',
     'mazemaze16',
     'TeamRocker',
-    'YIFY',
     'PMEDIA',
     'bone111',
-    'Silmarillion'
+    'Silmarillion',
+    'TGxGoodies'
   ]
 
   /**

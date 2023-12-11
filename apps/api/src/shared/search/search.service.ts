@@ -16,7 +16,7 @@ export class SearchService {
   adapters: SearchAdapter[] = []
 
   constructor(private readonly httpService: HttpService) {
-    this.adapters.push(new RarbgSearchAdapter(httpService))
+    // this.adapters.push(new RarbgSearchAdapter(httpService))
     this.adapters.push(new OneThreeThreeSevenXSearchAdapater(httpService))
   }
 
