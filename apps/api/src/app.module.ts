@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
-import { MongooseModule } from '@nestjs/mongoose'
+import { ApolloDriver } from '@nestjs/apollo'
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose'
 
 import { ModelsModule } from './shared/models.module'
 import { ConfigModule } from './shared/config/config.module'
@@ -54,10 +55,7 @@ import { WatchModule } from './watch/watch.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.databaseUri,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
+        uri: configService.databaseUri
       })
     }),
 
@@ -65,13 +63,14 @@ import { WatchModule } from './watch/watch.module'
     GraphQLModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
+      driver: ApolloDriver,
       useFactory: (configService: ConfigService) => ({
         debug: configService.isDevelopment,
         tracing: configService.isDevelopment,
         playground: true,
         installSubscriptionHandlers: true,
         autoSchemaFile: 'schema.gql',
-        introspection: true,
+        introspection: true
       })
     })
   ]

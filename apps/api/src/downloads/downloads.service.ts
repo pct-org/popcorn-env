@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { Download, DownloadModel } from '@pct-org/types/download'
+import { Download, DownloadDocument } from '@pct-org/types/download'
 import { EPISODE_TYPE } from '@pct-org/types/episode'
+
+import type { Model } from 'mongoose'
 
 import { DownloadsArgs } from './dto/downloads.args'
 import { NewDownloadInput } from './dto/new-download.input'
@@ -11,7 +13,7 @@ import { TorrentService } from '../shared/torrent/torrent.service'
 export class DownloadsService {
 
   @InjectModel('Downloads')
-  private readonly downloadModel: DownloadModel
+  private readonly downloadModel: Model<DownloadDocument>
 
   /**
    * Add's one download

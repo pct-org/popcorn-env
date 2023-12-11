@@ -1,0 +1,27 @@
+{
+  "root": "libs/services/tmdb",
+  "sourceRoot": "libs/services/tmdb/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/services/tmdb/tsconfig.lib.json",
+          "libs/services/tmdb/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/services/tmdb/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/services/tmdb/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

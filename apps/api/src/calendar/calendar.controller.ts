@@ -1,12 +1,11 @@
 import { Controller, Get, Inject, Res } from '@nestjs/common'
-import * as ical from 'ical-generator'
+import ical from 'ical-generator'
 import { EpisodesService } from '@pct-org/types/episode'
 
 import { BookmarksService } from '../bookmarks/bookmarks.service'
 
 @Controller()
 export class CalendarController {
-
   @Inject()
   private readonly episodesService: EpisodesService
 
@@ -14,9 +13,7 @@ export class CalendarController {
   private readonly bookmarksService: BookmarksService
 
   @Get('calendar.ics')
-  public async calendar(
-    @Res() res
-  ) {
+  public async calendar(@Res() res) {
     const cal = ical()
 
     cal.prodId({
@@ -24,7 +21,6 @@ export class CalendarController {
       product: 'Calendar'
     })
 
-    cal.domain('pct')
     cal.name('Airing Episodes')
 
     // Set the correct ical headers
@@ -41,16 +37,20 @@ export class CalendarController {
 
     await Promise.all(
       bookmarks.map(async (bookmark) => {
-        const notAiredEpisodes = await this.episodesService.findForCalendar(bookmark._id)
+        const notAiredEpisodes = await this.episodesService.findForCalendar(
+          bookmark._id
+        )
 
         if (notAiredEpisodes.length > 0) {
-          notAiredEpisodes.forEach(episode => {
+          notAiredEpisodes.forEach((episode) => {
             cal.createEvent({
               id: episode._id,
               start: new Date(episode.firstAired),
               alarms: null,
               allDay: true,
-              summary: `${bookmark.title} S${`0${episode.season}`.slice(-2)}E${`0${episode.number}`.slice(-2)}. ${episode.title}`,
+              summary: `${bookmark.title} S${`0${episode.season}`.slice(
+                -2
+              )}E${`0${episode.number}`.slice(-2)}. ${episode.title}`,
               description: episode.synopsis
             })
           })
@@ -58,9 +58,6 @@ export class CalendarController {
       })
     )
 
-    res.send(
-      cal.toString()
-    )
+    res.send(cal.toString())
   }
-
 }

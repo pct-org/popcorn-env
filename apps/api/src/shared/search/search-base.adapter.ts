@@ -1,16 +1,12 @@
-import { HttpService, } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { Movie } from '@pct-org/types/movie'
 import { Episode } from '@pct-org/types/episode'
 import { Torrent } from '@pct-org/types/shared'
 
 export abstract class SearchAdapter {
-
   public static TORRENT_TYPE = 'searched'
 
-  constructor(
-    protected readonly httpService: HttpService
-  ) {
-  }
+  constructor(protected readonly httpService: HttpService) {}
 
   public abstract searchEpisode(episode: Episode): Promise<Torrent[]>
 
@@ -24,8 +20,7 @@ export abstract class SearchAdapter {
   }
 
   protected getEpisodeQuery = (episode: Episode): string => {
-    const searchTitle = episode.show.title.toLowerCase()
-      .replace(/\s/g, '.')
+    const searchTitle = episode.show.title.toLowerCase().replace(/\s/g, '.')
 
     return `${searchTitle}.${this.buildSeasonEpisodeString(episode)}`
   }
@@ -85,5 +80,4 @@ export abstract class SearchAdapter {
 
     return metadata.includes('subtitulado')
   }
-
 }

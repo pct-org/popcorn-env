@@ -1,4 +1,5 @@
-import { Module, HttpModule } from '@nestjs/common'
+import { Module } from '@nestjs/common'
+import { HttpModule } from '@nestjs/axios'
 
 import { StatusResolver } from './status.resolver'
 import { StatusService } from './status.service'
@@ -10,11 +11,7 @@ import { StatusController } from './status.controller'
       timeout: 1000
     })
   ],
-  providers: [
-    StatusResolver,
-    StatusService
-  ],
-  controllers: [StatusController],
+  providers: [StatusResolver, StatusService],
+  controllers: [StatusController]
 })
-export class StatusModule {
-}
+export class StatusModule {}

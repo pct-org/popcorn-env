@@ -1,0 +1,41 @@
+{
+  "root": "packages/kat-api",
+  "sourceRoot": "packages/kat-api/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "packages/kat-api/tsconfig.lib.json",
+          "packages/kat-api/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!packages/kat-api/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/kat-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "options": {
+        "outputPath": "dist/packages/kat-api",
+        "tsConfig": "packages/kat-api/tsconfig.lib.json",
+        "packageJson": "packages/kat-api/package.json",
+        "main": "packages/kat-api/src/index.ts",
+        "assets": [
+          "packages/kat-api/*.md",
+          "packages/kat-api/example.js",
+          "packages/kat-api/LICENSE"
+        ]
+      }
+    }
+  },
+  "tags": ["scope:public"]
+}

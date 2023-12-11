@@ -1,0 +1,37 @@
+{
+  "root": "packages/zooqle-api",
+  "sourceRoot": "packages/zooqle-api/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "packages/zooqle-api/tsconfig.lib.json",
+          "packages/zooqle-api/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!packages/zooqle-api/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/zooqle-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "options": {
+        "outputPath": "dist/packages/zooqle-api",
+        "tsConfig": "packages/zooqle-api/tsconfig.lib.json",
+        "packageJson": "packages/zooqle-api/package.json",
+        "main": "packages/zooqle-api/src/index.ts",
+        "assets": ["packages/zooqle-api/*.md", "packages/zooqle-api/LICENSE"]
+      }
+    }
+  },
+  "tags": ["scope:public"]
+}

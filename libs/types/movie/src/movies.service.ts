@@ -2,15 +2,17 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { ContentService } from '@pct-org/types/shared'
 
+import type { Model } from 'mongoose'
+
 import { MoviesArgs } from './dto/movies.args'
-import { MovieModel } from './movie.model'
+import { MovieDocument } from './movie.model'
 import { Movie } from './movie.object-type'
 
 @Injectable()
 export class MoviesService extends ContentService {
 
   @InjectModel('Movies')
-  private readonly movieModel: MovieModel
+  private readonly movieModel: Model<MovieDocument>
 
   public async count(): Promise<number> {
     return this.movieModel.count({})

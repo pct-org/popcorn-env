@@ -1,17 +1,19 @@
 import { Injectable, Logger } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Show } from '@pct-org/types/show'
-import { EpisodeModel, Episode, EPISODE_TYPE } from '@pct-org/types/episode'
+import { Episode, EPISODE_TYPE, EpisodeDocument } from '@pct-org/types/episode'
 import { IMAGES_DEFAULT } from '@pct-org/types/image'
 import { TraktEpisode } from '@pct-org/services/trakt'
 import { formatTorrents } from '@pct-org/torrent/utils'
 import { ScrapedTorrent } from '@pct-org/scraper/providers/base'
 
+import type { Model } from 'mongoose'
+
 @Injectable()
 export class EpisodeHelperService {
 
   @InjectModel('Episodes')
-  private readonly episodeModel: EpisodeModel
+  private readonly episodeModel: Model<EpisodeDocument>
 
   protected readonly logger = new Logger('EpisodeHelper')
 

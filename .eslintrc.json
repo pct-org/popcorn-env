@@ -1,66 +1,54 @@
 {
   "root": true,
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module",
-    "project": "./tsconfig.*?.json"
-  },
-  "ignorePatterns": [
-    "**/*"
-  ],
-  "plugins": [
-    "@typescript-eslint",
-    "@nrwl/nx"
-  ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
-  ],
-  "rules": {
-    "@typescript-eslint/no-inferrable-types": "off",
-    "@typescript-eslint/explicit-member-accessibility": "off",
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-parameter-properties": "off",
-    "@nrwl/nx/enforce-module-boundaries": [
-      "error",
-      {
-        "enforceBuildableLibDependency": true,
-        "allow": [],
-        "depConstraints": [
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nrwl/nx"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "semi": ["warn", "never"],
+        "@nrwl/nx/enforce-module-boundaries": [
+          "error",
           {
-            "sourceTag": "*",
-            "onlyDependOnLibsWithTags": [
-              "*"
+            "enforceBuildableLibDependency": true,
+            "allow": ["@danone-global/internal/react/testing"],
+            "depConstraints": [
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
             ]
           }
         ]
       }
-    ]
-  },
-  "overrides": [
+    },
     {
-      "files": [
-        "**/*.spec.js",
-        "**/*.spec.jsx",
-        "**/*.spec.ts",
-        "**/*.spec.tsx"
-      ],
-      "env": {
-        "jest": true
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nrwl/nx/typescript"],
+      "parserOptions": {
+        "project": "./tsconfig.*?.json"
+      },
+      "rules": {
+        "no-unneeded-ternary": ["error"],
+        "no-nested-ternary": ["error"],
+        "multiline-ternary": ["error", "always-multiline"],
+        "operator-linebreak": ["error", "before"]
       }
     },
     {
-      "files": [
-        "*.tsx"
-      ],
+      "files": ["*.tsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": "off"
+        "react/jsx-max-props-per-line": [
+          "warn",
+          { "maximum": 1, "when": "always" }
+        ],
+        "react/jsx-first-prop-new-line": ["warn", "multiline"],
+        "react/jsx-indent-props": ["warn", 2]
       }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nrwl/nx/javascript"]
     }
   ]
 }

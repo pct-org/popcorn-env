@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import * as Trakt from 'trakt.tv'
+import Trakt from 'trakt.tv'
 
 import { TraktMovie } from './interfaces/trakt.movie.interface'
 import { TraktShow } from './interfaces/trakt.show.interface'

@@ -1,0 +1,41 @@
+{
+  "root": "packages/eztv-api",
+  "sourceRoot": "packages/eztv-api/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "packages/eztv-api/tsconfig.lib.json",
+          "packages/eztv-api/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!packages/eztv-api/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/eztv-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "options": {
+        "outputPath": "dist/packages/eztv-api",
+        "tsConfig": "packages/eztv-api/tsconfig.lib.json",
+        "packageJson": "packages/eztv-api/package.json",
+        "main": "packages/eztv-api/src/index.ts",
+        "assets": [
+          "packages/eztv-api/*.md",
+          "packages/eztv-api/example.js",
+          "packages/eztv-api/LICENSE"
+        ]
+      }
+    }
+  },
+  "tags": ["scope:public"]
+}

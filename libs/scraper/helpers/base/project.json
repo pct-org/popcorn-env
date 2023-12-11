@@ -1,0 +1,27 @@
+{
+  "root": "libs/scraper/helpers/base",
+  "sourceRoot": "libs/scraper/helpers/base/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/scraper/helpers/base/tsconfig.lib.json",
+          "libs/scraper/helpers/base/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/scraper/helpers/base/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/scraper/helpers/base/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

@@ -2,13 +2,11 @@ module.exports = {
   name: 'services-omdb',
   preset: '../../../jest.config.js',
   globals: {
-    'ts-jest': {
-      tsConfig: '<rootDir>/tsconfig.spec.json',
-    },
+    'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' }
   },
   transform: {
-    '^.+\\.[tj]sx?$': 'ts-jest',
+    '^.+\\.[tj]sx?$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../../coverage/libs/services/omdb',
-};
+  coverageDirectory: '../../../coverage/libs/services/omdb'
+}

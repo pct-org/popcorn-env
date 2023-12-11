@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { MovieModel, MOVIES_TYPE } from '@pct-org/types/movie'
-import { ShowModel, SHOWS_TYPE } from '@pct-org/types/show'
+import { MovieDocument, MOVIES_TYPE } from '@pct-org/types/movie'
+import { ShowDocument, SHOWS_TYPE } from '@pct-org/types/show'
 import { Content } from '@pct-org/types/shared'
+
+import type { Model } from 'mongoose'
 
 import { BookmarksArgs } from './dto/bookmarks.args'
 import { NewBookmarkInput } from './dto/new-bookmark.input'
@@ -11,10 +13,10 @@ import { NewBookmarkInput } from './dto/new-bookmark.input'
 export class BookmarksService {
 
   @InjectModel('Movies')
-  private readonly movieModel: MovieModel
+  private readonly movieModel: Model<MovieDocument>
 
   @InjectModel('Shows')
-  private readonly showModel: ShowModel
+  private readonly showModel: Model<ShowDocument>
 
   public async findAll(bookmarksArgs: BookmarksArgs): Promise<Content[]> {
     const movies = ['none', MOVIES_TYPE].includes(bookmarksArgs.filter)
@@ -65,24 +67,24 @@ export class BookmarksService {
    * @param {boolean} add - Do we need to add or remove the bookmark
    */
   public async updateBookmark(addBookmarksArgs: NewBookmarkInput, add: boolean): Promise<Content> {
-    return (
-      addBookmarksArgs.type === 'movie'
-        ? this.movieModel
-        : this.showModel
+    const update = {
+      bookmarked: add,
+      bookmarkedOn: add
+        ? Number(new Date())
+        : null
+    }
 
-    ).findByIdAndUpdate(
-      addBookmarksArgs._id,
-      {
-        bookmarked: add,
-        bookmarkedOn: add
-          ? Number(new Date())
-          : null
-      },
-      {
-        new: true, // Return the new updated object
-        lean: true
-      }
-    )
+    const options = {
+      new: true, // Return the new updated object
+      lean: true
+    }
+
+    if (addBookmarksArgs.type === 'movie') {
+      return this.movieModel.findByIdAndUpdate(addBookmarksArgs._id, update, options)
+
+    } else {
+      return this.showModel.findByIdAndUpdate(addBookmarksArgs._id, update, options)
+    }
   }
 
   /**
@@ -101,7 +103,9 @@ export class BookmarksService {
         bookmarked: true,
         title: {
           // Update the query to make it better searchable
-          $regex: bookmarksArgs.query.trim().split(' ').join('.+'),
+          $regex: bookmarksArgs.query.trim()
+            .split(' ')
+            .join('.+'),
           $options: 'i'
         }
       }

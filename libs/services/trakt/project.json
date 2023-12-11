@@ -1,0 +1,27 @@
+{
+  "root": "libs/services/trakt",
+  "sourceRoot": "libs/services/trakt/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/services/trakt/tsconfig.lib.json",
+          "libs/services/trakt/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/services/trakt/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/services/trakt/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

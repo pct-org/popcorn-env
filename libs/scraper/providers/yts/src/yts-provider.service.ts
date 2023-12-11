@@ -1,32 +1,37 @@
 import { Inject, Injectable, Logger } from '@nestjs/common'
-import { BaseProvider, ScraperProviderConfig, ScrapedItem } from '@pct-org/scraper/providers/base'
+import {
+  BaseProvider,
+  ScraperProviderConfig,
+  ScrapedItem
+} from '@pct-org/scraper/providers/base'
 import { MOVIE_TYPE } from '@pct-org/types/movie'
-import * as Yts from 'yts-api-pt'
+import Yts from 'yts-api-pt'
 
 import { YtsTorrent } from './yts-provider.interfaces'
 import { MovieHelperService } from '@pct-org/scraper/helpers/movie'
 
 @Injectable()
 export class YtsProviderService extends BaseProvider {
-
-  @Inject('MovieHelperService')
+  @Inject()
   protected readonly movieHelper: MovieHelperService
 
-  name = 'YTS'
+  protected readonly name = 'YTS'
 
-  maxWebRequests = 2
+  protected readonly maxWebRequests = 2
 
-  logger = new Logger(this.name)
+  protected readonly logger = new Logger(this.name)
 
-  configs: ScraperProviderConfig[] = [{
-    contentType: MOVIE_TYPE,
-    query: {
-      page: 1,
-      limit: 50
+  protected readonly configs: ScraperProviderConfig[] = [
+    {
+      contentType: MOVIE_TYPE,
+      query: {
+        page: 1,
+        limit: 50
+      }
     }
-  }]
+  ]
 
-  api
+  protected api
 
   constructor() {
     super()
@@ -41,23 +46,30 @@ export class YtsProviderService extends BaseProvider {
    * Get content info from a given torrent
    */
   getContentData(torrent: YtsTorrent): ScrapedItem | undefined {
-    if (
-      torrent && torrent.torrents &&
-      torrent.imdb_code
-    ) {
-      if (torrent.language.match(/english/i) || torrent.language === this.language) {
+    if (torrent && torrent.torrents && torrent.imdb_code) {
+      if (
+        torrent.language.match(/english/i) ||
+        torrent.language === this.language
+      ) {
         return this.extractContent({
           torrent,
           lang: this.language
         })
       }
-
     } else {
-      this.logger.warn(`Could not extract data from torrent: '${torrent.title}'`)
+      this.logger.warn(
+        `Could not extract data from torrent: '${torrent.title}'`
+      )
     }
   }
 
-  extractContent({ torrent, lang }: { torrent: YtsTorrent; lang: string }): ScrapedItem | undefined {
+  extractContent({
+    torrent,
+    lang
+  }: {
+    torrent: YtsTorrent
+    lang: string
+  }): ScrapedItem | undefined {
     const movie: ScrapedItem = {
       title: torrent.title,
       slug: torrent.imdb_code,
@@ -99,5 +111,4 @@ export class YtsProviderService extends BaseProvider {
   //
   //   return Promise.resolve()
   // }
-
 }

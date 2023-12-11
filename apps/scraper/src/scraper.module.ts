@@ -2,7 +2,7 @@ import { Inject, Logger, Module, OnApplicationBootstrap } from '@nestjs/common'
 import { ScheduleModule, SchedulerRegistry } from '@nestjs/schedule'
 import { MongooseModule } from '@nestjs/mongoose'
 import { CronJob } from 'cron'
-import * as pLimit from 'p-limit'
+import pLimit from 'p-limit'
 
 import { ModelsModule } from './shared/models.module'
 import { ConfigModule } from './shared/config/config.module'
@@ -25,10 +25,7 @@ import { StatusModule } from './routes/status/status.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.databaseUri,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
+        uri: configService.databaseUri
       })
     }),
 
@@ -51,14 +48,19 @@ export class ScraperModule implements OnApplicationBootstrap {
   private providersService: ProvidersService
 
   public onApplicationBootstrap(): void {
-    const job = new CronJob(this.configService.get(ConfigService.CRON_TIME), () => {
-      this.scrapeConfigs()
-    })
+    const job = new CronJob(
+      this.configService.get(ConfigService.CRON_TIME),
+      () => {
+        this.scrapeConfigs()
+      }
+    )
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
     job.start()
 
-    this.logger.log(`Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`)
+    this.logger.log(
+      `Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`
+    )
 
     if (this.configService.get(ConfigService.SCRAPE_ON_START)) {
       this.scrapeConfigs()
@@ -70,9 +72,11 @@ export class ScraperModule implements OnApplicationBootstrap {
 
     const limit = pLimit(1)
 
-    await Promise.all(this.providersService.getProviders().map((provider) => (
-      limit(() => provider.scrapeConfigs())
-    )))
+    await Promise.all(
+      this.providersService
+        .getProviders()
+        .map((provider) => limit(() => provider.scrapeConfigs()))
+    )
   }
 
 }

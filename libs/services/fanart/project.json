@@ -1,0 +1,27 @@
+{
+  "root": "libs/services/fanart",
+  "sourceRoot": "libs/services/fanart/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/services/fanart/tsconfig.lib.json",
+          "libs/services/fanart/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/services/fanart/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/services/fanart/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

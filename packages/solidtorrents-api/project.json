@@ -1,0 +1,41 @@
+{
+  "root": "packages/solidtorrents-api",
+  "sourceRoot": "packages/solidtorrents-api/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "packages/solidtorrents-api/tsconfig.lib.json",
+          "packages/solidtorrents-api/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!packages/solidtorrents-api/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "packages/solidtorrents-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "build": {
+      "executor": "@nrwl/node:package",
+      "options": {
+        "outputPath": "dist/packages/solidtorrents-api",
+        "tsConfig": "packages/solidtorrents-api/tsconfig.lib.json",
+        "packageJson": "packages/solidtorrents-api/package.json",
+        "main": "packages/solidtorrents-api/src/index.ts",
+        "assets": [
+          "packages/solidtorrents-api/*.md",
+          "packages/solidtorrents-api/example.js",
+          "packages/solidtorrents-api/LICENSE"
+        ]
+      }
+    }
+  },
+  "tags": ["scope:public"]
+}

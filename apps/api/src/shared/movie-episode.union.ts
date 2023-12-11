@@ -8,10 +8,10 @@ export const MovieEpisodeUnion = createUnionType({
   types: () => [Movie, Episode],
   resolveType(value) {
     if (value.type === MOVIE_TYPE) {
-      return Movie
+      return 'Movie'
 
     } else if (value.type === EPISODE_TYPE) {
-      return Episode
+      return 'Episode'
     }
 
     return null

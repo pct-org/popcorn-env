@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import * as Fanart from 'fanart.tv-api'
+import Fanart from 'fanart.tv-api'
 import { Images, ImageSizes } from '@pct-org/types/image'
 import { Movie } from '@pct-org/types/movie'
 import { Show } from '@pct-org/types/show'

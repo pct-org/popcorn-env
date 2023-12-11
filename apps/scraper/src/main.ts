@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { Logger } from '@nestjs/common'
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify'
+import {
+  FastifyAdapter,
+  NestFastifyApplication
+} from '@nestjs/platform-fastify'
 
 import { ScraperModule } from './scraper.module'
 import { ConfigService } from './shared/config/config.service'
@@ -16,7 +19,7 @@ async function bootstrap() {
     }
   )
 
-  const configService = app.get('ConfigService')
+  const configService = app.get<ConfigService>(ConfigService)
   const port = configService.get(ConfigService.PORT)
 
   await app.listen(port, '0.0.0.0').then(() => {

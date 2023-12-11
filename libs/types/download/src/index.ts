@@ -1,7 +1,7 @@
 import { MongooseModule } from '@nestjs/mongoose'
 
 export { Download } from './download.object-type'
-export { DownloadModel } from './download.model'
+export { DownloadDocument } from './download.model'
 
 import { downloadSchema } from './download.schema'
 

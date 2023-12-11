@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common'
 import { BaseHelper } from '@pct-org/scraper/helpers/base'
 import { ScrapedItem, ScrapedTorrent } from '@pct-org/scraper/providers/base'
 import { InjectModel } from '@nestjs/mongoose'
-import { MovieModel, Movie, MOVIE_TYPE } from '@pct-org/types/movie'
+import { Movie, MOVIE_TYPE, MovieDocument } from '@pct-org/types/movie'
 import { Show } from '@pct-org/types/show'
 import { TraktService } from '@pct-org/services/trakt'
 import { TmdbService } from '@pct-org/services/tmdb'
@@ -11,11 +11,13 @@ import { OmdbService } from '@pct-org/services/omdb'
 import { formatTorrents } from '@pct-org/torrent/utils'
 import { IMAGES_DEFAULT } from '@pct-org/types/image'
 
+import type { Model } from 'mongoose'
+
 @Injectable()
 export class MovieHelperService extends BaseHelper {
 
   @InjectModel('Movies')
-  private readonly movieModel: MovieModel
+  private readonly movieModel: Model<MovieDocument>
 
   @Inject()
   private readonly traktService: TraktService
@@ -118,7 +120,9 @@ export class MovieHelperService extends BaseHelper {
         : ['unknown'],
       trailer: traktMovie.trailer,
       trailerId: traktMovie.trailer
-        ? traktMovie.trailer.split('v=').reverse().shift()
+        ? traktMovie.trailer.split('v=')
+          .reverse()
+          .shift()
         : null,
       createdAt: Number(new Date()),
       updatedAt: Number(new Date()),

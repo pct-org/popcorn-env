@@ -22,10 +22,7 @@ import { ShowsModule } from './routes/shows/shows.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.databaseUri,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
+        uri: configService.databaseUri
       })
     })
   ]

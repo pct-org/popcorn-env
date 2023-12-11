@@ -17,103 +17,29 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ],
+        "parallel": 1
       }
     }
   },
   "workspaceLayout": {
     "libsDir": "libs"
   },
-  "projects": {
-    "api": {
-      "tags": []
-    },
-    "package-eztv-api": {
-      "tags": ["scope:public"]
-    },
-    "package-solidtorrents-api": {
-      "tags": ["scope:public"]
-    },
-    "package-zooqle-api": {
-      "tags": ["scope:public"]
-    },
-    "package-ettv-api": {
-      "tags": ["scope:public"]
-    },
-    "package-kat-api": {
-      "tags": ["scope:public"]
-    },
-    "scraper": {
-      "tags": []
-    },
-    "scraper-providers-base": {
-      "tags": []
-    },
-    "scraper-helpers-show": {
-      "tags": []
-    },
-    "scraper-helpers-movie": {
-      "tags": []
-    },
-    "scraper-providers-yts": {
-      "tags": []
-    },
-    "torrent-utils": {
-      "tags": []
-    },
-    "scraper-helpers-base": {
-      "tags": []
-    },
-    "services-trakt": {
-      "tags": []
-    },
-    "services-fanart": {
-      "tags": []
-    },
-    "services-omdb": {
-      "tags": []
-    },
-    "services-tmdb": {
-      "tags": []
-    },
-    "services-tvdb": {
-      "tags": []
-    },
-    "scraper-providers-eztv": {
-      "tags": []
-    },
-    "scraper-helpers-season": {
-      "tags": []
-    },
-    "scraper-helpers-episode": {
-      "tags": []
-    },
-    "rest-api": {
-      "tags": []
-    },
-    "types-movie": {
-      "tags": []
-    },
-    "types-show": {
-      "tags": []
-    },
-    "types-episode": {
-      "tags": []
-    },
-    "types-season": {
-      "tags": []
-    },
-    "types-shared": {
-      "tags": []
-    },
-    "types-blacklist": {
-      "tags": []
-    },
-    "types-download": {
-      "tags": []
-    },
-    "types-image": {
-      "tags": []
-    }
-  }
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
+  "defaultProject": "api"
 }

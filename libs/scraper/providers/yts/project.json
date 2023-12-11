@@ -1,0 +1,27 @@
+{
+  "root": "libs/scraper/providers/yts",
+  "sourceRoot": "libs/scraper/providers/yts/src",
+  "projectType": "library",
+  "generators": {},
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:lint",
+      "options": {
+        "linter": "eslint",
+        "tsConfig": [
+          "libs/scraper/providers/yts/tsconfig.lib.json",
+          "libs/scraper/providers/yts/tsconfig.spec.json"
+        ],
+        "exclude": ["**/node_modules/**", "!libs/scraper/providers/yts/**/*"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/scraper/providers/yts/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

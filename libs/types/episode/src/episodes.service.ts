@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 
+import type { Model } from 'mongoose'
+
 import { Episode } from './episode.object-type'
-import { EpisodeModel } from './episode.model'
+import { EpisodeDocument } from './episode.model'
 
 @Injectable()
 export class EpisodesService {
 
   @InjectModel('Episodes')
-  private readonly episodeModel: EpisodeModel
+  private readonly episodeModel: Model<EpisodeDocument>
 
   /**
    * Returns all the episodes for the user that he did not watch

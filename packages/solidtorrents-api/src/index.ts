@@ -1,7 +1,7 @@
 // @ts-nocheck
 const bytes = require('bytes')
 const debug = require('debug')
-const got = require('got')
+const got = require('got') // TODO:: Change to axios
 const { stringify } = require('querystring')
 
 const { name } = require('../package')

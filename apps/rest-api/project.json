@@ -1,0 +1,45 @@
+{
+  "root": "apps/rest-api",
+  "sourceRoot": "apps/rest-api/src",
+  "projectType": "application",
+  "prefix": "rest-api",
+  "generators": {},
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:build",
+      "options": {
+        "outputPath": "dist/apps/rest-api",
+        "main": "apps/rest-api/src/main.ts",
+        "tsConfig": "apps/rest-api/tsconfig.app.json"
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "rest-api:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/rest-api/**/*.ts"]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/rest-api/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

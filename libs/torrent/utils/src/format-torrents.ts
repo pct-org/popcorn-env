@@ -1,25 +1,23 @@
-import { ScrapedTorrent } from '@pct-org/scraper/providers/base'
-import { Torrent } from '@pct-org/types/shared'
+import type { ScrapedTorrent } from '@pct-org/scraper/providers/base'
+import type { Torrent } from '@pct-org/types/shared'
 
 import { formatBytes } from './format-bytes'
 import { sortTorrents } from './sort-torrents'
 
 export type Torrents = ScrapedTorrent[] | Torrent[]
 
-export const formatTorrents = (torrents: Torrents, foundTorrents: Torrents = []): Torrent[] => {
-  const allTorrents = [
-    ...torrents,
-    ...foundTorrents
-  ]
+export const formatTorrents = (
+  torrents: Torrents,
+  foundTorrents: Torrents = []
+): Torrent[] => {
+  const allTorrents = [...torrents, ...foundTorrents]
 
   let newTorrents = []
 
   // Loop true all torrents
   allTorrents.forEach((torrent) => {
     let add = true
-    const match = newTorrents.find(
-      t => t.quality === torrent.quality
-    )
+    const match = newTorrents.find((t) => t.quality === torrent.quality)
 
     // If we have a match we need additional checks to determine witch one to keep
     if (match) {
@@ -32,7 +30,6 @@ export const formatTorrents = (torrents: Torrents, foundTorrents: Torrents = [])
         if (torrent.size < match.size) {
           add = true
         }
-
       } else if (match.seeds < torrent.seeds) {
         add = true
       }
@@ -42,9 +39,7 @@ export const formatTorrents = (torrents: Torrents, foundTorrents: Torrents = [])
     if (add && torrent.quality !== null) {
       // If add was true and we have a match we need to remove the old one
       if (match) {
-        newTorrents = newTorrents.filter(
-          t => t.quality !== torrent.quality
-        )
+        newTorrents = newTorrents.filter((t) => t.quality !== torrent.quality)
       }
 
       // Add the sizeString attribute

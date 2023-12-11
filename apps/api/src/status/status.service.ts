@@ -1,11 +1,14 @@
-import { HttpService, Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { InjectModel } from '@nestjs/mongoose'
 import { checkSync } from 'diskusage'
-import * as getFolderSize from 'get-folder-size'
 import { formatBytes } from '@pct-org/torrent/utils'
-import { MovieModel } from '@pct-org/types/movie'
-import { ShowModel } from '@pct-org/types/show'
-import { EpisodeModel } from '@pct-org/types/episode'
+import { MovieDocument } from '@pct-org/types/movie'
+import { ShowDocument } from '@pct-org/types/show'
+import { EpisodeDocument } from '@pct-org/types/episode'
+import fastFolderSizeSync from 'fast-folder-size/sync'
+
+import type { Model } from 'mongoose'
 
 import { Status } from './status.object-type'
 import { StatusScraper } from './status-scraper.object-type'
@@ -15,13 +18,13 @@ import { ConfigService } from '../shared/config/config.service'
 export class StatusService {
 
   @InjectModel('Movies')
-  private readonly movieModel: MovieModel
+  private readonly movieModel: Model<MovieDocument>
 
   @InjectModel('Shows')
-  private readonly showModel: ShowModel
+  private readonly showModel: Model<ShowDocument>
 
   @InjectModel('Episodes')
-  private readonly episodesModel: EpisodeModel
+  private readonly episodesModel: Model<EpisodeDocument>
 
   @Inject()
   private readonly configService: ConfigService
@@ -34,11 +37,19 @@ export class StatusService {
       this.configService.get(ConfigService.DOWNLOAD_LOCATION)
     )
 
-    const folderSize = await this.getFolderSize()
+    const folderSize = fastFolderSizeSync(this.configService.get(ConfigService.DOWNLOAD_LOCATION))
 
-    const freePercentage = parseFloat(((disk.available / disk.total) * 100).toFixed(2))
-    const usedPercentage = parseFloat(((folderSize / disk.total) * 100).toFixed(2))
-    const sizePercentage = parseFloat((((disk.total - disk.available - folderSize) / disk.total) * 100).toFixed(2))
+    const freePercentage = parseFloat(
+      ((disk.available / disk.total) * 100).toFixed(2)
+    )
+    const usedPercentage = parseFloat(
+      ((folderSize / disk.total) * 100).toFixed(2)
+    )
+    const sizePercentage = parseFloat(
+      (((disk.total - disk.available - folderSize) / disk.total) * 100).toFixed(
+        2
+      )
+    )
 
     return {
       version: this.configService.version,
@@ -59,18 +70,17 @@ export class StatusService {
 
   public async getScraperStatus(): Promise<StatusScraper> {
     try {
-      const response = await this.httpService.get(
-        `http://localhost:${this.configService.get(ConfigService.SCRAPER_PORT)}/status`
-      ).toPromise()
+      const response = await this.httpService
+        .get(`http://localhost:${this.configService.get(ConfigService.SCRAPER_PORT)}/status`)
+        .toPromise()
 
       return {
         version: response.data.version,
         status: response.data.status,
         updated: response.data.updated,
         nextUpdate: response.data.nextUpdate,
-        uptime: response.data.uptime,
+        uptime: response.data.uptime
       }
-
     } catch (e) {
       return {
         version: 'unknown',
@@ -81,13 +91,4 @@ export class StatusService {
       }
     }
   }
-
-  private getFolderSize(): Promise<number> {
-    return new Promise((resolve) => {
-      getFolderSize(this.configService.get(ConfigService.DOWNLOAD_LOCATION), (err, size) => {
-        resolve(err ? 0 : size)
-      })
-    })
-  }
-
 }
