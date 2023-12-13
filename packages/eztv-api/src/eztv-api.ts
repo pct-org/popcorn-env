@@ -44,7 +44,12 @@ export class EztvApi {
 
     this.debug(`Making request to: '${uri}'`)
 
-    return axios.get(uri).then(({ data }) => {
+    return axios.get(uri, {
+      headers: {
+        Cookie: 'layout=def_wlinks;'
+      },
+      withCredentials: true
+    }).then(({ data }) => {
       return cheerio.load(data)
     })
   }
