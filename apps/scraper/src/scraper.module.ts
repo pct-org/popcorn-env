@@ -38,32 +38,28 @@ export class ScraperModule implements OnApplicationBootstrap {
 
   private readonly logger = new Logger(ScraperModule.name)
 
-  @Inject()
+  @Inject(SchedulerRegistry)
   private schedulerRegistry: SchedulerRegistry
 
-  @Inject()
+  @Inject(ConfigService)
   private configService: ConfigService
 
-  @Inject()
+  @Inject(ProvidersService)
   private providersService: ProvidersService
 
   public onApplicationBootstrap(): void {
     const job = new CronJob(
       this.configService.get(ConfigService.CRON_TIME),
-      () => {
-        this.scrapeConfigs()
-      }
+      () => this.scrapeConfigs()
     )
 
     this.schedulerRegistry.addCronJob(ScraperModule.JOB_NAME, job)
     job.start()
 
-    this.logger.log(
-      `Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`
-    )
+    this.logger.log(`Enabled cron on '${this.configService.get(ConfigService.CRON_TIME)}'`)
 
     if (this.configService.get(ConfigService.SCRAPE_ON_START)) {
-      this.scrapeConfigs()
+      void this.scrapeConfigs()
     }
   }
 

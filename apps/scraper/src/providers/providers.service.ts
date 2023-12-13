@@ -6,10 +6,10 @@ import { EztvProviderService } from '@pct-org/scraper/providers/eztv'
 @Injectable()
 export class ProvidersService {
 
-  @Inject()
+  @Inject(YtsProviderService)
   private readonly ytsService: YtsProviderService
 
-  @Inject()
+  @Inject(EztvProviderService)
   private readonly eztvService: EztvProviderService
 
   public getProviders(): BaseProvider[] {

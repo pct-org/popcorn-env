@@ -153,9 +153,7 @@ export abstract class BaseProvider {
    * @param content - The content information.
    * @returns {Promise<Boolean|Error>}
    */
-  protected async isItemBlackListed(
-    content: ScrapedItem
-  ): Promise<boolean | Error> {
+  protected async isItemBlackListed(content: ScrapedItem): Promise<boolean | Error> {
     const { slug, imdb } = content
 
     const blacklistedItem = await this.blackListModel.findOne({
@@ -192,15 +190,14 @@ export abstract class BaseProvider {
     let helper: BaseHelper = null
     if (this.contentType === MOVIE_TYPE && this.movieHelper) {
       helper = this.movieHelper
+
     } else if (this.contentType === SHOW_TYPE && this.showHelper) {
       helper = this.showHelper
     }
 
     if (!helper) {
       return Promise.reject(
-        new Error(
-          `'${this.contentType}' is not a valid value for ContentTypes!`
-        )
+        new Error(`'${this.contentType}' is not a valid value for ContentTypes!`)
       )
     }
 
@@ -226,7 +223,7 @@ export abstract class BaseProvider {
         newItem = existingItem
       }
     } else {
-      // Add trakt info to the item, will return null if trakt could not find it
+      // Add Trakt info to the item, will return null if Trakt could not find it
       newItem = await helper.addTraktInfo(item)
     }
 
@@ -304,7 +301,7 @@ export abstract class BaseProvider {
 
         const { slug } = item
 
-        // If we already have the movie merge the torrents together
+        // If we already have the movie merge the torrents
         if (items.has(slug)) {
           // Reset the movies torrents
           item.torrents = formatTorrents(
